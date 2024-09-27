@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "480646276765",
+    "project_id": "mtg-rfid",
+    "storage_bucket": "mtg-rfid.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480646276765:android:ad70e59a5a3381ed03d674",
+        "android_client_info": {
+          "package_name": "com.example.untitled"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMk2xCCCRWqhj2jziJs9cmoV21JimtrKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
