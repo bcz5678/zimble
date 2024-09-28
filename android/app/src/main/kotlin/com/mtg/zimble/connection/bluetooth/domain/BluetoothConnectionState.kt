@@ -1,4 +1,4 @@
-package com.example.untitled.connection.bluetooth.domain
+package com.mtg.zimble.connection.bluetooth.domain
 
 data class BluetoothConnectionState (
         val isConnected: Boolean = false,

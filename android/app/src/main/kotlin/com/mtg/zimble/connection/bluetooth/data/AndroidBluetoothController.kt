@@ -1,4 +1,4 @@
-package com.example.untitled.connection.bluetooth.data
+package com.mtg.zimble.connection.bluetooth.data
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -12,11 +12,11 @@ import android.content.Context.RECEIVER_EXPORTED
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
-import com.example.untitled.connection.bluetooth.domain.BluetoothDeviceEntity
-import com.example.untitled.connection.bluetooth.domain.BluetoothController
-import com.example.untitled.connection.bluetooth.domain.BluetoothDeviceScanningStreamHandler
-import com.example.untitled.connection.bluetooth.domain.ConnectionResult
-import com.example.untitled.connection.bluetooth.domain.bluetoothScanningCollector
+import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceEntity
+import com.mtg.zimble.connection.bluetooth.domain.BluetoothController
+import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceScanningStreamHandler
+import com.mtg.zimble.connection.bluetooth.domain.ConnectionResult
+import com.mtg.zimble.connection.bluetooth.domain.bluetoothScanningCollector
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -28,7 +28,7 @@ import android.util.Log
 
 
 
-//import com.example.untitled.bluetooth.data.BluetoothEnableActivity
+//import com.mtg.zimble.bluetooth.data.BluetoothEnableActivity
 
 
 

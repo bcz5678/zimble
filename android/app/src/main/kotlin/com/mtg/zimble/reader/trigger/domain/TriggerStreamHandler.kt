@@ -1,4 +1,4 @@
-package com.example.untitled.reader.trigger.domain
+package com.mtg.zimble.reader.trigger.domain
 
 //import android.content.Context
 import io.flutter.plugin.common.EventChannel

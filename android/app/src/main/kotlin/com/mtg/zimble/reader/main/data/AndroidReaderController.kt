@@ -1,10 +1,10 @@
-package com.example.untitled.reader.main.data
+package com.mtg.zimble.reader.main.data
 
 import android.content.Context
 import android.util.Log
 
-import com.example.untitled.reader.main.domain.ReaderController
-import com.example.untitled.connection.bluetooth.domain.BluetoothDeviceEntity
+import com.mtg.zimble.reader.main.domain.ReaderController
+import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceEntity
 
 import com.uk.tsl.rfid.asciiprotocol.AsciiCommander
 import com.uk.tsl.rfid.asciiprotocol.device.ObservableReaderList

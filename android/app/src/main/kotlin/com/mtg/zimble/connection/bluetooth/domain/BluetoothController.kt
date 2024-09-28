@@ -1,4 +1,4 @@
-package com.example.untitled.connection.bluetooth.domain
+package com.mtg.zimble.connection.bluetooth.domain
 import kotlinx.coroutines.flow.*
 
 interface BluetoothController {

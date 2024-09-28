@@ -8,10 +8,10 @@ import 'package:twitter_login/twitter_login.dart';
 
 /// Signature for [SignInWithApple.getAppleIDCredential].
 typedef GetAppleCredentials = Future<AuthorizationCredentialAppleID> Function({
-required List<AppleIDAuthorizationScopes> scopes,
-WebAuthenticationOptions webAuthenticationOptions,
-String nonce,
-String state,
+  required List<AppleIDAuthorizationScopes> scopes,
+  WebAuthenticationOptions webAuthenticationOptions,
+  String nonce,
+  String state,
 });
 
 /// {@template firebase_authentication_client}
@@ -138,7 +138,7 @@ class FirebaseAuthenticationClient implements AuthenticationClient {
       }
 
       final credential =
-      firebase_auth.FacebookAuthProvider.credential(accessToken);
+          firebase_auth.FacebookAuthProvider.credential(accessToken);
 
       await _firebaseAuth.signInWithCredential(credential);
     } on LogInWithFacebookCanceled {

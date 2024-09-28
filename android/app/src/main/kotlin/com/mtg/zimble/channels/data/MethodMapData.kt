@@ -1,4 +1,4 @@
-package com.example.untitled.channels.data
+package com.mtg.zimble.channels.data
 
 import com.google.gson.Gson
 

@@ -1,4 +1,4 @@
-package com.example.untitled.reader.main.domain
+package com.mtg.zimble.reader.main.domain
 
 import android.util.Log
 

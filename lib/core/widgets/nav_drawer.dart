@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:zimble/home/home.dart';
-import 'package:zimble/reader/reader.dart';
+import 'package:zimble/readers/readers.dart';
 import 'package:zimble/tag_info/tag_info.dart';
-import 'package:zimble/find_tags/find_tags.dart';
+import 'package:zimble/tag_finder/tag_finder.dart';
 import 'package:zimble/inventory/inventory.dart';
-import 'package:zimble/trigger_status/trigger_status.dart';
+import 'package:zimble/trigger/trigger.dart';
 import 'package:zimble/core/widgets/logout_confirm_dialog.dart';
 
 
@@ -35,7 +35,7 @@ class NavDrawer extends StatelessWidget {
                 leading: const Icon(Icons.home_outlined),
                 title: const Text('Home'),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Home(),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomePage(),
                   ));
                 },
               ),
@@ -43,7 +43,7 @@ class NavDrawer extends StatelessWidget {
                 leading: const Icon(Icons.plus_one_outlined),
                 title: const Text('Reader'),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Reader(),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const ReadersPage(),
                   ));
                 },
               ),
@@ -51,7 +51,7 @@ class NavDrawer extends StatelessWidget {
                 leading: const Icon(Icons.tag_outlined),
                 title: const Text('Tag Info'),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const TagInfo(),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const TagInfoPage(),
                   ));
                 },
               ),
@@ -59,7 +59,7 @@ class NavDrawer extends StatelessWidget {
                 leading: const Icon(Icons.search_outlined),
                 title: const Text('Find Tags'),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const FindTags(),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const TagFinderPage(),
                   ));
                 },
               ),
@@ -67,7 +67,7 @@ class NavDrawer extends StatelessWidget {
                 leading: const Icon(Icons.inventory_outlined),
                 title: const Text('Inventory'),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Inventory(),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const InventoryPage(),
                   ));
                 },
               ),
@@ -75,7 +75,7 @@ class NavDrawer extends StatelessWidget {
                 leading: const Icon(Icons.barcode_reader),
                 title: const Text('Trigger Status'),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const TriggerStatus(),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const TriggerPage(),
                   ));
                 },
               ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:zimble/readers/readers.dart';
+import 'package:zimble/trigger/trigger.dart';
 
 
-class ReadersPage extends StatelessWidget {
-  const ReadersPage({Key? key}) : super(key: key);
+class TriggerPage extends StatelessWidget {
+  const TriggerPage({Key? key}) : super(key: key);
 
 
   @override

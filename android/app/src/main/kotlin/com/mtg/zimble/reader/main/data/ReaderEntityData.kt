@@ -1,6 +1,6 @@
-package com.example.untitled.reader.main.data
+package com.mtg.zimble.reader.main.data
 
-import com.example.untitled.reader.trigger.data.ReaderTriggerSettingsData
+import com.mtg.zimble.reader.trigger.data.ReaderTriggerSettingsData
 
 data class ReaderEntityData(
     var name: String?,

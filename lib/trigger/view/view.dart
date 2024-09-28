@@ -1,1 +1,1 @@
-export 'readers_page.dart';
+export 'trigger_page.dart';

@@ -1,4 +1,4 @@
-package com.example.untitled.reader.main.data
+package com.mtg.zimble.reader.main.data
 
 
 import io.flutter.plugin.common.EventChannel

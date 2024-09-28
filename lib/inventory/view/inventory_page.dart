@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:zimble/readers/readers.dart';
+import 'package:zimble/inventory/inventory.dart';
 
 
-class ReadersPage extends StatelessWidget {
-  const ReadersPage({Key? key}) : super(key: key);
+class InventoryPage extends StatelessWidget {
+  const InventoryPage({Key? key}) : super(key: key);
 
 
   @override

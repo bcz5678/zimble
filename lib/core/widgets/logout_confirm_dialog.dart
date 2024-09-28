@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:untitled/features/auth/presentation/pages/auth_main.dart';
+import 'package:zimble/login/login.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class LogoutConfirmationDialog extends StatelessWidget {
   const LogoutConfirmationDialog({super.key});
 
-  void authSignUserOut(context) async {
+  Future<void> authSignUserOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context, rootNavigator: true)
         .pushAndRemoveUntil(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return const AuthMain();
+          return const LoginPage();
         },
       ),
           (_) => false,

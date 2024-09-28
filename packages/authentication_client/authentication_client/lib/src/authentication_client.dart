@@ -1,10 +1,3 @@
-/// {@template authentication_client}
-/// Authentication client to handle all forms of user authentication
-/// {@endtemplate}
-class AuthenticationClient {
-  /// {@macro authentication_client}
-  const AuthenticationClient();
-}
 import 'dart:async';
 
 import 'package:authentication_client/authentication_client.dart';

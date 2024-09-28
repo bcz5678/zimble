@@ -1,19 +1,13 @@
 name: authentication_client
-description: Authentication client to handle all forms of user authentication
-version: 0.1.0+1
+description: An Authentication Client Interface
 publish_to: none
 
 environment:
-  sdk: ^3.5.0
-  flutter: ^3.24.0
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
-  equatable: ^2.0.5
+  equatable: ^2.0.3
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  mocktail: ^1.0.4
+  test: ^1.21.4
   very_good_analysis: ^6.0.0

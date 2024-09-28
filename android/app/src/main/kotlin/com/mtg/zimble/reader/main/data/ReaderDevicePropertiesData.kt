@@ -1,4 +1,4 @@
-package com.example.untitled.reader.main.data
+package com.mtg.zimble.reader.main.data
 
 import kotlin.reflect.full.memberProperties
 import com.google.gson.Gson

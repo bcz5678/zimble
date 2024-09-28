@@ -1,9 +1,9 @@
-package com.example.untitled
+package com.mtg.zimble
 
-import com.example.untitled.channels.domain.BluetoothDeviceChannels
-import com.example.untitled.channels.domain.ReaderMainChannels
+import com.mtg.zimble.channels.domain.BluetoothDeviceChannels
+import com.mtg.zimble.channels.domain.ReaderMainChannels
 
-import com.example.untitled.reader.main.domain.ReaderConnectionState
+import com.mtg.zimble.reader.main.domain.ReaderConnectionState
 
 import android.content.Context
 import android.os.Bundle

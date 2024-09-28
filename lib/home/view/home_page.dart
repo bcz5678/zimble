@@ -1,37 +1,41 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zimble/home/home.dart';
 
 
-import 'package:untitled/core/utils/auth_utils.dart';
+import 'package:zimble/core/utils/auth_utils.dart';
 
-import 'package:untitled/core/widgets/nav_drawer.dart';
+import 'package:zimble/core/widgets/nav_drawer.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:untitled/features/reader/presentation/pages/reader.dart';
-import 'package:untitled/features/tag_finder/presentation/pages/tag_info.dart';
-import 'package:untitled/features/tag_finder/presentation/pages/find_tags.dart';
-import 'package:untitled/features/inventory/presentation/pages/inventory.dart';
+
+import 'package:zimble/inventory/inventory.dart';
+import 'package:zimble/readers/readers.dart';
+import 'package:zimble/tag_finder/tag_finder.dart';
+import 'package:zimble/tag_info/tag_info.dart';
+import 'package:zimble/trigger/trigger.dart';
 
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   double? scrolledUnderElevation;
 
   bool shadowColor = false;
 
-
   final List<Widget> _tabs = [
     HomePage(),
     InventoryPage(),
-    ReaderPage(),
-    FindTagsPage(),
+    ReadersPage(),
+    TagFinderPage(),
     TagInfoPage(),
-    InventoryPage(),
+    TriggerPage(),
   ];
 
-  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +69,6 @@ class HomePage extends StatelessWidget {
           child: Center(
             child: Column(
               children: [
-
-
             ],
             ),
           )

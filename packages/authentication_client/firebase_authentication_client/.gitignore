@@ -8,7 +8,6 @@
 .buildlog/
 .history
 .svn/
-migrate_working_dir/
 
 # IntelliJ related
 *.iml
@@ -17,7 +16,7 @@ migrate_working_dir/
 .idea/
 
 # VSCode related
-.vscode/*
+.vscode/
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -29,7 +28,6 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-pubspec.lock
 
 # Web related
 lib/generated_plugin_registrant.dart
@@ -39,6 +37,3 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
-
-# Test related
-coverage

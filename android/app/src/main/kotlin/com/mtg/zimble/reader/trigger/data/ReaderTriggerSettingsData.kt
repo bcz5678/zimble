@@ -1,9 +1,9 @@
-package com.example.untitled.reader.trigger.data
+package com.mtg.zimble.reader.trigger.data
 
 import android.annotation.SuppressLint
 import android.util.Log
-import com.example.untitled.connection.bluetooth.domain.BluetoothDeviceEntity
-import com.example.untitled.reader.main.data.ReaderDevicePropertiesData
+import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceEntity
+import com.mtg.zimble.reader.main.data.ReaderDevicePropertiesData
 import com.uk.tsl.rfid.asciiprotocol.enumerations.TriState
 import com.uk.tsl.rfid.asciiprotocol.enumerations.SwitchAction
 

@@ -1,1 +1,1 @@
-export 'readers_page.dart';
+export 'inventory_page.dart';

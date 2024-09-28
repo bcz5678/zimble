@@ -2,9 +2,9 @@
 //----------------------------------------------------------------------------------------------
 // Copyright (c) 2013 Technology Solutions UK Ltd. All rights reserved.
 //----------------------------------------------------------------------------------------------
-package com.example.untitled.reader.trigger.data
+package com.mtg.zimble.reader.trigger.data
 
-import com.example.untitled.reader.trigger.domain.TriggerController
+import com.mtg.zimble.reader.trigger.domain.TriggerController
 
 import com.uk.tsl.rfid.asciiprotocol.commands.SwitchActionCommand
 import com.uk.tsl.rfid.asciiprotocol.AsciiCommander
