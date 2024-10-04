@@ -8,8 +8,17 @@ environment:
   flutter: ^3.22.0
 
 dependencies:
-  flutter:
-    sdk: flutter
+  equatable: ^2.0.3
+  rxdart: ^0.28.0
+
+  authentication_client:
+    path: ../authentication_client/authentication_client
+  deep_link_client:
+    path: ../deep_link_client/deep_link_client
+  package_info_client:
+    path: ../package_info_client
+  storage:
+    path: ../storage/storage
 
 dev_dependencies:
   flutter_test:

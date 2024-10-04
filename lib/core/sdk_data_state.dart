@@ -1,4 +1,6 @@
+/*
 abstract class SDKDataState<T> {
+
   final T ? data;
   final T ? error;
 
@@ -15,3 +17,4 @@ class SDKDataSuccess<T> extends SDKDataState<T> {
 class SDKDataFailed<T> extends SDKDataState<T> {
   const SDKDataFailed(error) : super(error: error);
 }
+*/

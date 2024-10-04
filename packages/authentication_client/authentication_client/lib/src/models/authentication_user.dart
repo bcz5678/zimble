@@ -13,6 +13,7 @@ class AuthenticationUser extends Equatable {
     this.name,
     this.photo,
     this.isNewUser = true,
+    this.placeholderData,
   });
 
   /// The current user's email address.
@@ -29,6 +30,9 @@ class AuthenticationUser extends Equatable {
 
   /// Whether the current user is a first time user.
   final bool isNewUser;
+
+  /// PlaceholderData for combining streams
+  final String? placeholderData;
 
   /// Whether the current user is anonymous.
   bool get isAnonymous => this == anonymous;
