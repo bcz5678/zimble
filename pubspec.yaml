@@ -63,7 +63,7 @@ dependencies:
   firebase_messaging: ^15.1.1
 
   #flow_builder for route generation
-  flow_builder: ^0.0.7
+  flow_builder: ^0.1.0
 
   #flutter SDK
   flutter:
