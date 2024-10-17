@@ -1,6 +1,6 @@
-package com.example.zimble.reader.trigger.domain
+package com.mtg.zimble.reader.trigger.domain
 
-import com.example.zimble.reader.trigger.data.ReaderTriggerSettingsData
+import com.mtg.zimble.reader.trigger.data.ReaderTriggerSettingsData
 
 interface TriggerController {
 

@@ -1,12 +1,12 @@
-package com.example.zimble.channels.domain
+package com.mtg.zimble.channels.domain
 
 
-import com.example.zimble.reader.main.data.AndroidReaderController
+import com.mtg.zimble.reader.main.data.AndroidReaderController
 
 
 import android.content.Context
 import android.util.Log
-import com.example.zimble.connection.bluetooth.domain.BluetoothDeviceScanningStreamHandler
+import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceScanningStreamHandler
 
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel

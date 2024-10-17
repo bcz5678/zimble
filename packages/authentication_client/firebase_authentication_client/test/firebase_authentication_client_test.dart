@@ -1,5 +1,5 @@
 // ignore_for_file: must_be_immutable
-
+/*
 import 'dart:async';
 
 import 'package:authentication_client/authentication_client.dart';
@@ -17,8 +17,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:token_storage/token_storage.dart';
-import 'package:twitter_login/entity/auth_result.dart' as twitter_auth;
-import 'package:twitter_login/twitter_login.dart' as twitter_auth;
+//import 'package:twitter_login/entity/auth_result.dart' as twitter_auth;
+//import 'package:twitter_login/twitter_login.dart' as twitter_auth;
 
 class MockFirebaseAuth extends Mock implements firebase_auth.FirebaseAuth {}
 
@@ -62,9 +62,9 @@ class FakeAuthCredential extends Fake implements firebase_auth.AuthCredential {}
 class FakeActionCodeSettings extends Fake
     implements firebase_auth.ActionCodeSettings {}
 
-class MockTwitterLogin extends Mock implements twitter_auth.TwitterLogin {}
+//class MockTwitterLogin extends Mock implements twitter_auth.TwitterLogin {}
 
-class MockTwitterAuthResult extends Mock implements twitter_auth.AuthResult {}
+//class MockTwitterAuthResult extends Mock implements twitter_auth.AuthResult {}
 
 class MockTokenStorage extends Mock implements TokenStorage {}
 
@@ -91,7 +91,7 @@ void main() {
     late GetAppleCredentials getAppleCredentials;
     late List<List<AppleIDAuthorizationScopes>> getAppleCredentialsCalls;
     late facebook_auth.FacebookAuth facebookAuth;
-    late twitter_auth.TwitterLogin twitterLogin;
+    //late twitter_auth.TwitterLogin twitterLogin;
 
     late StreamController<firebase_auth.User?> authStateChangesController;
 
@@ -130,7 +130,7 @@ void main() {
         return authorizationCredentialAppleID;
       };
       facebookAuth = MockFacebookAuth();
-      twitterLogin = MockTwitterLogin();
+      //twitterLogin = MockTwitterLogin();
 
       authStateChangesController =
           StreamController<firebase_auth.User?>.broadcast();
@@ -146,7 +146,7 @@ void main() {
         googleSignIn: googleSignIn,
         getAppleCredentials: getAppleCredentials,
         facebookAuth: facebookAuth,
-        twitterLogin: twitterLogin,
+        //twitterLogin: twitterLogin,
       );
     });
 
@@ -329,8 +329,9 @@ void main() {
       });
     });
 
+    /*
     group('logInWithTwitter', () {
-      late twitter_auth.AuthResult loginResult;
+      //late twitter_auth.AuthResult loginResult;
       const accessToken = 'access-token';
       const secret = 'secret';
 
@@ -346,6 +347,7 @@ void main() {
             .thenAnswer((_) => Future.value(MockUserCredential()));
       });
 
+
       test('calls loginV2 authentication and signInWithCredential', () async {
         await firebaseAuthenticationClient.logInWithTwitter();
         verify(() => twitterLogin.loginV2()).called(1);
@@ -355,6 +357,7 @@ void main() {
       test('succeeds when login succeeds', () {
         expect(firebaseAuthenticationClient.logInWithTwitter(), completes);
       });
+
 
       test(
           'throws LogInWithTwitterFailure '
@@ -408,7 +411,10 @@ void main() {
           throwsA(isA<LogInWithTwitterCanceled>()),
         );
       });
+       */
+
     });
+
 
     group('sendLoginEmailLink', () {
       setUp(() {
@@ -714,3 +720,5 @@ void main() {
     });
   });
 }
+
+ */

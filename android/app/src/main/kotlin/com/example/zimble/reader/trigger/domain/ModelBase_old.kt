@@ -1,6 +1,6 @@
 
 
-package com.example.zimble.reader.trigger.domain
+package com.mtg.zimble.reader.trigger.domain
 /*
 //import kotlinx.coroutines.GlobalScope
 //import kotlinx.coroutines.flow.StateFlow

@@ -21,12 +21,10 @@
     <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
     <uses-feature android:name="android.hardware.bluetooth-le" android:required="false" />
 
-
-
     <uses-sdk android:minSdkVersion="34" />
 
     <application
-        android:label="Zimble"
+        android:label="zimble"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -53,13 +51,16 @@
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
-                <!-- Registered callback URL for Twitter authentication -->
-                <data android:scheme="zimble" />
+                <!-- Registered callback URL for deep linking -->
+                <data
+                    android:host="@string/flavor_deep_link_domain"
+                    android:scheme="https"/>
             </intent-filter>
+
             <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" android:resource="@xml/device_filter" />
 
         </activity>
@@ -68,15 +69,6 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-
-        <!-- Facebook authentication meta-data -->
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-        <meta-data
-            android:name="com.facebook.sdk.ClientToken"
-            android:value="@string/facebook_client_token"/>
-        <!-- Google AdMob meta-data -->
 
         <!-- "AR Optional" app, contains non-AR features that can be used when
          "Google Play Services for AR" (ARCore) is not available. -->

@@ -1,4 +1,4 @@
-package com.example.zimble.connection.bluetooth.data
+package com.mtg.zimble.connection.bluetooth.data
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice

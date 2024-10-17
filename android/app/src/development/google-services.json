@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1079123583399",
+    "project_id": "zimble-dev-d158a",
+    "storage_bucket": "zimble-dev-d158a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079123583399:android:226b76041f581b991bd682",
+        "android_client_info": {
+          "package_name": "com.mtg.zimble.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1079123583399-1r72fgmk9ftmsmilj0cp3r5bgoui3l0o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqnQVy4biBWSrHhEW5ic_RN_yhNj8_P5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1079123583399-1r72fgmk9ftmsmilj0cp3r5bgoui3l0o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,4 @@
-import 'package:app_ui/app_ui.dart' show AppSpacing, Assets, showAppModal;
+import 'package:app_ui/app_ui.dart' show AppColors, AppSpacing, Assets, showAppModal;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zimble/app/app.dart';
@@ -29,7 +29,7 @@ class LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: Assets.icons.logInIcon.svg(),
+      icon: Assets.icons.logInIcon.svg(color: AppColors.lingoWhite),
       iconSize: 24,
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.lg,

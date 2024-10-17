@@ -52,7 +52,7 @@ class _HomeViewState extends State<HomeView> {
               }
             },
           ),
-          BlocListener<HomeBloc, HomeState>(
+          BlocListener<HomeCubit, HomeState>(
             listener: (context, state) {
               FocusManager.instance.primaryFocus?.unfocus();
             },
@@ -61,9 +61,10 @@ class _HomeViewState extends State<HomeView> {
         child: Scaffold(
           appBar: AppBar(
             title: const Text('Home'),
+            titleTextStyle: UITextStyle.headline1,
             scrolledUnderElevation: scrolledUnderElevation,
             centerTitle: true,
-            backgroundColor: Colors.green,
+            backgroundColor: AppColors.lingoDark,
             leading: Builder(
                 builder: (BuildContext context) {
                   return IconButton(
@@ -74,9 +75,7 @@ class _HomeViewState extends State<HomeView> {
                   );
                 }),
             actions: [
-              IconButton(onPressed: () => {}, icon: const Icon(Icons.search)),
-              IconButton(onPressed: () => {}, icon: const Icon(Icons.more_vert)),
-              UserProfileButton()
+                     const UserProfileButton()
             ],
           ),
           drawer: Drawer(

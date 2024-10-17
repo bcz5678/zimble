@@ -1,4 +1,4 @@
-package com.example.zimble.connection.bluetooth.domain
+package com.mtg.zimble.connection.bluetooth.domain
 
 //import android.content.Context
 import io.flutter.plugin.common.EventChannel

@@ -57,6 +57,7 @@ void main() {
     );
   });
 
+  /*
   test('exports LogInWithFacebookFailure', () {
     expect(
       () => LogInWithFacebookFailure('oops'),
@@ -70,13 +71,16 @@ void main() {
       returnsNormally,
     );
   });
+   */
 
+  /*
   test('exports LogInWithTwitterFailure', () {
     expect(
       () => LogInWithTwitterFailure('oops'),
       returnsNormally,
     );
   });
+   */
 
   test('exports LogInWithTwitterCanceled', () {
     expect(

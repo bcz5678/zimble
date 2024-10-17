@@ -1,19 +1,19 @@
-package com.example.zimble.channels.domain
+package com.mtg.zimble.channels.domain
 
 //Controllers
-import com.example.zimble.connection.bluetooth.data.AndroidBluetoothController
-import com.example.zimble.reader.main.data.AndroidReaderController
-import com.example.zimble.reader.trigger.data.AndroidTriggerController
+import com.mtg.zimble.connection.bluetooth.data.AndroidBluetoothController
+import com.mtg.zimble.reader.main.data.AndroidReaderController
+import com.mtg.zimble.reader.trigger.data.AndroidTriggerController
 
 //Entities
-import com.example.zimble.connection.bluetooth.data.JsonToBluetoothDeviceEntity
+import com.mtg.zimble.connection.bluetooth.data.JsonToBluetoothDeviceEntity
 
 import android.content.Context
 import android.util.Log
-import com.example.zimble.channels.data.MethodMapData
-import com.example.zimble.connection.bluetooth.domain.BluetoothConnectionHandler
-import com.example.zimble.connection.bluetooth.domain.BluetoothDeviceEntity
-import com.example.zimble.connection.bluetooth.domain.BluetoothDeviceScanningStreamHandler
+import com.mtg.zimble.channels.data.MethodMapData
+import com.mtg.zimble.connection.bluetooth.domain.BluetoothConnectionHandler
+import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceEntity
+import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceScanningStreamHandler
 
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel

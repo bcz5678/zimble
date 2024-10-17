@@ -1,9 +1,9 @@
-package com.example.zimble
+package com.mtg.zimble
 
-import com.example.zimble.channels.domain.BluetoothDeviceChannels
-import com.example.zimble.channels.domain.ReaderMainChannels
+import com.mtg.zimble.channels.domain.BluetoothDeviceChannels
+import com.mtg.zimble.channels.domain.ReaderMainChannels
 
-import com.example.zimble.reader.main.domain.ReaderConnectionState
+import com.mtg.zimble.reader.main.domain.ReaderConnectionState
 
 import android.content.Context
 import android.os.Bundle
@@ -28,6 +28,7 @@ class MainActivity: FlutterActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "App started")
     }
 
     // Initial Flutter entry point
@@ -66,7 +67,6 @@ class MainActivity: FlutterActivity() {
         Log.d(TAG, "ReaderList - ${ReaderManager.sharedInstance().getReaderList().list()}")
 
         ReaderConnectionState()
-
 
         val rfidDeviceManager = DeviceProperties()
         Log.d(TAG, "rfidDeviceManager - ${rfidDeviceManager}")

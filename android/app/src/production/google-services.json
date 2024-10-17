@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "382208031192",
+    "project_id": "mtg-rfid-424319",
+    "storage_bucket": "mtg-rfid-424319.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:382208031192:android:683e4780e7d54c3997daad",
+        "android_client_info": {
+          "package_name": "com.mtg.zimble"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "382208031192-1ip0959ac487r2l37sneqge74882f5cm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxfnBnJNmM5Rg3xMvuoblScGyMEkLnnoM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "382208031192-1ip0959ac487r2l37sneqge74882f5cm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,9 +1,9 @@
-package com.example.zimble.reader.main.domain
+package com.mtg.zimble.reader.main.domain
 
 import android.content.Context
-import com.example.zimble.reader.main.data.ReaderDevicePropertiesData
+import com.mtg.zimble.reader.main.data.ReaderDevicePropertiesData
 import io.flutter.plugin.common.BinaryMessenger
-import com.example.zimble.connection.bluetooth.domain.BluetoothDeviceEntity
+import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceEntity
 
 
 interface ReaderController {

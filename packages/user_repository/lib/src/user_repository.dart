@@ -145,6 +145,7 @@ class UserRepository {
     }
   }
 
+  /*
   /// Starts the Sign In with Twitter Flow.
   ///
   /// Throws a [LogInWithTwitterCanceled] if the flow is canceled by the user.
@@ -161,6 +162,9 @@ class UserRepository {
     }
   }
 
+   */
+
+  /*
   /// Starts the Sign In with Facebook Flow.
   ///
   /// Throws a [LogInWithFacebookCanceled] if the flow is canceled by the user.
@@ -176,6 +180,7 @@ class UserRepository {
       Error.throwWithStackTrace(LogInWithFacebookFailure(error), stackTrace);
     }
   }
+   */
 
   /// Sends an authentication link to the provided [email].
   ///

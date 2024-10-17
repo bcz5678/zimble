@@ -61,6 +61,7 @@ class LogInWithGoogleCanceled extends AuthenticationException {
   const LogInWithGoogleCanceled(super.error);
 }
 
+/*
 /// {@template log_in_with_facebook_failure}
 /// Thrown during the sign in with Facebook process if a failure occurs.
 /// {@endtemplate}
@@ -76,7 +77,9 @@ class LogInWithFacebookCanceled extends AuthenticationException {
   /// {@macro log_in_with_facebook_canceled}
   const LogInWithFacebookCanceled(super.error);
 }
+ */
 
+/*
 /// {@template log_in_with_twitter_failure}
 /// Thrown during the sign in with Twitter process if a failure occurs.
 /// {@endtemplate}
@@ -84,6 +87,7 @@ class LogInWithTwitterFailure extends AuthenticationException {
   /// {@macro log_in_with_twitter_failure}
   const LogInWithTwitterFailure(super.error);
 }
+ */
 
 /// {@template log_in_with_twitter_canceled}
 /// Thrown during the sign in with Twitter process if it's canceled.
@@ -127,15 +131,21 @@ abstract class AuthenticationClient {
   /// Throws a [LogInWithGoogleFailure] if an exception occurs.
   Future<void> logInWithGoogle();
 
+/*
   /// Starts the Sign In with Facebook Flow.
   ///
   /// Throws a [LogInWithFacebookFailure] if an exception occurs.
   Future<void> logInWithFacebook();
+ */
 
+
+  /*
   /// Starts the Sign In with Twitter Flow.
   ///
   /// Throws a [LogInWithTwitterFailure] if an exception occurs.
   Future<void> logInWithTwitter();
+   */
+
 
   /// Sends an authentication link to the provided [email].
   ///

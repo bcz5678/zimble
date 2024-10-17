@@ -1,7 +1,7 @@
-package com.example.zimble.connection.bluetooth.domain
+package com.mtg.zimble.connection.bluetooth.domain
 
-import com.example.zimble.reader.main.data.ReaderDevicePropertiesData
-import com.example.zimble.reader.trigger.data.ReaderTriggerSettingsData
+import com.mtg.zimble.reader.main.data.ReaderDevicePropertiesData
+import com.mtg.zimble.reader.trigger.data.ReaderTriggerSettingsData
 
 class BluetoothDeviceEntity(
     var name: String?,

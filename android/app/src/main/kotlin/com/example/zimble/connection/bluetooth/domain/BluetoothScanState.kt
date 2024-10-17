@@ -1,4 +1,4 @@
-package com.example.zimble.connection.bluetooth.domain
+package com.mtg.zimble.connection.bluetooth.domain
 
 //import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.StateFlow

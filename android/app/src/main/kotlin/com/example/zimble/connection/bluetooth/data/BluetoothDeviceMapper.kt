@@ -1,11 +1,11 @@
-package com.example.zimble.connection.bluetooth.data
+package com.mtg.zimble.connection.bluetooth.data
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.util.Log
-import com.example.zimble.connection.bluetooth.domain.BluetoothDeviceEntity
-import com.example.zimble.reader.main.data.ReaderDevicePropertiesData
-import com.example.zimble.reader.trigger.data.ReaderTriggerSettingsData
+import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceEntity
+import com.mtg.zimble.reader.main.data.ReaderDevicePropertiesData
+import com.mtg.zimble.reader.trigger.data.ReaderTriggerSettingsData
 
 @SuppressLint("MissingPermission")
 fun BluetoothDevice.toBluetoothDeviceEntity(): BluetoothDeviceEntity {

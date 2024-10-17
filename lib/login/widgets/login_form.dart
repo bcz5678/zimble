@@ -64,10 +64,10 @@ class _LoginContent extends StatelessWidget {
                 const SizedBox(height: AppSpacing.lg),
                 _AppleLoginButton(),
               ],
-              const SizedBox(height: AppSpacing.lg),
-              _FacebookLoginButton(),
-              const SizedBox(height: AppSpacing.lg),
-              _TwitterLoginButton(),
+              //const SizedBox(height: AppSpacing.lg),
+              //_FacebookLoginButton(),
+              //const SizedBox(height: AppSpacing.lg),
+              //_TwitterLoginButton(),
               const SizedBox(height: AppSpacing.lg),
               _ContinueWithEmailLoginButton(),
             ],
@@ -160,6 +160,7 @@ class _GoogleLoginButton extends StatelessWidget {
   }
 }
 
+/*
 class _FacebookLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -177,7 +178,9 @@ class _FacebookLoginButton extends StatelessWidget {
     );
   }
 }
+ */
 
+/*
 class _TwitterLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -195,6 +198,7 @@ class _TwitterLoginButton extends StatelessWidget {
     );
   }
 }
+*/
 
 class _ContinueWithEmailLoginButton extends StatelessWidget {
   @override

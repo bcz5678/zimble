@@ -1,4 +1,4 @@
-package com.example.zimble.reader.trigger.domain
+package com.mtg.zimble.reader.trigger.domain
 
 class ModelException : Exception {
     constructor()

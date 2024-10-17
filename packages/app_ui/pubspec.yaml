@@ -25,26 +25,22 @@ flutter:
     - assets/icons/
     - assets/images/
   fonts:
-    - family: NotoSerif
+    - family: Manrope
       fonts:
-        - asset: assets/fonts/NotoSerif-Bold.ttf
+        - asset: assets/fonts/Manrope-ExtraBold.ttf
+          weight: 900
+        - asset: assets/fonts/Manrope-Bold.ttf
           weight: 700
-        - asset: assets/fonts/NotoSerif-SemiBold.ttf
+        - asset: assets/fonts/Manrope-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/NotoSerif-Medium.ttf
+        - asset: assets/fonts/Manrope-Medium.ttf
           weight: 500
-        - asset: assets/fonts/NotoSerif-Regular.ttf
+        - asset: assets/fonts/Manrope-Regular.ttf
           weight: 400
-    - family: NotoSansDisplay
-      fonts:
-        - asset: assets/fonts/NotoSansDisplay-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/NotoSansDisplay-SemiBold.ttf
-          weight: 600
-    - family: Montserrat
-      fonts:
-        - asset: assets/fonts/Montserrat-Medium.ttf
-          weight: 500
+        - asset: assets/fonts/Manrope-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Manrope-ExtraLight.ttf
+          weight: 100
 
 flutter_gen:
   assets:

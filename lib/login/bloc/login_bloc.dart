@@ -19,8 +19,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<SendEmailLinkSubmitted>(_onSendEmailLinkSubmitted);
     on<LoginGoogleSubmitted>(_onGoogleSubmitted);
     on<LoginAppleSubmitted>(_onAppleSubmitted);
-    on<LoginTwitterSubmitted>(_onTwitterSubmitted);
-    on<LoginFacebookSubmitted>(_onFacebookSubmitted);
+    //on<LoginTwitterSubmitted>(_onTwitterSubmitted);
+    //on<LoginFacebookSubmitted>(_onFacebookSubmitted);
   }
 
   final UserRepository _userRepository;
@@ -82,6 +82,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
+/*
   Future<void> _onTwitterSubmitted(
     LoginTwitterSubmitted event,
     Emitter<LoginState> emit,
@@ -97,7 +98,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       addError(error, stackTrace);
     }
   }
+ */
 
+/*
   Future<void> _onFacebookSubmitted(
     LoginFacebookSubmitted event,
     Emitter<LoginState> emit,
@@ -113,4 +116,5 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       addError(error, stackTrace);
     }
   }
+ */
 }
