@@ -24,7 +24,7 @@
     <uses-sdk android:minSdkVersion="34" />
 
     <application
-        android:label="zimble"
+        android:label="${appName}"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

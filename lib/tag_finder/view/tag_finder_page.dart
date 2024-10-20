@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:zimble/tag_finder/tag_finder.dart';
 
 
 class TagFinderPage extends StatelessWidget {

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:zimble/inventory/inventory.dart';
 
 
 class InventoryPage extends StatelessWidget {

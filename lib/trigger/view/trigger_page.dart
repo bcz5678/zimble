@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:zimble/trigger/trigger.dart';
 
 
 class TriggerPage extends StatelessWidget {

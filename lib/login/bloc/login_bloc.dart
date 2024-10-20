@@ -4,6 +4,7 @@ import 'package:analytics_repository/analytics_repository.dart';
 import 'package:authentication_client/authentication_client.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:form_inputs/form_inputs.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -56,6 +57,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     LoginGoogleSubmitted event,
     Emitter<LoginState> emit,
   ) async {
+    if (kDebugMode) {
+      print("in _onGoogleSobmitted");
+    }
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
       await _userRepository.logInWithGoogle();
