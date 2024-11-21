@@ -72,6 +72,8 @@ class _UserProfileViewState extends State<UserProfileView>
     //  (bloc) => bloc.state.isUserSubscribed,
     //);
 
+    double? scrolledUnderElevation;
+
     final l10n = context.l10n;
 
     return BlocListener<UserProfileBloc, UserProfileState>(
@@ -92,6 +94,9 @@ class _UserProfileViewState extends State<UserProfileView>
         child: Scaffold(
           appBar: AppBar(
             leading: const AppBackButton(),
+            scrolledUnderElevation: scrolledUnderElevation,
+            centerTitle: true,
+            backgroundColor: AppColors.lingoDark,
           ),
           body: CustomScrollView(
             slivers: [
@@ -110,11 +115,11 @@ class _UserProfileViewState extends State<UserProfileView>
                       const UserProfileLogoutButton(),
                     ],
                     const SizedBox(height: AppSpacing.lg),
-                    const _UserProfileDivider(),
+                    //const _UserProfileDivider(),
+                    /*
                     UserProfileSubtitle(
                       subtitle: l10n.userProfileSubscriptionDetailsSubtitle,
                     ),
-                    /*
                     if (isUserSubscribed)
                       UserProfileItem(
                         key: const Key('userProfilePage_subscriptionItem'),

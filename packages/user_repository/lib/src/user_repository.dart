@@ -219,6 +219,25 @@ class UserRepository {
     }
   }
 
+  /// Signs in with the provided [email] and [emailLink].
+  ///
+  /// Throws a [LogInWithEmailLinkFailure] if an exception occurs.
+  Future<void> logInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      await _authenticationClient.logInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on LogInWithEmailAndPasswordFailure {
+      rethrow;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(LogInWithEmailAndPasswordFailure(error), stackTrace);
+    }
+  }
+
   /// Signs out the current user which will emit
   /// [User.anonymous] from the [user] Stream.
   ///

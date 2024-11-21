@@ -37,6 +37,14 @@ class LogInWithEmailLinkFailure extends AuthenticationException {
   const LogInWithEmailLinkFailure(super.error);
 }
 
+/// {@template log_in_with_email_and_password_failure}
+/// Thrown during the sign in with email and passwordprocess if a failure occurs.
+/// {@endtemplate}
+class LogInWithEmailAndPasswordFailure extends AuthenticationException {
+  /// {@macro log_in_with_email_link_failure}
+  const LogInWithEmailAndPasswordFailure(super.error);
+}
+
 /// {@template log_in_with_apple_failure}
 /// Thrown during the sign in with apple process if a failure occurs.
 /// {@endtemplate}
@@ -171,6 +179,14 @@ abstract class AuthenticationClient {
   Future<void> logInWithEmailLink({
     required String email,
     required String emailLink,
+  });
+
+  /// Signs in with the provided email and password.
+  ///
+  /// Throws a [LogInWithEmailLinkFailure] if an exception occurs.
+  Future<void> logInWithEmailAndPassword({
+    required String email,
+    required String password,
   });
 
   /// Signs out the current user which will emit

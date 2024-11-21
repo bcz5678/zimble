@@ -14,6 +14,9 @@ class AppLogo extends StatelessWidget {
   /// The light app logo.
   AppLogo.light({Key? key}) : this._(key: key, logo: Assets.images.logoLight);
 
+  /// the square app logo
+  AppLogo.square({Key? key}) : this._(key: key, logo: Assets.images.zimbleLogoSquare);
+
   /// The logo to be displayed.
   final AssetGenImage _logo;
 
@@ -21,8 +24,6 @@ class AppLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return _logo.image(
       fit: BoxFit.contain,
-      width: 172,
-      height: 24,
     );
   }
 }

@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "1079123583399",
     "project_id": "zimble-dev-d158a",
-    "storage_bucket": "zimble-dev-d158a.appspot.com"
+    "storage_bucket": "zimble-dev-d158a.firebasestorage.app"
   },
   "client": [
     {
@@ -13,6 +13,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "1079123583399-fugoa972h5tbcamk7iedjgn3idv17iub.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mtg.zimble.dev",
+            "certificate_hash": "903afeb7a1142321f06655ad586b3f84e6101b2b"
+          }
+        },
         {
           "client_id": "1079123583399-1r72fgmk9ftmsmilj0cp3r5bgoui3l0o.apps.googleusercontent.com",
           "client_type": 3

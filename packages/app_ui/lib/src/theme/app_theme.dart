@@ -141,14 +141,14 @@ class AppTheme {
       hoverColor: AppColors.inputHover,
       focusColor: AppColors.inputFocused,
       fillColor: AppColors.inputEnabled,
-      enabledBorder: _textFieldBorder,
-      focusedBorder: _textFieldBorder,
-      disabledBorder: _textFieldBorder,
+      border: _textFieldBorder,
+      enabledBorder: _enabledBorder,
+      focusedBorder: _focusedBorder,
+      disabledBorder: _disabledBorder,
       hintStyle: UITextStyle.bodyText1.copyWith(
         color: AppColors.mediumEmphasisSurface,
       ),
       contentPadding: const EdgeInsets.all(AppSpacing.lg),
-      border: const UnderlineInputBorder(),
       filled: true,
       isDense: true,
       errorStyle: UITextStyle.caption,
@@ -259,13 +259,33 @@ class AppTheme {
     );
   }
 }
+InputBorder get _textFieldBorder => const OutlineInputBorder(
+  borderSide: BorderSide(
+    width: 1.5,
+    color: AppColors.enabledBorder,
+  ),
+);
 
-InputBorder get _textFieldBorder => const UnderlineInputBorder(
-      borderSide: BorderSide(
-        width: 1.5,
-        color: AppColors.darkAqua,
-      ),
-    );
+InputBorder get _enabledBorder => const OutlineInputBorder(
+  borderSide: BorderSide(
+    width: 1.5,
+    color: AppColors.enabledBorder,
+  ),
+);
+
+InputBorder get _focusedBorder => const OutlineInputBorder(
+  borderSide: BorderSide(
+    width: 1.5,
+    color: AppColors.focusedBorder,
+  ),
+);
+
+InputBorder get _disabledBorder => const OutlineInputBorder(
+  borderSide: BorderSide(
+    width: 1.5,
+    color: AppColors.disabledBorder,
+  ),
+);
 
 BottomNavigationBarThemeData get _bottomAppBarTheme {
   return BottomNavigationBarThemeData(

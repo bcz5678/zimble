@@ -17,7 +17,6 @@ abstract class AppColors {
   /// LingoOrange
   static const Color lingoOrange = Color(0xFFFB6A18);
 
-
   /// Black
   static const Color black = Color(0xFF000000);
 
@@ -32,6 +31,12 @@ abstract class AppColors {
 
   /// The grey primary color and swatch.
   static const MaterialColor grey = Colors.grey;
+
+  /// Alert Color Background
+  static const Color redAlertBG = Color(0xFFE57373);
+
+  /// Alert Color Font Color
+  static const Color redAlertFont = Color(0xFFFFCCCC);
 
   /// The liver color.
   static const Color liver = Color(0xFF4D4D4D);
@@ -77,6 +82,15 @@ abstract class AppColors {
 
   /// The input enabled color.
   static const Color inputEnabled = Color(0xFFEDEDED);
+
+  /// The input enabled border Color
+  static const Color enabledBorder = Colors.black54;
+
+  /// The input focused border Color
+  static const Color focusedBorder = Color(0xFFFB6A18);
+
+  /// The input disabled border Color
+  static const Color disabledBorder = Colors.grey;
 
   /// The pastel grey color.
   static const Color pastelGrey = Color(0xFFCCCCCC);

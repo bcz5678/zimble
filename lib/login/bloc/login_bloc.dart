@@ -18,8 +18,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         super(const LoginState()) {
     on<LoginEmailChanged>(_onEmailChanged);
     on<SendEmailLinkSubmitted>(_onSendEmailLinkSubmitted);
+    on<LoginEmailAndPasswordSubmitted>(_onEmailAndPasswordSubmitted);
     on<LoginGoogleSubmitted>(_onGoogleSubmitted);
     on<LoginAppleSubmitted>(_onAppleSubmitted);
+    on<LoginPasswordChanged>(_onPasswordChanged);
     //on<LoginTwitterSubmitted>(_onTwitterSubmitted);
     //on<LoginFacebookSubmitted>(_onFacebookSubmitted);
   }
@@ -31,16 +33,28 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(
       state.copyWith(
         email: email,
-        valid: Formz.validate([email]),
+        emailValid: Formz.validate([email]),
       ),
     );
   }
+  void _onPasswordChanged(LoginPasswordChanged event, Emitter<LoginState> emit) {
+    final password = Password.dirty(event.password);
+    emit(
+      state.copyWith(
+        password: password,
+        passwordValid: Formz.validate([password]),
+      ),
+    );
+  }
+
 
   Future<void> _onSendEmailLinkSubmitted(
     SendEmailLinkSubmitted event,
     Emitter<LoginState> emit,
   ) async {
-    if (!state.valid) return;
+    emit(state.copyWith(errorMessage: ''));
+
+    if (!state.emailValid) return;
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
       await _userRepository.sendLoginEmailLink(
@@ -48,7 +62,31 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       );
       emit(state.copyWith(status: FormzSubmissionStatus.success));
     } catch (error, stackTrace) {
-      emit(state.copyWith(status: FormzSubmissionStatus.failure));
+      emit(state.copyWith(status: FormzSubmissionStatus.failure, errorMessage: error.toString()));
+      addError(error, stackTrace);
+    }
+  }
+
+  Future<void> _onEmailAndPasswordSubmitted(
+      LoginEmailAndPasswordSubmitted event,
+      Emitter<LoginState> emit,
+      ) async {
+    emit(state.copyWith(errorMessage: ''));
+
+    if (kDebugMode) {
+      print("in _onEmailAndPasswordSubmitted");
+    }
+    if (!state.emailValid || !state.passwordValid) return;
+    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+    try {
+      await _userRepository.logInWithEmailAndPassword(
+        email: state.email.value,
+        password: state.password.value,
+      );
+      emit(state.copyWith(status: FormzSubmissionStatus.success));
+    } catch (error, stackTrace) {
+      print(error);
+      emit(state.copyWith(status: FormzSubmissionStatus.failure, errorMessage: error.toString()));
       addError(error, stackTrace);
     }
   }
@@ -57,8 +95,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     LoginGoogleSubmitted event,
     Emitter<LoginState> emit,
   ) async {
+    emit(state.copyWith(errorMessage: ''));
+
     if (kDebugMode) {
-      print("in _onGoogleSobmitted");
+      print("in _onGoogleSubmitted");
     }
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
@@ -67,7 +107,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } on LogInWithGoogleCanceled {
       emit(state.copyWith(status: FormzSubmissionStatus.canceled));
     } catch (error, stackTrace) {
-      emit(state.copyWith(status: FormzSubmissionStatus.failure));
+      emit(state.copyWith(status: FormzSubmissionStatus.failure, errorMessage: error.toString()));
       addError(error, stackTrace);
     }
   }
@@ -76,12 +116,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     LoginAppleSubmitted event,
     Emitter<LoginState> emit,
   ) async {
+    emit(state.copyWith(errorMessage: ''));
+
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
       await _userRepository.logInWithApple();
       emit(state.copyWith(status: FormzSubmissionStatus.success));
     } catch (error, stackTrace) {
-      emit(state.copyWith(status: FormzSubmissionStatus.failure));
+      emit(state.copyWith(status: FormzSubmissionStatus.failure, errorMessage: error.toString()));
       addError(error, stackTrace);
     }
   }

@@ -1,11 +1,11 @@
 {
-    "appName": "Flutter News Example",
+    "appName": "Zimble",
     "@appName": {
         "description": "The name of this application",
         "type": "String",
         "placeholders": {}
     },
-    "authenticationFailure": "Authentication failure",
+    "authenticationFailure": "The username or password you entered is incorrect",
     "@authenticationFailure": {
         "description": "Message shown when there is an error at login",
         "type": "String",
@@ -23,12 +23,6 @@
         "type": "String",
         "placeholders": {}
     },
-    "adLoadFailure": "Failed to load this ad.",
-    "@adLoadFailure": {
-        "description": "Text displayed when loading an ad fails",
-        "type": "String",
-        "placeholders": {}
-    },
     "loginWelcomeText": "Welcome to\nFlutter News Example",
     "@loginWelcomeText": {
         "description": "Greeting shown on the login page.",
@@ -41,15 +35,33 @@
         "type": "String",
         "placeholders": {}
     },
-    "loginWithEmailHeaderText": "Please enter your\nemail address.",
+    "loginWithEmailHeaderText": "Hello Again!",
     "@loginWithEmailHeaderText": {
         "description": "Header title shown on Login with email form",
         "type": "String",
         "placeholders": {}
     },
-    "loginWithEmailTextFieldHint": "Your email address",
-    "@loginWithEmailTextFieldHint": {
+    "loginWithEmailHeaderSubtitleText": "Log into your account",
+    "@loginWithEmailHeaderSubtitleText": {
+        "description": "Header Subtitle shown on Login with email form",
+        "type": "String",
+        "placeholders": {}
+    },
+    "loginWithEmailEmailTextFieldHint": "Enter your email address",
+    "@loginWithEmailEmailTextFieldHint": {
         "description": "Hint text shown on the email text field on Login with email form",
+        "type": "String",
+        "placeholders": {}
+    },
+    "loginWithEmailPasswordTextFieldHint": "Enter your password",
+    "@loginWithEmailPasswordTextFieldHint": {
+        "description": "Hint text shown on the email text field on Login with email form",
+        "type": "String",
+        "placeholders": {}
+    },
+    "loginWithEmailForgotPasswordText": "Forgot your password?",
+    "@loginWithEmailForgotPasswordText": {
+        "description": "Text to Forgotten Password link",
         "type": "String",
         "placeholders": {}
     },

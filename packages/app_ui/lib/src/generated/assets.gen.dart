@@ -123,6 +123,10 @@ class $AssetsImagesGen {
   AssetGenImage get logoLight =>
       const AssetGenImage('assets/images/logo_light.png');
 
+  /// File path: assets/images/logo_light.png
+  AssetGenImage get zimbleLogoSquare =>
+      const AssetGenImage('assets/images/zimble_logo_square.png');
+
   /// List of all assets
   List<dynamic> get values => [
         continueWithApple,

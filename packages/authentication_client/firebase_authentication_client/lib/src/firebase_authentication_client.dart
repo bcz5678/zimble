@@ -264,6 +264,26 @@ class FirebaseAuthenticationClient implements AuthenticationClient {
     }
   }
 
+  /// Signs in with the email and Password
+  ///
+  /// Throws a [LogInWithEmailLinkFailure] if an exception occurs.
+  @override
+  Future<void> logInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(LogInWithEmailAndPasswordFailure(error), stackTrace);
+    }
+  }
+
+
+
   /// Signs out the current user which will emit
   /// [AuthenticationUser.anonymous] from the [user] Stream.
   ///

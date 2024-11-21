@@ -19,6 +19,7 @@ class LoginWithEmailPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           leading: const AppBackButton(),
+          backgroundColor: AppTheme().themeData.appBarTheme.backgroundColor,
           actions: [
             IconButton(
               key: const Key('loginWithEmailPage_closeIcon'),

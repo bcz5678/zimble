@@ -32,6 +32,7 @@ class AppButton extends StatelessWidget {
         _minimumSize = minimumSize ?? _defaultMinimumSize,
         _padding = padding ?? _defaultPadding;
 
+
   /// Filled black button.
   const AppButton.black({
     required Widget child,
@@ -48,6 +49,25 @@ class AppButton extends StatelessWidget {
           elevation: elevation,
           textStyle: textStyle,
         );
+
+  /// Filled black button.
+  const AppButton.lingoDark({
+    required Widget child,
+    Key? key,
+    VoidCallback? onPressed,
+    double? elevation,
+    TextStyle? textStyle,
+    BorderSide? borderSide,
+  }) : this._(
+    key: key,
+    onPressed: onPressed,
+    buttonColor: AppColors.lingoDark,
+    child: child,
+    foregroundColor: AppColors.white,
+    elevation: elevation,
+    textStyle: textStyle,
+    borderSide: borderSide,
+  );
 
   /// Filled blue dress button.
   const AppButton.blueDress({
@@ -402,7 +422,7 @@ class AppButton extends StatelessWidget {
         side: WidgetStateProperty.all(_borderSide),
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
+            borderRadius: BorderRadius.circular(5),
           ),
         ),
       ),

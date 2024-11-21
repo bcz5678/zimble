@@ -24,6 +24,8 @@ class AppTextField extends StatelessWidget {
     this.onChanged,
     this.onSubmitted,
     this.onTap,
+    this.padding,
+    this.obscureText = false,
   });
 
   /// A value to initialize the field to.
@@ -75,6 +77,12 @@ class AppTextField extends StatelessWidget {
   /// Called when the text field has been tapped.
   final VoidCallback? onTap;
 
+  /// Optional padding set
+  final Padding? padding;
+
+  /// Boolean to obscure/hide password text
+  final bool obscureText;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -91,10 +99,12 @@ class AppTextField extends StatelessWidget {
             keyboardType: keyboardType,
             autocorrect: autocorrect,
             readOnly: readOnly,
+            obscureText: obscureText,
             autofillHints: autoFillHints,
-            cursorColor: AppColors.darkAqua,
+
+            cursorColor: AppColors.lingoBlack,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w300,
                 ),
             onFieldSubmitted: onSubmitted,
             decoration: InputDecoration(
@@ -102,6 +112,10 @@ class AppTextField extends StatelessWidget {
               errorText: errorText,
               prefixIcon: prefix,
               suffixIcon: suffix,
+              border: AppTheme().themeData.inputDecorationTheme.border,
+              enabledBorder: AppTheme().themeData.inputDecorationTheme.enabledBorder,
+              focusedBorder: AppTheme().themeData.inputDecorationTheme.focusedBorder,
+              disabledBorder: AppTheme().themeData.inputDecorationTheme.disabledBorder,
               suffixIconConstraints: const BoxConstraints.tightFor(
                 width: 32,
                 height: 32,
