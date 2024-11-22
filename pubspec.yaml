@@ -82,6 +82,10 @@ dependencies:
   #Font_awesome support
   font_awesome_flutter: ^10.1.0
 
+  #GoROuter for navigation routes
+  go_router: ^14.6.1
+  url_strategy:
+
   #HydratedBloc for persistent local state management across app start/close
   hydrated_bloc: ^9.0.0
 

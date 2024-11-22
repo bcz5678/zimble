@@ -10,8 +10,6 @@ import 'package:zimble/l10n/l10n.dart';
 import 'package:zimble/login/login.dart';
 
 
-
-
 class App extends StatelessWidget {
   const App({
     required UserRepository userRepository,
