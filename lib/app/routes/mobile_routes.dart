@@ -21,56 +21,56 @@ class MobileRouter {
   }) : _appBloc = appBloc;
 
   final AppBloc _appBloc;
+  final AppRouter _appRouter = AppRouter();
 
   GoRouter get router =>
     GoRouter(
-      initialLocation: AppRouter.homePath,
+      initialLocation: _appRouter.home.path,
       routes: [
         GoRoute(
-          path: AppRouter.homePath,
-          name: AppRouteNames.home,
+          path: _appRouter.home.path,
+          name: _appRouter.home.name,
           builder: (context, state) => const HomePage(),
         ),
         GoRoute(
-          path: AppRouter.loginPath,
-          name: AppRouteNames.login,
+          path: _appRouter.login.path,
+          name: _appRouter.login.name,
           builder: (context, state) => const LoginPage(),
         ),
         GoRoute(
-          path: AppRouter.loginWithEmailPath,
-          name: AppRouteNames.loginWithEmail,
+          path: _appRouter.loginWithEmail.path,
+          name: _appRouter.loginWithEmail.name,
           builder: (context, state) => const LoginWithEmailPage(),
         ),
         GoRoute(
-        path: AppRouter.inventoryPath,
-        name: AppRouteNames.inventory,
+        path: _appRouter.inventory.path,
+        name: _appRouter.inventory.name,
         builder: (context, state) => const InventoryPage(),
         ),
         GoRoute(
-          path: AppRouter.readersPath,
-          name: AppRouteNames.readers,
+          path: _appRouter.readers.path,
+          name: _appRouter.readers.name,
           builder: (context, state) => const ReadersPage(),
         ),
         GoRoute(
-          path: AppRouter.tagFinderPath,
-          name: AppRouteNames.tagFinder,
+          path: _appRouter.tagFinder.path,
+          name: _appRouter.tagFinder.name,
           builder: (context, state) => const TagFinderPage(),
         ),
         GoRoute(
-          path: AppRouter.tagInfoPath,
-          name: AppRouteNames.tagInfo,
+          path: _appRouter.tagInfo.path,
+          name: _appRouter.tagInfo.name,
           builder: (context, state) => const TagInfoPage(),
         ),
         GoRoute(
-          path: AppRouter.triggerPath,
-          name: AppRouteNames.trigger,
+          path: _appRouter.trigger.path,
+          name: _appRouter.trigger.name,
           builder: (context, state) => const TriggerPage(),
         ),
 
       ],
 
       errorBuilder: (context, state) => ErrorPage(error: state.error),
-
 
       /// Changes on the listenable will cause the router to refresh its route (AUTH)
       refreshListenable: AuthenticatedUserListener(stream: _appBloc.stream),
@@ -82,12 +82,12 @@ class MobileRouter {
 
         // if the user is not logged in, they need to login
         final AppStatus authenticationStatus = context.read<AppBloc>().state.status;
-        final String loginLocation = AppRouter.loginWithEmailPath;
+        final String loginLocation = _appRouter.loginWithEmail.path;
         final User user =  context.read<AppBloc>().state.user;
 
         // Grab the location the user is trying to reach,
         // to use as a query parameter on redirect
-        final String homeLocation = AppRouter.homePath;
+        final String homeLocation = _appRouter.home.path;
 
         // Check if the current location  is the Home page, then set it to ''
         // or set fromLocation as the non-home page they were trying to access
@@ -122,16 +122,28 @@ class MobileRouter {
         if (authenticationStatus == AppStatus.unauthenticated) {
           //Authentication Status: not logged in
 
+          if (kDebugMode) {
+            print('mobile_routes -> redirection -> not authenticated');
+          }
+
           if (state.matchedLocation == loginLocation) {
             // User already on Login Page, no need to redirect
+
+            if (kDebugMode) {
+              print('mobile_routes -> redirection -> not authenticated  && loginLocation');
+            }
+
             return null;
 
           } else {
 
+            if (kDebugMode) {
+              print('mobile_routes -> redirection -> not authenticated  && fromLocation');
+            }
             // Redirect User to the Login Page, passing the current URL location
             // as a param in state to redirect after successful login
             return state.namedLocation(
-              AppRouteNames.loginWithEmail,
+              _appRouter.loginWithEmail.name,
               queryParameters: {
                 if (fromLocation.isNotEmpty) 'from': fromLocation
               },
@@ -145,6 +157,9 @@ class MobileRouter {
           // User just logged in (on login Page),
           // DOES THIS CODE NEED TO MOVE TO AUTH BLOC?
           if (state.matchedLocation == loginLocation) {
+            if (kDebugMode) {
+              print('mobile_routes -> redirection -> authenticated & loginLocation');
+            }
 
             // Firing Analytics event for tracking
             context.read<analytics.AnalyticsBloc>().add(
@@ -156,17 +171,23 @@ class MobileRouter {
             );
           }
 
+          if (kDebugMode) {
+            print('mobile_routes -> redirection -> authenticated & fromLocation');
+            print('{state.uri.queryParameters["from"] -> ${state.uri.queryParameters['from']}');
+          }
+
           //Redirect them to previous destination
           // (or home if they weren't going anywhere)
-          return state.uri.queryParameters['from'] ?? homeLocation;
+          return state.matchedLocation;
 
         } else {
           // AppStatus not set - returns null
+          if (kDebugMode) {
+            print('mobile_routes -> redirection -> return null from no auth match');
+          }
           return null;
         }
 
-        //Default fail-safe in case nothing
-        return null;
       },
     );
 
