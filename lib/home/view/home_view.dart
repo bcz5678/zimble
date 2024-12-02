@@ -88,6 +88,9 @@ class _HomeViewState extends State<HomeView> {
               child: Center(
                 child: Column(
                   children: [
+                    Text(
+                      context.read<AppBloc>().state.user.toString(),
+                    ),
                   ],
                 ),
               )

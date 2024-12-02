@@ -1,14 +1,12 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:zimble/login/login.dart';
 import 'package:user_repository/user_repository.dart';
 
 class LoginWithEmailPage extends StatelessWidget {
   const LoginWithEmailPage({super.key});
-
-  static Route<void> route() =>
-      MaterialPageRoute<void>(builder: (_) => const LoginWithEmailPage());
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +16,16 @@ class LoginWithEmailPage extends StatelessWidget {
       ),
       child: Scaffold(
         appBar: AppBar(
-          leading: const AppBackButton(),
+          leading: AppBackButton(
+            key: const Key("loginWithEmailPage_BackButton"),
+            onPressed: () => context.pop(),
+          ),
           backgroundColor: AppTheme().themeData.appBarTheme.backgroundColor,
           actions: [
             IconButton(
               key: const Key('loginWithEmailPage_closeIcon'),
               icon: const Icon(Icons.close),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => context.pop(),
             ),
           ],
         ),

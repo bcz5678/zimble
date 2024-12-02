@@ -82,7 +82,7 @@ dependencies:
   #Font_awesome support
   font_awesome_flutter: ^10.1.0
 
-  #GoROuter for navigation routes
+  #GoRouter for navigation routes
   go_router: ^14.6.1
   url_strategy:
 

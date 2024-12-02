@@ -25,7 +25,7 @@ class Password extends FormzInput<String, PasswordValidationError> {
   ///   .{8,}             // Must be at least 8 characters in length
   /// $'
   static final RegExp _passwordRegExp = RegExp(
-      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$'
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
   );
 
   /// Function: Password input Validator check

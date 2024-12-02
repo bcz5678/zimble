@@ -1,5 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 /// {@template app_back_button}
 /// IconButton displayed in the application.
@@ -40,7 +41,7 @@ class AppBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: onPressed ?? () => Navigator.of(context).pop(),
+      onPressed: onPressed ?? () => context.pop(),
       icon: Assets.icons.backIcon.svg(
         colorFilter: ColorFilter.mode(
           isLight ? AppColors.white : AppColors.highEmphasisSurface,

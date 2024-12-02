@@ -1,30 +1,28 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:zimble/analytics/analytics.dart';
-import 'package:zimble/app/app.dart';
+import 'dart:async';
 
-class AuthenticatedUserListener extends StatelessWidget {
-  const AuthenticatedUserListener({
-    required this.child,
-    super.key,
-  });
+import 'package:flutter/foundation.dart';
 
-  final Widget child;
+class AuthenticatedUserListener extends ChangeNotifier {
+  AuthenticatedUserListener({
+    required Stream<dynamic> stream
+  }) {
+
+    //[DEBUG TEST] with tree-shaking to remove tests on release
+    if(kDebugMode) {
+      print('authenticated_user_listener -> Entry');
+    }
+
+    notifyListeners();
+    _subscription = stream.asBroadcastStream().listen(
+          (dynamic _) => notifyListeners(),
+    );
+  }
+
+  late final StreamSubscription<dynamic> _subscription;
 
   @override
-  Widget build(BuildContext context) {
-    return BlocListener<AppBloc, AppState>(
-      listener: (context, state) {
-        if (state.status.isLoggedIn) {
-          context.read<AnalyticsBloc>().add(
-            TrackAnalyticsEvent(
-              state.user.isNewUser ? RegistrationEvent() : LoginEvent(),
-            ),
-          );
-        }
-      },
-      listenWhen: (previous, current) => previous.status != current.status,
-      child: child,
-    );
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 }

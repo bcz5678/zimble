@@ -6,9 +6,6 @@ import 'package:user_repository/user_repository.dart';
 class LoginModal extends StatelessWidget {
   const LoginModal({super.key});
 
-  static Route<void> route() =>
-      MaterialPageRoute<void>(builder: (_) => const LoginModal());
-
   static const String name = '/loginModal';
 
   @override

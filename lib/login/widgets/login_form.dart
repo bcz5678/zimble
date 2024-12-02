@@ -69,7 +69,7 @@ class _LoginContent extends StatelessWidget {
               //const SizedBox(height: AppSpacing.lg),
               //_TwitterLoginButton(),
               const SizedBox(height: AppSpacing.lg),
-              _ContinueWithEmailLoginButton(),
+              //_ContinueWithEmailLoginButton(),
             ],
           ),
         );
@@ -198,7 +198,7 @@ class _TwitterLoginButton extends StatelessWidget {
     );
   }
 }
-*/
+
 
 class _ContinueWithEmailLoginButton extends StatelessWidget {
   @override
@@ -220,3 +220,4 @@ class _ContinueWithEmailLoginButton extends StatelessWidget {
     );
   }
 }
+*/

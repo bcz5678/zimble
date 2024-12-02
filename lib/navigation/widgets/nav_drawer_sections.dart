@@ -1,9 +1,10 @@
 import 'package:app_ui/app_ui.dart' show AppColors, AppSpacing;
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:zimble/home/home.dart';
+import 'package:go_router/go_router.dart';
+//import 'package:flutter_bloc/flutter_bloc.dart';
+//import 'package:zimble/home/home.dart';
 import 'package:zimble/l10n/l10n.dart';
-import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
+//import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
 
 class NavDrawerSections extends StatelessWidget {
   const NavDrawerSections({super.key});
@@ -15,6 +16,46 @@ class NavDrawerSections extends StatelessWidget {
       children: [
         const NavDrawerSectionsTitle(),
         ...[
+          NavDrawerSectionItem(
+            key: const ValueKey('navDrawerSectionItem_inventory'),
+            title: 'Inventory',
+            onTap: () {
+              Scaffold.of(context).closeDrawer();
+              context.goNamed('inventory');
+            },
+          ),
+          NavDrawerSectionItem(
+            key: const ValueKey('navDrawerSectionItem_readers'),
+            title: 'Readers',
+            onTap: () {
+              Scaffold.of(context).closeDrawer();
+              context.goNamed('readers');
+            }
+          ),
+          NavDrawerSectionItem(
+            key: const ValueKey('navDrawerSectionItem_tagFinder'),
+            title: 'Tag Finder',
+            onTap: () {
+              Scaffold.of(context).closeDrawer();
+              context.goNamed('tagFinder');
+            },
+          ),
+          NavDrawerSectionItem(
+            key: const ValueKey('navDrawerSectionItem_tagInfo'),
+            title: 'Tag Info',
+            onTap: () {
+              Scaffold.of(context).closeDrawer();
+              context.goNamed('tagInfo');
+            },
+          ),
+          NavDrawerSectionItem(
+            key: const ValueKey('navDrawerSectionItem_trigger'),
+            title: 'Trigger',
+            onTap: () {
+              Scaffold.of(context).closeDrawer();
+              context.goNamed('trigger');
+            },
+          ),
             /*
             ///  Template for future Dynamic Tabs
             NavDrawerSectionItem(

@@ -103,7 +103,7 @@ class UserRepository {
         ),
   ).asBroadcastStream();
 
-  final BehaviorSubject<String> _placeholderData = BehaviorSubject.seeded("null");
+  final BehaviorSubject<String> _placeholderData = BehaviorSubject.seeded('null');
 
 
   /// A stream of incoming email links used to authenticate the user.

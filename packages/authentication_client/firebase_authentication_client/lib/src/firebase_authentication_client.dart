@@ -32,6 +32,7 @@ class FirebaseAuthenticationClient implements AuthenticationClient {
         _getAppleCredentials =
             getAppleCredentials ?? SignInWithApple.getAppleIDCredential
         //_facebookAuth = facebookAuth ?? FacebookAuth.instance
+      {
         /*
         _twitterLogin = twitterLogin ??
 
@@ -41,9 +42,8 @@ class FirebaseAuthenticationClient implements AuthenticationClient {
               redirectURI: const String.fromEnvironment('TWITTER_REDIRECT_URI'),
             )
          */
-      {
-    user.listen(_onUserChanged);
-  }
+        user.listen(_onUserChanged);
+     }
 
   final TokenStorage _tokenStorage;
   final firebase_auth.FirebaseAuth _firebaseAuth;

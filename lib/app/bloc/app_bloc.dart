@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
+
 import 'package:notifications_repository/notifications_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -29,7 +31,13 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
     /// Initialize subscription to the _userRepository rxStream for user changes
     _userSubscription = _userRepository.user.listen(_userChanged);
+
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('app_bloc -> _AppBlocInitiation -> ${state.user}');
+    }
   }
+
 
   /// The number of app opens after which the login overlay is shown
   /// for an unauthenticated user.
@@ -46,6 +54,10 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
   /// Handles updating AppState based on  newly changed User data
   void _onUserChanged(AppUserChanged event, Emitter<AppState> emit) {
+    if(kDebugMode) {
+      print('app_bloc.dart -> _onUSerChanged -> $AppStatus');
+    }
+
     final user = event.user;
 
     switch (state.status) {
@@ -62,9 +74,12 @@ class AppBloc extends Bloc<AppEvent, AppState> {
                 : emit(AppState.authenticated(user));
 
      */
-      return user != User.anonymous && user.isNewUser
-          ? emit(const AppState.unauthenticated())
-          : emit(AppState.authenticated(user));
+      if (user != User.anonymous && user.id.isNotEmpty) {
+        emit(AppState.authenticated(user));
+      } else {
+        emit(const AppState.unauthenticated());
+      }
+
     }
   }
 
@@ -111,11 +126,16 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       addError(error, stackTrace);
     }
   }
-
   /// Tracking how many times the app has been opened
   /// from Local Storage Keys before prompting to re-login
   Future<void> _onAppOpened(AppOpened event, Emitter<AppState> emit) async {
     if (state.user.isAnonymous) {
+
+      // [DEBUG TEST]
+      if (kDebugMode) {
+        print('app_bloc -> _onAppOpened -> ${state.user}');
+      }
+
       final appOpenedCount = await _userRepository.fetchAppOpenedCount();
 
       if (appOpenedCount == _appOpenedCountForLoginOverlay - 1) {
@@ -127,6 +147,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       }
     }
   }
+
 
   /// Disposing of subscriptions
   @override

@@ -6,8 +6,7 @@ enum AppStatus {
   unauthenticated();
 
   bool get isLoggedIn =>
-      this == AppStatus.authenticated;
-          // IMplemented with Onboarding|| this == AppStatus.onboardingRequired;
+      this == AppStatus.authenticated; // || this == AppStatus.onboardingRequired;
 }
 
 class AppState extends Equatable {
@@ -17,6 +16,7 @@ class AppState extends Equatable {
     this.showLoginOverlay = false,
   });
 
+  /// Sets authenticated stated
   const AppState.authenticated(
     User user,
   ) : this(
@@ -32,7 +32,10 @@ class AppState extends Equatable {
           user: user,
         );
    */
-  const AppState.unauthenticated() : this(status: AppStatus.unauthenticated);
+  const AppState.unauthenticated()
+      : this(
+      status: AppStatus.unauthenticated,
+  );
 
   final AppStatus status;
   final User user;

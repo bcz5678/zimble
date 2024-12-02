@@ -1,9 +1,9 @@
 import 'package:app_ui/app_ui.dart' show AppColors, AppSpacing, Assets, showAppModal;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:zimble/app/app.dart';
 import 'package:zimble/l10n/l10n.dart';
-import 'package:zimble/login/login.dart';
 import 'package:zimble/user_profile/user_profile.dart';
 
 /// A user profile button which displays a [LoginButton]
@@ -35,11 +35,7 @@ class LoginButton extends StatelessWidget {
         horizontal: AppSpacing.lg,
         vertical: AppSpacing.sm,
       ),
-      onPressed: () => showAppModal<void>(
-        context: context,
-        builder: (context) => const LoginModal(),
-        routeSettings: const RouteSettings(name: LoginModal.name),
-      ),
+      onPressed: () => context.pushNamed('loginWithEmail'),
       tooltip: context.l10n.loginTooltip,
     );
   }

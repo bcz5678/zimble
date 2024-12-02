@@ -1,13 +1,8 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:zimble/app/app.dart';
 import 'package:zimble/l10n/l10n.dart';
 import 'package:zimble/login/login.dart';
-import 'package:zimble/magic_link_prompt/magic_link_prompt.dart';
-import 'package:zimble/home/home.dart';
-import 'package:zimble/terms_of_service/terms_of_service.dart';
 import 'package:form_inputs/form_inputs.dart';
 
 class LoginWithEmailForm extends StatelessWidget {
@@ -16,82 +11,67 @@ class LoginWithEmailForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final email = context.select((LoginBloc bloc) => bloc.state.email.value);
-    return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-        if (state.status.isSuccess) {
-          Navigator.of(context).push<void>(
-            MagicLinkPromptPage.route(email: email),
-          );
-        } else if (state.status.isFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text(context.l10n.loginWithEmailFailure)),
-            );
-        }
-      },
-      child: CustomScrollView(
-        slivers: [
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.xlg,
-                AppSpacing.lg,
-                AppSpacing.xlg,
-                AppSpacing.xxlg,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _HeaderLogo(),
-                  _HeaderTitle(),
-                  _HeaderSubtitle(),
-                  SizedBox(height: AppSpacing.xxxlg),
-                  _errorMessageBox(),
-                  _EmailInput(),
-                  _PasswordInput(),
-                  Align(
-                    alignment: Alignment.centerRight,
-                      child: _ForgotPasswordLink()
-                  ),
-                  _LoginButton(),
-                  SizedBox(height: AppSpacing.lg),
-                  Row(
-                      children: [
-                        Expanded(
-                            child: Divider()
+    return CustomScrollView(
+      slivers: [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.xlg,
+              AppSpacing.lg,
+              AppSpacing.xlg,
+              AppSpacing.xxlg,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _HeaderLogo(),
+                _HeaderTitle(),
+                _HeaderSubtitle(),
+                SizedBox(height: AppSpacing.xxxlg),
+                _errorMessageBox(),
+                _EmailInput(),
+                _PasswordInput(),
+                Align(
+                  alignment: Alignment.centerRight,
+                    child: _ForgotPasswordLink()
+                ),
+                _LoginButton(),
+                SizedBox(height: AppSpacing.lg),
+                Row(
+                    children: [
+                      Expanded(
+                          child: Divider()
+                      ),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(
+                          AppSpacing.xlg,
+                          0,
+                          AppSpacing.xlg,
+                          0,
                         ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(
-                            AppSpacing.xlg,
-                            0,
-                            AppSpacing.xlg,
-                            0,
-                          ),
-                            child: Text(
-                                "or",
-                                style: TextStyle(
-                                  color: AppColors.grey,
-                                  fontSize: AppTheme().themeData.textTheme.bodyLarge?.fontSize,
-                            )
-                          ),
+                          child: Text(
+                              "or",
+                              style: TextStyle(
+                                color: AppColors.grey,
+                                fontSize: AppTheme().themeData.textTheme.bodyLarge?.fontSize,
+                          )
                         ),
-                        Expanded(
-                            child: Divider(),
-                        ),
-                      ]
-                  ),
-                  SizedBox(height: AppSpacing.lg),
-                  _GoogleLoginButton(),
+                      ),
+                      Expanded(
+                          child: Divider(),
+                      ),
+                    ]
+                ),
+                SizedBox(height: AppSpacing.lg),
+                _GoogleLoginButton(),
 
-                ],
-              ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

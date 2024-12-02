@@ -1,5 +1,4 @@
 import 'package:analytics_repository/analytics_repository.dart';
-import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notifications_repository/notifications_repository.dart';
@@ -63,19 +62,30 @@ class App extends StatelessWidget {
               lazy: false,
             ),
           ],
-          child: const AppView(),
+          child: AppView(),
         )
     );
   }
 }
 
 
-class AppView extends StatelessWidget {
-  const AppView({super.key});
+class AppView extends StatefulWidget {
+  AppView({super.key});
 
   @override
+  State<AppView> createState() => _AppViewState();
+}
+
+class _AppViewState extends State<AppView> {
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final mobileRouter = MobileRouter(appBloc: BlocProvider.of<AppBloc>(context)).router;
+
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: true,
+      routeInformationProvider: mobileRouter.routeInformationProvider,
+      routerDelegate: mobileRouter.routerDelegate,
+      routeInformationParser: mobileRouter.routeInformationParser,
       themeMode: ThemeMode.light,
       /*
       TO Replace theme below
@@ -91,12 +101,6 @@ class AppView extends StatelessWidget {
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: AuthenticatedUserListener(
-        child: FlowBuilder<AppStatus>(
-          state: context.select((AppBloc bloc) => bloc.state.status),
-          onGeneratePages: onGenerateAppViewPages,
-        ),
-      ),
-    );
+      );
   }
 }
