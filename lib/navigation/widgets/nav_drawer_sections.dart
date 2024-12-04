@@ -18,7 +18,7 @@ class NavDrawerSections extends StatelessWidget {
         ...[
           NavDrawerSectionItem(
             key: const ValueKey('navDrawerSectionItem_inventory'),
-            title: 'Inventory',
+            title: context.l10n.navDrawerInventory,
             onTap: () {
               Scaffold.of(context).closeDrawer();
               context.goNamed('inventory');
@@ -26,7 +26,7 @@ class NavDrawerSections extends StatelessWidget {
           ),
           NavDrawerSectionItem(
             key: const ValueKey('navDrawerSectionItem_readers'),
-            title: 'Readers',
+            title: context.l10n.navDrawerReaders,
             onTap: () {
               Scaffold.of(context).closeDrawer();
               context.goNamed('readers');
@@ -34,7 +34,7 @@ class NavDrawerSections extends StatelessWidget {
           ),
           NavDrawerSectionItem(
             key: const ValueKey('navDrawerSectionItem_tagFinder'),
-            title: 'Tag Finder',
+            title: context.l10n.navDrawerTagFinder,
             onTap: () {
               Scaffold.of(context).closeDrawer();
               context.goNamed('tagFinder');
@@ -42,7 +42,7 @@ class NavDrawerSections extends StatelessWidget {
           ),
           NavDrawerSectionItem(
             key: const ValueKey('navDrawerSectionItem_tagInfo'),
-            title: 'Tag Info',
+            title: context.l10n.navDrawerTagInfo,
             onTap: () {
               Scaffold.of(context).closeDrawer();
               context.goNamed('tagInfo');
@@ -50,7 +50,7 @@ class NavDrawerSections extends StatelessWidget {
           ),
           NavDrawerSectionItem(
             key: const ValueKey('navDrawerSectionItem_trigger'),
-            title: 'Trigger',
+            title: context.l10n.navDrawerTrigger,
             onTap: () {
               Scaffold.of(context).closeDrawer();
               context.goNamed('trigger');

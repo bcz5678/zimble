@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-//import 'package:zimble/l10n/l10n.dart';
+import 'package:zimble/l10n/l10n.dart';
 
 @visibleForTesting
 class BottomNavBar extends StatelessWidget {
@@ -18,16 +18,15 @@ class BottomNavBar extends StatelessWidget {
       items: [
         BottomNavigationBarItem(
           icon: const Icon(Icons.home_outlined),
-          //label: context.l10n.bottomNavBarTopStories,
-          label: "Home"
+          key: Key('bottonNavBar_home'),
+          label: context.l10n.bottomNavBarHome,
         ),
         BottomNavigationBarItem(
           icon: const Icon(
             Icons.search,
             key: Key('bottomNavBar_search'),
           ),
-          //label: context.l10n.bottomNavBarSearch,
-          label: "Search",
+          label: context.l10n.bottomNavBarSearch,
         ),
       ],
       currentIndex: currentIndex,

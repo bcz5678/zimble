@@ -1,7 +1,14 @@
 {
+    "@@locale": "en",
     "appName": "Zimble",
     "@appName": {
         "description": "The name of this application",
+        "type": "String",
+        "placeholders": {}
+    },
+    "routeDataHomeTitle": "Home",
+    "@routeDataHomeTitle": {
+        "description": "Route Title for Home Page",
         "type": "String",
         "placeholders": {}
     },
@@ -23,7 +30,7 @@
         "type": "String",
         "placeholders": {}
     },
-    "loginWelcomeText": "Welcome to\nFlutter News Example",
+    "loginWelcomeText": "Welcome to\nZimble",
     "@loginWelcomeText": {
         "description": "Greeting shown on the login page.",
         "type": "String",
@@ -113,7 +120,7 @@
         "type": "String",
         "placeholders": {}
     },
-    "onboardingWelcomeTitle": "Welcome to\nThe Daily Globe!",
+    "onboardingWelcomeTitle": "Welcome to\nZimble!",
     "@onboardingWelcomeTitle": {
         "description": "Text shown as title on the onboarding page",
         "type": "String",
@@ -461,9 +468,51 @@
         "type": "String",
         "placeholders": {}
     },
-    "bottomNavBarTopStories": "Top Stories",
-    "@bottomNavBarTopStories": {
-        "description": "Top stories text shown in the bottom nav bar widget.",
+    "navDrawerHome": "Home",
+    "@navDrawerHome": {
+        "description": "Home text shown in the side nav Drawer",
+        "type": "String",
+        "placeholders": {}
+    },
+    "navDrawerInventory": "Inventory",
+    "@navDrawerInventory": {
+        "description": "Inventory text shown in the side nav Drawer",
+        "type": "String",
+        "placeholders": {}
+    },
+    "navDrawerLogin": "Login",
+    "@navDrawerLogin": {
+        "description": "Login text shown in the side nav Drawer",
+        "type": "String",
+        "placeholders": {}
+    },
+    "navDrawerReaders": "Readers",
+    "@navDrawerReaders": {
+        "description": "Readers text shown in the side nav Drawer",
+        "type": "String",
+        "placeholders": {}
+    },
+    "navDrawerTagInfo": "Tag Info",
+    "@navDrawerTagInfo": {
+        "description": "TagInfo text shown in the side nav Drawer",
+        "type": "String",
+        "placeholders": {}
+    },
+    "navDrawerTagFinder": "Tag Finder",
+    "@navDrawerTagFinder": {
+        "description": "TagFinder text shown in the side nav Drawer",
+        "type": "String",
+        "placeholders": {}
+    },
+    "navDrawerTrigger": "Trigger",
+    "@navDrawerTrigger": {
+        "description": "Trigger text shown in the side nav Drawer",
+        "type": "String",
+        "placeholders": {}
+    },
+    "bottomNavBarHome": "Home",
+    "@bottomNavBarHome": {
+        "description": "Home text shown in the bottom nav bar widget.",
         "type": "String",
         "placeholders": {}
     },

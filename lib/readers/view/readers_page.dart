@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:zimble/readers/readers.dart';
 
 
 class ReadersPage extends StatelessWidget {
@@ -7,8 +9,9 @@ class ReadersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('Readers'),
+    return BlocProvider(
+      create: (_) => ReadersBloc(),
+      child: const ReadersView(),
     );
   }
 }

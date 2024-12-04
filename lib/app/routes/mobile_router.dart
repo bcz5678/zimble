@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:user_repository/user_repository.dart';
@@ -13,58 +14,58 @@ import 'package:zimble/tag_finder/tag_finder.dart';
 import 'package:zimble/tag_info/tag_info.dart';
 import 'package:zimble/trigger/trigger.dart';
 
-
 class MobileRouter {
-
   MobileRouter({
     required AppBloc appBloc,
   }) : _appBloc = appBloc;
 
   final AppBloc _appBloc;
-  final AppRouter _appRouter = AppRouter();
+  final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: "Root");
+  final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>(debugLabel: "Shell");
 
   GoRouter get router =>
     GoRouter(
-      initialLocation: _appRouter.home.path,
+      navigatorKey: rootNavigatorKey,
+      initialLocation: AppRoutes.home.path,
       routes: [
         GoRoute(
-          path: _appRouter.home.path,
-          name: _appRouter.home.name,
+          path: AppRoutes.home.path,
+          name: AppRoutes.home.name,
           builder: (context, state) => const HomePage(),
         ),
         GoRoute(
-          path: _appRouter.login.path,
-          name: _appRouter.login.name,
+          path: AppRoutes.login.path,
+          name: AppRoutes.login.name,
           builder: (context, state) => const LoginPage(),
         ),
         GoRoute(
-          path: _appRouter.loginWithEmail.path,
-          name: _appRouter.loginWithEmail.name,
+          path: AppRoutes.loginWithEmail.path,
+          name: AppRoutes.loginWithEmail.name,
           builder: (context, state) => const LoginWithEmailPage(),
         ),
         GoRoute(
-        path: _appRouter.inventory.path,
-        name: _appRouter.inventory.name,
+        path: AppRoutes.inventory.path,
+        name: AppRoutes.inventory.name,
         builder: (context, state) => const InventoryPage(),
         ),
         GoRoute(
-          path: _appRouter.readers.path,
-          name: _appRouter.readers.name,
+          path: AppRoutes.readers.path,
+          name: AppRoutes.readers.name,
           builder: (context, state) => const ReadersPage(),
         ),
         GoRoute(
-          path: _appRouter.tagFinder.path,
-          name: _appRouter.tagFinder.name,
+          path: AppRoutes.tagFinder.path,
+          name: AppRoutes.tagFinder.name,
           builder: (context, state) => const TagFinderPage(),
         ),
         GoRoute(
-          path: _appRouter.tagInfo.path,
-          name: _appRouter.tagInfo.name,
+          path: AppRoutes.tagInfo.path,
+          name: AppRoutes.tagInfo.name,
           builder: (context, state) => const TagInfoPage(),
         ),
         GoRoute(
-          path: _appRouter.trigger.path,
-          name: _appRouter.trigger.name,
+          path: AppRoutes.trigger.path,
+          name: AppRoutes.trigger.name,
           builder: (context, state) => const TriggerPage(),
         ),
 
@@ -79,15 +80,14 @@ class MobileRouter {
       /// The top-level callback allows the app to redirect to a new location.
       redirect: (context, state) {
 
-
         // if the user is not logged in, they need to login
         final AppStatus authenticationStatus = context.read<AppBloc>().state.status;
-        final String loginLocation = _appRouter.loginWithEmail.path;
+        final String loginLocation = AppRoutes.loginWithEmail.path;
         final User user =  context.read<AppBloc>().state.user;
 
         // Grab the location the user is trying to reach,
         // to use as a query parameter on redirect
-        final String homeLocation = _appRouter.home.path;
+        final String homeLocation = AppRoutes.home.path;
 
         // Check if the current location  is the Home page, then set it to ''
         // or set fromLocation as the non-home page they were trying to access
@@ -143,7 +143,7 @@ class MobileRouter {
             // Redirect User to the Login Page, passing the current URL location
             // as a param in state to redirect after successful login
             return state.namedLocation(
-              _appRouter.loginWithEmail.name,
+              AppRoutes.loginWithEmail.name,
               queryParameters: {
                 if (fromLocation.isNotEmpty) 'from': fromLocation
               },
@@ -155,12 +155,13 @@ class MobileRouter {
           //Authentication Status: not logged in
 
           // User just logged in (on login Page),
-          // DOES THIS CODE NEED TO MOVE TO AUTH BLOC?
+
           if (state.matchedLocation == loginLocation) {
             if (kDebugMode) {
               print('mobile_routes -> redirection -> authenticated & loginLocation');
             }
 
+            /// [TODO] DOES THIS CODE NEED TO MOVE TO AUTH BLOC?
             // Firing Analytics event for tracking
             context.read<analytics.AnalyticsBloc>().add(
               analytics.TrackAnalyticsEvent(

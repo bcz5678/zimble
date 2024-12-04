@@ -17,7 +17,7 @@ class LoginWithEmailPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           leading: AppBackButton(
-            key: const Key("loginWithEmailPage_BackButton"),
+            key: const Key("loginWithEmailPage_AppBackButton"),
             onPressed: () => context.pop(),
           ),
           backgroundColor: AppTheme().themeData.appBarTheme.backgroundColor,

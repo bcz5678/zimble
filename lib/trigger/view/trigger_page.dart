@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:zimble/trigger/trigger.dart';
 
 
 class TriggerPage extends StatelessWidget {
@@ -7,8 +9,9 @@ class TriggerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('Trigger'),
+    return BlocProvider(
+      create: (_) => TriggerBloc(),
+      child: const TriggerView(),
     );
   }
 }

@@ -22,7 +22,6 @@ void main() {
         ) async {
       final tokenStorage = InMemoryTokenStorage();
 
-
       const permissionClient = PermissionClient();
 
       final persistentStorage = PersistentStorage(
@@ -30,8 +29,8 @@ void main() {
       );
 
       final packageInfoClient = PackageInfoClient(
-        appName: 'Flutter News Example [DEV]',
-        packageName: 'com.flutter.news.example.dev',
+        appName: 'Zimble [DEV]',
+        packageName: 'com.zimble.example.dev',
         packageVersion: packageVersion,
       );
 

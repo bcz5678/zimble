@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:authentication_client/authentication_client.dart';
 import 'package:deep_link_client/deep_link_client.dart';
 import 'package:equatable/equatable.dart';
@@ -94,14 +96,20 @@ class UserRepository {
   /// Getter for current user.
   /// **NOTE: This version is only being used to bootstrap getting the app up and running
   /// Will be replaced by an Rx.combineLatest2 or greater when more userProfile info is added.
-  Stream<User> get user =>
-      Rx.combineLatest2<AuthenticationUser, String, User>(
+  Stream<User> get user {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('user_repository -> get user -> Entry');
+    }
+    return Rx.combineLatest2<AuthenticationUser, String, User>(
       _authenticationClient.user,
-        _placeholderData,
-        (authenticationUser, placeholderData) => User.fromAuthenticationUser(
+      _placeholderData,
+          (authenticationUser, placeholderData) =>
+          User.fromAuthenticationUser(
             authenticationUser: authenticationUser,
-        ),
-  ).asBroadcastStream();
+          ),
+    ).asBroadcastStream();
+  }
 
   final BehaviorSubject<String> _placeholderData = BehaviorSubject.seeded('null');
 
@@ -120,6 +128,10 @@ class UserRepository {
   ///
   /// Throws a [LogInWithAppleFailure] if an exception occurs.
   Future<void> logInWithApple() async {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('user_repository -> logInWithApple -> Entry');
+    }
     try {
       await _authenticationClient.logInWithApple();
     } on LogInWithAppleFailure {
@@ -134,6 +146,10 @@ class UserRepository {
   /// Throws a [LogInWithGoogleCanceled] if the flow is canceled by the user.
   /// Throws a [LogInWithGoogleFailure] if an exception occurs.
   Future<void> logInWithGoogle() async {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('user_repository -> logInWithGoogle -> Entry');
+    }
     try {
       await _authenticationClient.logInWithGoogle();
     } on LogInWithGoogleFailure {
@@ -188,6 +204,11 @@ class UserRepository {
   Future<void> sendLoginEmailLink({
     required String email,
   }) async {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('user_repository -> sendLoginEmailLink -> Entry');
+    }
+
     try {
       await _authenticationClient.sendLoginEmailLink(
         email: email,
@@ -207,6 +228,11 @@ class UserRepository {
     required String email,
     required String emailLink,
   }) async {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('user_repository -> loginWithEmailLink -> Entry');
+    }
+
     try {
       await _authenticationClient.logInWithEmailLink(
         email: email,
@@ -226,6 +252,11 @@ class UserRepository {
     required String email,
     required String password,
   }) async {
+
+      // [DEBUG TEST]
+      if (kDebugMode) {
+        print('user_repository -> loginWithEmailAndPassword -> Entry');
+      }
     try {
       await _authenticationClient.logInWithEmailAndPassword(
         email: email,
@@ -243,6 +274,11 @@ class UserRepository {
   ///
   /// Throws a [LogOutFailure] if an exception occurs.
   Future<void> logOut() async {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('user_repository -> logout -> Entry');
+    }
+
     try {
       await _authenticationClient.logOut();
     } on LogOutFailure {
@@ -254,6 +290,10 @@ class UserRepository {
 
   /// Deletes the current user account.
   Future<void> deleteAccount() async {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('user_repository -> deleteAccount -> Entry');
+    }
     try {
       await _authenticationClient.deleteAccount();
     } on DeleteAccountFailure {
@@ -265,6 +305,11 @@ class UserRepository {
 
   /// Returns the number of times the app was opened.
   Future<int> fetchAppOpenedCount() async {
+
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('user_repository -> fetchAppOpenedCount -> Entry');
+    }
     try {
       return await _storage.fetchAppOpenedCount();
     } catch (error, stackTrace) {

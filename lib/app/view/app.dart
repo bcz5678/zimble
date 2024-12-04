@@ -1,10 +1,15 @@
+import 'dart:io';
 import 'package:analytics_repository/analytics_repository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:notifications_repository/notifications_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:zimble/analytics/analytics.dart';
 import 'package:zimble/app/app.dart';
+import 'package:zimble/app/routes/app_router.dart';
 import 'package:zimble/l10n/l10n.dart';
 import 'package:zimble/login/login.dart';
 
@@ -79,19 +84,21 @@ class AppView extends StatefulWidget {
 class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
-    final mobileRouter = MobileRouter(appBloc: BlocProvider.of<AppBloc>(context)).router;
+    final router = MobileRouter(
+      appBloc: BlocProvider.of<AppBloc>(context),
+    ).router;
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: true,
-      routeInformationProvider: mobileRouter.routeInformationProvider,
-      routerDelegate: mobileRouter.routerDelegate,
-      routeInformationParser: mobileRouter.routeInformationParser,
+      routeInformationProvider: router.routeInformationProvider,
+      routerDelegate: router.routerDelegate,
+      routeInformationParser: router.routeInformationParser,
       themeMode: ThemeMode.light,
       /*
-      TO Replace theme below
-      theme: const AppTheme().themeData,
-      darkTheme: const AppDarkTheme().themeData,
-       */
+    TO Replace theme below
+    theme: const AppTheme().themeData,
+    darkTheme: const AppDarkTheme().themeData,
+     */
 
       theme: ThemeData(
         appBarTheme: AppBarTheme(
@@ -101,6 +108,6 @@ class _AppViewState extends State<AppView> {
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      );
+    );
   }
 }

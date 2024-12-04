@@ -1,2 +1,3 @@
-export 'mobile_routes.dart';
-export 'app_router.dart';
+export 'mobile_router.dart';
+export 'app_routes.dart';
+export 'models/route_data_model.dart';

@@ -50,7 +50,14 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
   /// callback for _userSubscription events,
   /// calling the on<AppUserChanged> event method below
-  void _userChanged(User user) => add(AppUserChanged(user));
+  void _userChanged(User user) {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('app_bloc -> _userChanged -> $user');
+    }
+    add(AppUserChanged(user));
+
+  }
 
   /// Handles updating AppState based on  newly changed User data
   void _onUserChanged(AppUserChanged event, Emitter<AppState> emit) {
@@ -65,20 +72,20 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     //case AppStatus.onboardingRequired:
       case AppStatus.authenticated:
       case AppStatus.unauthenticated:
-    /*
-    /// Implement with Onboarding
-    //return user != User.anonymous && user.isNewUser
-            ? emit(AppState.onboardingRequired(user))
-            : user == User.anonymous
-                ? emit(const AppState.unauthenticated())
-                : emit(AppState.authenticated(user));
+      /*
+  /// Implement with Onboarding
+  //return user != User.anonymous && user.isNewUser
+          ? emit(AppState.onboardingRequired(user))
+          : user == User.anonymous
+              ? emit(const AppState.unauthenticated())
+              : emit(AppState.authenticated(user));
 
-     */
-      if (user != User.anonymous && user.id.isNotEmpty) {
-        emit(AppState.authenticated(user));
-      } else {
-        emit(const AppState.unauthenticated());
-      }
+   */
+        if (user != User.anonymous && user.id.isNotEmpty) {
+          emit(AppState.authenticated(user));
+        } else {
+          emit(const AppState.unauthenticated());
+        }
 
     }
   }
@@ -95,7 +102,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
           : emit(AppState.authenticated(state.user));
     }
   }
-   */
+  */
 
   /// Handles logging out the user in _userRepository on logout event
   /// Will pause notifications when implemented
@@ -103,7 +110,13 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     // We are disabling notifications when a user logs out because
     // the user should not receive any notifications when logged out.
 
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('app_bloc -> _onLogoutRequested -> $event');
+    }
+
     //unawaited(_notificationsRepository.toggleNotifications(enable: false));
+
 
     unawaited(_userRepository.logOut());
   }
@@ -112,13 +125,19 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   ///on delete event
   /// Will stop notifications when implemented
   Future<void> _onDeleteAccountRequested(
-    AppDeleteAccountRequested event,
-    Emitter<AppState> emit,
-  ) async {
+      AppDeleteAccountRequested event,
+      Emitter<AppState> emit,
+      ) async {
     try {
       // We are disabling notifications when a user deletes their account
       // because the user should not receive any notifications after their
       // account is deleted.
+
+      // [DEBUG TEST]
+      if (kDebugMode) {
+        print('app_bloc -> _onDeleteAccountRequested -> $event');
+      }
+
       //unawaited(_notificationsRepository.toggleNotifications(enable: false));
       await _userRepository.deleteAccount();
     } catch (error, stackTrace) {
@@ -126,6 +145,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       addError(error, stackTrace);
     }
   }
+
   /// Tracking how many times the app has been opened
   /// from Local Storage Keys before prompting to re-login
   Future<void> _onAppOpened(AppOpened event, Emitter<AppState> emit) async {
@@ -134,6 +154,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       // [DEBUG TEST]
       if (kDebugMode) {
         print('app_bloc -> _onAppOpened -> ${state.user}');
+        print('app_bloc -> _onAppOpened -> ${event}');
       }
 
       final appOpenedCount = await _userRepository.fetchAppOpenedCount();

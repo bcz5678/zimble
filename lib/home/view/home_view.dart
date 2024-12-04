@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zimble/app/app.dart';
 import 'package:zimble/home/home.dart';
-import 'package:zimble/login/login.dart';
 import 'package:zimble/inventory/inventory.dart';
+import 'package:zimble/login/login.dart';
+import 'package:zimble/navigation/navigation.dart';
 import 'package:zimble/readers/readers.dart';
 import 'package:zimble/tag_finder/tag_finder.dart';
 import 'package:zimble/tag_info/tag_info.dart';
 import 'package:zimble/trigger/trigger.dart';
 import 'package:zimble/user_profile/user_profile.dart';
-import 'package:zimble/navigation/navigation.dart';
 
 
 class HomeView extends StatefulWidget {
@@ -22,7 +22,6 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   double? scrolledUnderElevation;
-
   bool shadowColor = false;
 
   final List<Widget> _tabs = [
@@ -60,7 +59,7 @@ class _HomeViewState extends State<HomeView> {
         ],
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Home'),
+            title: Text(AppRoutes.home.title ?? 'Home'),
             titleTextStyle: UITextStyle.headline1,
             scrolledUnderElevation: scrolledUnderElevation,
             centerTitle: true,
