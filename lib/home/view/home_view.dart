@@ -3,13 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zimble/app/app.dart';
 import 'package:zimble/home/home.dart';
-import 'package:zimble/inventory/inventory.dart';
 import 'package:zimble/login/login.dart';
 import 'package:zimble/navigation/navigation.dart';
-import 'package:zimble/readers/readers.dart';
-import 'package:zimble/tag_finder/tag_finder.dart';
-import 'package:zimble/tag_info/tag_info.dart';
-import 'package:zimble/trigger/trigger.dart';
 import 'package:zimble/user_profile/user_profile.dart';
 
 
@@ -23,16 +18,6 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   double? scrolledUnderElevation;
   bool shadowColor = false;
-
-  final List<Widget> _tabs = [
-    HomePage(),
-    InventoryPage(),
-    ReadersPage(),
-    TagFinderPage(),
-    TagInfoPage(),
-    TriggerPage(),
-  ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +36,7 @@ class _HomeViewState extends State<HomeView> {
               }
             },
           ),
-          BlocListener<HomeCubit, HomeState>(
+          BlocListener<HomeBloc, HomeState>(
             listener: (context, state) {
               FocusManager.instance.primaryFocus?.unfocus();
             },
@@ -74,7 +59,7 @@ class _HomeViewState extends State<HomeView> {
                   );
                 }),
             actions: [
-                     const UserProfileButton()
+              UserProfileButton()
             ],
           ),
           drawer: Drawer(

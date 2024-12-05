@@ -5,10 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:zimble/analytics/analytics.dart' as analytics;
 import 'package:zimble/app/app.dart';
+import 'package:zimble/dash/dash.dart';
 import 'package:zimble/error/error.dart';
 import 'package:zimble/home/home.dart';
 import 'package:zimble/inventory/inventory.dart';
 import 'package:zimble/login/login.dart';
+import 'package:zimble/navigation/navigation.dart';
 import 'package:zimble/readers/readers.dart';
 import 'package:zimble/tag_finder/tag_finder.dart';
 import 'package:zimble/tag_info/tag_info.dart';
@@ -29,11 +31,6 @@ class MobileRouter {
       initialLocation: AppRoutes.home.path,
       routes: [
         GoRoute(
-          path: AppRoutes.home.path,
-          name: AppRoutes.home.name,
-          builder: (context, state) => const HomePage(),
-        ),
-        GoRoute(
           path: AppRoutes.login.path,
           name: AppRoutes.login.name,
           builder: (context, state) => const LoginPage(),
@@ -44,29 +41,51 @@ class MobileRouter {
           builder: (context, state) => const LoginWithEmailPage(),
         ),
         GoRoute(
-        path: AppRoutes.inventory.path,
-        name: AppRoutes.inventory.name,
-        builder: (context, state) => const InventoryPage(),
-        ),
-        GoRoute(
-          path: AppRoutes.readers.path,
-          name: AppRoutes.readers.name,
-          builder: (context, state) => const ReadersPage(),
-        ),
-        GoRoute(
-          path: AppRoutes.tagFinder.path,
-          name: AppRoutes.tagFinder.name,
-          builder: (context, state) => const TagFinderPage(),
-        ),
-        GoRoute(
-          path: AppRoutes.tagInfo.path,
-          name: AppRoutes.tagInfo.name,
-          builder: (context, state) => const TagInfoPage(),
-        ),
-        GoRoute(
-          path: AppRoutes.trigger.path,
-          name: AppRoutes.trigger.name,
-          builder: (context, state) => const TriggerPage(),
+          path: AppRoutes.home.path,
+          name: AppRoutes.home.name,
+          builder: (context, state) => const HomePage(),
+          routes: [
+            ShellRoute(
+              navigatorKey: shellNavigatorKey,
+              builder: (context, state, child) =>
+                  ScaffoldWithNavBar(
+                      child: child,
+                  ),
+              routes: [
+                GoRoute(
+                  path: AppRoutes.dash.path,
+                  name: AppRoutes.dash.name,
+                  builder: (context, state) => const DashPage(),
+                ),
+                GoRoute(
+                  path: AppRoutes.inventory.path,
+                  name: AppRoutes.inventory.name,
+                  builder: (context, state) => const InventoryPage(),
+                ),
+                GoRoute(
+                  path: AppRoutes.readers.path,
+                  name: AppRoutes.readers.name,
+                  builder: (context, state) => const ReadersPage(),
+                ),
+                GoRoute(
+                  path: AppRoutes.tagFinder.path,
+                  name: AppRoutes.tagFinder.name,
+                  builder: (context, state) => const TagFinderPage(),
+                ),
+                GoRoute(
+                  path: AppRoutes.tagInfo.path,
+                  name: AppRoutes.tagInfo.name,
+                  builder: (context, state) => const TagInfoPage(),
+                ),
+                GoRoute(
+                  path: AppRoutes.trigger.path,
+                  name: AppRoutes.trigger.name,
+                  builder: (context, state) => const TriggerPage(),
+                ),
+              ], )
+            ,
+
+          ],
         ),
 
       ],
@@ -76,7 +95,6 @@ class MobileRouter {
       /// Changes on the listenable will cause the router to refresh its route (AUTH)
       refreshListenable: AuthenticatedUserListener(stream: _appBloc.stream),
 
-
       /// The top-level callback allows the app to redirect to a new location.
       redirect: (context, state) {
 
@@ -85,9 +103,8 @@ class MobileRouter {
         final String loginLocation = AppRoutes.loginWithEmail.path;
         final User user =  context.read<AppBloc>().state.user;
 
-        // Grab the location the user is trying to reach,
-        // to use as a query parameter on redirect
         final String homeLocation = AppRoutes.home.path;
+        final String dashLocation = AppRoutes.dash.path;
 
         // Check if the current location  is the Home page, then set it to ''
         // or set fromLocation as the non-home page they were trying to access

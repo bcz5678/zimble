@@ -20,6 +20,11 @@ class AppRoutes {
     path: '/login',
     title: 'Login',
   );
+  static RouteDataModel dash = RouteDataModel(
+    name: 'dash',
+    path: '/dash',
+    title: 'Dashboard',
+  );
   static RouteDataModel inventory = RouteDataModel(
     name: 'inventory',
     path: '/inventory',

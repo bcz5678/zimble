@@ -516,9 +516,33 @@
         "type": "String",
         "placeholders": {}
     },
-    "bottomNavBarSearch": "Search",
-    "@bottomNavBarSearch": {
-        "description": "Search text shown in the bottom nav bar widget.",
+    "bottomNavBarInventory": "Inventory",
+    "@bottomNavBarInventory": {
+        "description": "Inventory text shown in the bottom nav bar widget.",
+        "type": "String",
+        "placeholders": {}
+    },
+    "bottomNavBarReaders": "Readers",
+    "@bottomNavBarReaders": {
+        "description": "Readers text shown in the bottom nav bar widget.",
+        "type": "String",
+        "placeholders": {}
+    },
+    "bottomNavBarTagFinder": "Tag Finder",
+    "@bottomNavBarTagFinder": {
+        "description": "TagFinder text shown in the bottom nav bar widget.",
+        "type": "String",
+        "placeholders": {}
+    },
+    "bottomNavBarTagInfo": "Tag Info",
+    "@bottomNavBarTagInfo": {
+        "description": "TagInfo text shown in the bottom nav bar widget.",
+        "type": "String",
+        "placeholders": {}
+    },
+    "bottomNavBarTrigger": "Trigger",
+    "@bottomNavBarTrigger": {
+        "description": "Trigger text shown in the bottom nav bar widget.",
         "type": "String",
         "placeholders": {}
     },

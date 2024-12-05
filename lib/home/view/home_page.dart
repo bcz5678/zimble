@@ -10,7 +10,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
-          BlocProvider(create: (_) => HomeCubit()),
+          BlocProvider(create: (_) => HomeBloc()),
         ],
         child: const HomeView(),
     );

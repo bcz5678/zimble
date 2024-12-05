@@ -1,15 +1,10 @@
-import 'dart:io';
 import 'package:analytics_repository/analytics_repository.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:notifications_repository/notifications_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:zimble/analytics/analytics.dart';
 import 'package:zimble/app/app.dart';
-import 'package:zimble/app/routes/app_router.dart';
 import 'package:zimble/l10n/l10n.dart';
 import 'package:zimble/login/login.dart';
 
