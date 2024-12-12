@@ -61,7 +61,7 @@ class AppButton extends StatelessWidget {
   }) : this._(
     key: key,
     onPressed: onPressed,
-    buttonColor: AppColors.lingoDark,
+    buttonColor: AppColors.lingoDark_100,
     child: child,
     foregroundColor: AppColors.white,
     elevation: elevation,

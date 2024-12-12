@@ -38,7 +38,7 @@ class _TagFinderViewState extends State<TagFinderView> {
           titleTextStyle: UITextStyle.headline1,
           scrolledUnderElevation: scrolledUnderElevation,
           centerTitle: true,
-          backgroundColor: AppColors.lingoDark,
+          backgroundColor: AppColors.lingoDark_100,
           leading: Builder(
               builder: (BuildContext context) {
                 return IconButton(

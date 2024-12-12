@@ -1,0 +1,22 @@
+name: bluetooth_reader_client
+description: Bluetooth implementation of reader_client
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ^3.5.0
+  flutter: ^3.24.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  #custom packages
+  reader_client:
+    path: ../reader_client
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.4
+  very_good_analysis: ^6.0.0

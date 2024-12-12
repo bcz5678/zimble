@@ -53,10 +53,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       key: Key("bottonNavBar_main"),
-      backgroundColor: AppColors.lingoDark,
-      selectedItemColor: AppColors.red,
-      unselectedItemColor: AppColors.black,
+      backgroundColor: AppColors.lingoDark_100,
+      selectedItemColor: AppColors.lingoOrange_100,
+      unselectedItemColor: AppColors.lingoBlack_40,
       showUnselectedLabels: true,
+      selectedFontSize: 12,
+      unselectedFontSize: 12,
+      iconSize: 30,
       items: [
         BottomNavigationBarItem(
           key: Key('bottonNavBarItem_home'),

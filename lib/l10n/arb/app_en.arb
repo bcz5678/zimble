@@ -12,6 +12,36 @@
         "type": "String",
         "placeholders": {}
     },
+    "readersMainTabCurrent": "Current Reader",
+    "@readersTabCurrent": {
+        "description": "Tab Label for Current Reader Info",
+        "type": "String",
+        "placeholders": {}
+    },
+    "readersMainTabSaved": "Saved",
+    "@readersTabSaved": {
+        "description": "Tab Label for Saved Readers",
+        "type": "String",
+        "placeholders": {}
+    },
+    "readersMainTabConnectNew": "Connect New",
+    "@readersTabConnectNew": {
+        "description": "Tab Label for Connect New Readers",
+        "type": "String",
+        "placeholders": {}
+    },
+    "readersConnectTabPairedDevices": "Paired Devices",
+    "@readersConnectTabPairedDevices": {
+        "description": "Tab Label for Paired Devices",
+        "type": "String",
+        "placeholders": {}
+    },
+    "readersConnectTabScanDevices": "Scan For Devices",
+    "@readersConnectTabScanDevices": {
+        "description": "Tab Label for Scan for Devices",
+        "type": "String",
+        "placeholders": {}
+    },
     "authenticationFailure": "The username or password you entered is incorrect",
     "@authenticationFailure": {
         "description": "Message shown when there is an error at login",

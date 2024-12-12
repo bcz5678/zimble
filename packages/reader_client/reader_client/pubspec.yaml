@@ -1,0 +1,28 @@
+name: reader_client
+description: Reader client
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ^3.5.0
+  flutter: ^3.24.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  equatable: ^2.0.7
+
+  #custom packages
+  bluetooth_reader_client:
+    path: ../bluetooth_reader_client
+  network_reader_client:
+    path: ../network_reader_client
+  usb_reader_client:
+    path: ../usb_reader_client
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.4
+  very_good_analysis: ^6.0.0

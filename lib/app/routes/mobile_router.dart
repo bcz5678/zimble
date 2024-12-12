@@ -67,20 +67,54 @@ class MobileRouter {
                   name: AppRoutes.readers.name,
                   builder: (context, state) => const ReadersPage(),
                 ),
-                GoRoute(
-                  path: AppRoutes.tagFinder.path,
-                  name: AppRoutes.tagFinder.name,
-                  builder: (context, state) => const TagFinderPage(),
-                ),
-                GoRoute(
-                  path: AppRoutes.tagInfo.path,
-                  name: AppRoutes.tagInfo.name,
-                  builder: (context, state) => const TagInfoPage(),
-                ),
-                GoRoute(
-                  path: AppRoutes.trigger.path,
-                  name: AppRoutes.trigger.name,
-                  builder: (context, state) => const TriggerPage(),
+
+                      /*
+                  routes: [
+                    GoRoute(
+                        path: AppRoutes.readersCurrentInfo.path,
+                        name: AppRoutes.readersCurrentInfo.name,
+                        builder: (context, state) => const CurrentReadersScreen()
+                    ),
+                    GoRoute(
+                    path: AppRoutes.readersSaved.path,
+                    name: AppRoutes.readersSaved.name,
+                    builder: (context, state) => const SavedReadersScreen()
+                    ),
+                    GoRoute(
+                        path: AppRoutes.readersConnectNew.path,
+                        name: AppRoutes.readersConnectNew.name,
+                        builder: (context, state) => const ConnectNewReadersScreen(),
+                      routes: [
+                        GoRoute(
+                            path: AppRoutes.readersConnectNewPaired.path,
+                            name: AppRoutes.readersConnectNewPaired.name,
+                            builder: (context, state) => const PairedReadersScreen(),
+                        ),
+                        GoRoute(
+                            path: AppRoutes.readersConnectNewScan.path,
+                            name: AppRoutes.readersConnectNewScan.name,
+                            builder: (context, state) => const ScanReadersScreen(),
+                        ),
+                      ],
+                    )
+                     ],
+                       */
+
+
+                    GoRoute(
+                    path: AppRoutes.tagFinder.path,
+                    name: AppRoutes.tagFinder.name,
+                    builder: (context, state) => const TagFinderPage(),
+                    ),
+                    GoRoute(
+                    path: AppRoutes.tagInfo.path,
+                    name: AppRoutes.tagInfo.name,
+                    builder: (context, state) => const TagInfoPage(),
+                    ),
+                    GoRoute(
+                    path: AppRoutes.trigger.path,
+                    name: AppRoutes.trigger.name,
+                    builder: (context, state) => const TriggerPage(),
                 ),
               ], )
             ,

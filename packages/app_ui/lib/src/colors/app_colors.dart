@@ -2,21 +2,43 @@ import 'package:flutter/material.dart';
 
 /// Defines the color palette for the App UI Kit.
 abstract class AppColors {
-  /// LingoBlack
-  static const Color lingoBlack = Color(0xFF1A2835);
+
+  /// LingoBlack Family
+  static const Color lingoBlack_100 = Color(0xFF1A2835);
+  static const Color lingoBlack_80 = Color(0xCC1A2835);
+  static const Color lingoBlack_60 = Color(0x991A2835);
+  static const Color lingoBlack_40 = Color(0x661A2835);
+  static const Color lingoBlack_20 = Color(0x331A2835);
+  static const Color lingoBlack_10 = Color(0x1A1A2835);
 
 
-  /// LingoDark
-  static const Color lingoDark = Color(0xFF202F3D);
+  /// LingoDark Family
+  static const Color lingoDark_100 = Color(0xFF202F3D);
+  static const Color lingoDark_80 = Color(0xCC202F3D);
+  static const Color lingoDark_60 = Color(0x99202F3D);
+  static const Color lingoDark_40 = Color(0x66202F3D);
+  static const Color lingoDark_20 = Color(0x33202F3D);
+  static const Color lingoDark_10 = Color(0x1A202F3D);
 
-  /// LingoGrey
-  static const Color lingoGrey = Color(0xFFF0F3F6);
+  /// LingoGrey Family
+  static const Color lingoGrey_100 = Color(0xFFF0F3F6);
+  static const Color lingoGrey_80 = Color(0xCCF0F3F6);
+  static const Color lingoGrey_60 = Color(0x99F0F3F6);
+  static const Color lingoGrey_40 = Color(0x66F0F3F6);
+  static const Color lingoGrey_20 = Color(0x33F0F3F6);
 
-  /// LingoGrey
+  /// LingoWhite
   static const Color lingoWhite = Color(0xFFFFFFFF);
 
-  /// LingoOrange
-  static const Color lingoOrange = Color(0xFFFB6A18);
+  /// LingoOrange Family
+  static const Color lingoOrange_100 = Color(0xFFFB6A18);
+  static const Color lingoOrange_80 = Color(0xCCFB6A18);
+  static const Color lingoOrange_60 = Color(0x99FB6A18);
+  static const Color lingoOrange_40 = Color(0x66FB6A18);
+  static const Color lingoOrange_20 = Color(0x33FB6A18);
+  static const Color lingoOrange_10 = Color(0x1AFB6A18);
+
+
   /// Black
   static const Color black = Color(0xFF000000);
 

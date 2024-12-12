@@ -102,7 +102,7 @@ class AppTextField extends StatelessWidget {
             obscureText: obscureText,
             autofillHints: autoFillHints,
 
-            cursorColor: AppColors.lingoBlack,
+            cursorColor: AppColors.lingoBlack_100,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w300,
                 ),

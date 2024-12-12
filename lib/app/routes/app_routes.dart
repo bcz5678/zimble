@@ -35,6 +35,34 @@ class AppRoutes {
     path: '/readers',
     title: 'Readers',
   );
+
+  /*
+  static RouteDataModel readersCurrentInfo = RouteDataModel(
+    name: 'readersCurrentInfo',
+    path: '/readers/current',
+    title: 'Current Reader Info',
+  );
+  static RouteDataModel readersSaved = RouteDataModel(
+    name: 'readersSaved',
+    path: '/readers/saved',
+    title: 'Saved Readers',
+  );
+  static RouteDataModel readersConnectNew = RouteDataModel(
+    name: 'readersConnectNew',
+    path: 'readers/connect_new',
+    title: 'Connect New Readers',
+  );
+  static RouteDataModel readersConnectNewPaired = RouteDataModel(
+    name: 'readersConnectNewPaired',
+    path: 'readers/connect_new/paired',
+    title: 'Paired Readers',
+  );
+  static RouteDataModel readersConnectNewScan = RouteDataModel(
+    name: 'readersConnectNewScan',
+    path: 'readers/connect_new/scan',
+    title: 'Scan For New Readers',
+  );
+   */
   static RouteDataModel tagFinder = RouteDataModel(
     name: 'tagFinder',
     path: '/tag_finder',

@@ -2,14 +2,14 @@ import 'package:app_ui/app_ui.dart'
     show AppBackButton, AppButton, AppColors, AppSpacing, AppSwitch, Assets;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notifications_repository/notifications_repository.dart';
+import 'package:user_repository/user_repository.dart';
 import 'package:zimble/analytics/analytics.dart';
 import 'package:zimble/app/app.dart';
 import 'package:zimble/l10n/l10n.dart';
 import 'package:zimble/notification_preferences/notification_preferences.dart';
 import 'package:zimble/terms_of_service/terms_of_service.dart';
 import 'package:zimble/user_profile/user_profile.dart';
-import 'package:notifications_repository/notifications_repository.dart';
-import 'package:user_repository/user_repository.dart';
 
 class UserProfilePage extends StatelessWidget {
   const UserProfilePage({super.key});
@@ -96,7 +96,7 @@ class _UserProfileViewState extends State<UserProfileView>
             leading: const AppBackButton(),
             scrolledUnderElevation: scrolledUnderElevation,
             centerTitle: true,
-            backgroundColor: AppColors.lingoDark,
+            backgroundColor: AppColors.lingoDark_100,
           ),
           body: CustomScrollView(
             slivers: [
