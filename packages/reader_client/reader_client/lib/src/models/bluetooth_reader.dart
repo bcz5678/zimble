@@ -28,7 +28,7 @@ class BluetoothReader extends Equatable{
   final String? imageStub;
 
   /// IS the reader connected
-  final bool? connectionStatus;
+  final String? connectionStatus;
 
   /// The current reader details
   final Map<String, dynamic>? readerDetails;

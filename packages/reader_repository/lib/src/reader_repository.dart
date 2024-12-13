@@ -57,7 +57,7 @@ class DisconnectFromBluetoothDeviceFailure extends ReaderFailure {
 /// {@endtemplate}
 class ReaderRepository {
   /// {@macro reader_repository}
-  const ReaderRepository({
+  ReaderRepository({
       required ReaderClient readerClient,
       required ReaderStorage storage,
   }) :  _readerClient = readerClient,
@@ -69,13 +69,14 @@ class ReaderRepository {
   /// Getter for current reader.
   /// [TODO] upgrade this to a multiple reader list
 
+  /*
   Stream<Reader> get reader {
     // [DEBUG TEST]
     if (kDebugMode) {
       print('reader_repository -> get reader -> Entry');
     }
 
-    /*
+
     return Rx.combineLatest(streams, combiner)<BluetoothReader, String, Reader>(
       _readerClient.reader,
       _placeholderData,
@@ -84,113 +85,110 @@ class ReaderRepository {
             authenticationUser: authenticationUser,
           ),
     ).asBroadcastStream();
-     */
-
-    final BehaviorSubject<String> _placeholderData = BehaviorSubject.seeded(
-        'null');
-
-    /// Gets the currently paired bluetooth devices
-    ///
-    /// Throws a [getPairedBluetoothDevicesFailure] if an exception occurs.
-    Future<List<BluetoothReader>> getPairedBluetoothDevices() async {
-      // [DEBUG TEST]
-      if (kDebugMode) {
-        print('reader_repository -> getPairedBluetoothDevices -> Entry');
-      }
-      try {
-        return await _readerClient.getPairedBluetoothDevices();
-      } on GetPairedBluetoothDevicesFailure {
-        rethrow;
-      } catch (error, stackTrace) {
-        Error.throwWithStackTrace(
-            GetPairedBluetoothDevicesFailure(error),
-            stackTrace
-        );
-      }
-    }
-
-    /// Send the command to start scanning for Bluetooth devices to pair
-    ///
-    /// Throws a [startScanningBluetoothDevicesFailure] if an exception occurs.
-    Future<String> startScanningBluetoothDevices() async {
-      // [DEBUG TEST]
-      if (kDebugMode) {
-        print('reader_repository -> startScanningBluetoothDevices -> Entry');
-      }
-      try {
-        return await _readerClient.startScanningBluetoothDevices();
-      } on StartScanningBluetoothDevicesFailure {
-        rethrow;
-      } catch (error, stackTrace) {
-        Error.throwWithStackTrace(
-            StartScanningBluetoothDevicesFailure(error),
-            stackTrace
-        );
-      }
-    }
-
-    /// Send the command to stop scanning for Bluetooth devices
-    ///
-    /// Throws a [stopScanningBluetoothDevicesFailure] if an exception occurs.
-    Future<String> stopScanningBluetoothDevices() async {
-      // [DEBUG TEST]
-      if (kDebugMode) {
-        print('reader_repository -> stopScanningBluetoothDevices -> Entry');
-      }
-      try {
-        return await _readerClient.stopScanningBluetoothDevices();
-      } on StopScanningBluetoothDevicesFailure {
-        rethrow;
-      } catch (error, stackTrace) {
-        Error.throwWithStackTrace(
-            StopScanningBluetoothDevicesFailure(error),
-            stackTrace
-        );
-      }
-    }
-
-    /// Send the command to connect to a Bluetooth device
-    ///
-    /// Throws a [connectToBluetoothDeviceFailure] if an exception occurs.
-    Future<BluetoothReader> connectToBluetoothDevice(bluetoothDevice) async {
-      // [DEBUG TEST]
-      if (kDebugMode) {
-        print('reader_repository -> connectToBluetoothDevices -> Entry');
-      }
-      try {
-        return await _readerClient.connectToBluetoothDevice();
-      } on ConnectToBluetoothDeviceFailure {
-        rethrow;
-      } catch (error, stackTrace) {
-        Error.throwWithStackTrace(
-            ConnectToBluetoothDeviceFailure(error),
-            stackTrace
-        );
-      }
-    }
-
-    /// Send the command to disconnect from a Bluetooth device
-    ///
-    /// Throws a [disconnectFromBluetoothDeviceFailure] if an exception occurs.
-    Future<BluetoothReader> disconnectFromBluetoothDevice(bluetoothDevice) async {
-      // [DEBUG TEST]
-      if (kDebugMode) {
-        print('reader_repository -> disconnectFromBluetoothDevice -> Entry');
-      }
-      try {
-        return await _readerClient.disconnectFromBluetoothDevice();
-      } on DisconnectFromBluetoothDeviceFailure {
-        rethrow;
-      } catch (error, stackTrace) {
-        Error.throwWithStackTrace(
-            DisconnectFromBluetoothDeviceFailure(error),
-            stackTrace
-        );
-      }
-    }
 
   }
+*/
 
+  final BehaviorSubject<String> _placeholderData = BehaviorSubject.seeded(
+      'null');
 
+  /// Gets the currently paired bluetooth devices
+  ///
+  /// Throws a [getPairedBluetoothDevicesFailure] if an exception occurs.
+  Future<List<BluetoothReader>> getPairedBluetoothDevices() async {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> getPairedBluetoothDevices -> Entry');
+    }
+    try {
+      return await _readerClient.getPairedBluetoothDevices();
+    } on GetPairedBluetoothDevicesFailure {
+      rethrow;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(
+          GetPairedBluetoothDevicesFailure(error),
+          stackTrace
+      );
+    }
+  }
 
+  /// Send the command to start scanning for Bluetooth devices to pair
+  ///
+  /// Throws a [startScanningBluetoothDevicesFailure] if an exception occurs.
+  Future<String> startScanningBluetoothDevices() async {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> startScanningBluetoothDevices -> Entry');
+    }
+    try {
+      return await _readerClient.startScanningBluetoothDevices();
+    } on StartScanningBluetoothDevicesFailure {
+      rethrow;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(
+          StartScanningBluetoothDevicesFailure(error),
+          stackTrace
+      );
+    }
+  }
+
+  /// Send the command to stop scanning for Bluetooth devices
+  ///
+  /// Throws a [stopScanningBluetoothDevicesFailure] if an exception occurs.
+  Future<String> stopScanningBluetoothDevices() async {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> stopScanningBluetoothDevices -> Entry');
+    }
+    try {
+      return await _readerClient.stopScanningBluetoothDevices();
+    } on StopScanningBluetoothDevicesFailure {
+      rethrow;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(
+          StopScanningBluetoothDevicesFailure(error),
+          stackTrace
+      );
+    }
+  }
+
+  /// Send the command to connect to a Bluetooth device
+  ///
+  /// Throws a [connectToBluetoothDeviceFailure] if an exception occurs.
+  Future<BluetoothReader> connectToBluetoothDevice(bluetoothDevice) async {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> connectToBluetoothDevices -> Entry');
+    }
+    try {
+      return await _readerClient.connectToBluetoothDevice();
+    } on ConnectToBluetoothDeviceFailure {
+      rethrow;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(
+          ConnectToBluetoothDeviceFailure(error),
+          stackTrace
+      );
+    }
+  }
+
+  /// Send the command to disconnect from a Bluetooth device
+  ///
+  /// Throws a [disconnectFromBluetoothDeviceFailure] if an exception occurs.
+  Future<BluetoothReader> disconnectFromBluetoothDevice(bluetoothDevice) async {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> disconnectFromBluetoothDevice -> Entry');
+    }
+    try {
+      return await _readerClient.disconnectFromBluetoothDevice();
+    } on DisconnectFromBluetoothDeviceFailure {
+      rethrow;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(
+          DisconnectFromBluetoothDeviceFailure(error),
+          stackTrace
+      );
+    }
+  }
 }

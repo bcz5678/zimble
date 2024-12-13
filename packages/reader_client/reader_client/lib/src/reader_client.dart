@@ -1,5 +1,9 @@
 import 'dart:async';
 
+import 'package:bluetooth_reader_client/bluetooth_reader_client.dart';
+import 'package:flutter/foundation.dart';
+import 'package:network_reader_client/network_reader_client.dart';
+import 'package:usb_reader_client/usb_reader_client.dart';
 import 'package:reader_client/reader_client.dart';
 
 
@@ -38,32 +42,105 @@ class DisconnectFromBluetoothDeviceFailure extends ReaderException {
 
 
 /// Reader client
-abstract class ReaderClient {
+class ReaderClient {
+  const ReaderClient({
+    required BluetoothReaderClient bluetoothReaderClient,
+    required NetworkReaderClient networkReaderClient,
+    required UsbReaderClient usbReaderClient,
+  })
+      : _bluetoothReaderClient = bluetoothReaderClient,
+        _networkReaderClient = networkReaderClient,
+        _usbReaderClient = usbReaderClient;
+
+  final BluetoothReaderClient _bluetoothReaderClient;
+  final NetworkReaderClient _networkReaderClient;
+  final UsbReaderClient _usbReaderClient;
+
 
   /// Stream of [BluetoothReader] which will emit the current reader when
   /// the connection process changes
-  Stream<BluetoothReader> get bluetoothReader;
+  //Stream<BluetoothReader> get bluetoothReader;
 
   /// Stream of [NetworkReader] which will emit the current reader when
   /// the connection process changes
-  Stream<NetworkReader> get networkReader;
+  //Stream<NetworkReader> get networkReader;
 
   /// Stream of [NetworkReader] which will emit the current reader when
   /// the connection process changes
-  Stream<UsbReader> get usbReader;
+  //Stream<UsbReader> get usbReader;
 
   /// Gets a list of Paired Bluetooth Readers
-  Future<List<BluetoothReader>> getPairedBluetoothDevices();
+  Future<List<BluetoothReader>> getPairedBluetoothDevices() async {
+    if (kDebugMode) {
+      print('reader_client -> getPairedBluetoothDevices -> Entry');
+    }
+    try {
+      return await _bluetoothReaderClient.getPairedBluetoothDevices();
+    } on GetPairedBluetoothDevicesFailure {
+      rethrow;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(
+          GetPairedBluetoothDevicesFailure(error), stackTrace);
+    }
+  }
 
-  /// Sends the command to device to start scanning for bluetooth devices
-  Future<String> startScanningBluetoothDevices();
+    /// Sends the command to device to start scanning for bluetooth devices
+  Future<String> startScanningBluetoothDevices() async {
+    if (kDebugMode) {
+      print('reader_client -> startScanningBluetoothDevices -> Entry');
+    }
+    try {
+      return await _bluetoothReaderClient.startScanningBluetoothDevices();
+    } on StartScanningBluetoothDevicesFailure {
+      rethrow;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(
+          StartScanningBluetoothDevicesFailure(error), stackTrace);
+    }
+  }
 
   /// Sends the command to device to stop scanning for bluetooth devices
-  Future<String> stopScanningBluetoothDevices();
+  Future<String> stopScanningBluetoothDevices() async {
+    if (kDebugMode) {
+      print('reader_client -> stopScanningBluetoothDevices -> Entry');
+    }
+    try {
+      return await _bluetoothReaderClient.stopScanningBluetoothDevices();
+    } on StopScanningBluetoothDevicesFailure {
+      rethrow;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(
+          StopScanningBluetoothDevicesFailure(error), stackTrace);
+    }
+  }
 
   /// Sends the command to device to connect to a specific bluetooth device
-  Future<BluetoothReader> connectToBluetoothDevice();
+  Future<BluetoothReader> connectToBluetoothDevice() async {
+    if (kDebugMode) {
+      print('reader_client -> connectToBluetoothDevice -> Entry');
+    }
+    try {
+      return await _bluetoothReaderClient.connectToBluetoothDevice();
+    } on ConnectToBluetoothDeviceFailure {
+      rethrow;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(
+          ConnectToBluetoothDeviceFailure(error), stackTrace);
+    }
+  }
 
   /// Sends the command to device to disconnect from a specific bluetooth device
-  Future<BluetoothReader> disconnectFromBluetoothDevice();
+  Future<BluetoothReader> disconnectFromBluetoothDevice() async {
+    if (kDebugMode) {
+      print('reader_client -> disconnectFromBluetoothDevices -> Entry');
+    }
+    try {
+      return await _bluetoothReaderClient.disconnectFromBluetoothDevice();
+    } on DisconnectFromBluetoothDeviceFailure {
+      rethrow;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(
+          DisconnectFromBluetoothDeviceFailure(error), stackTrace);
+    }
+  }
 }
