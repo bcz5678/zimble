@@ -36,6 +36,25 @@
         "type": "String",
         "placeholders": {}
     },
+    "readersConnectTabPairedDevicesChooseReader": "Choose your RFID reader from the Available Bluetooth Devices",
+    "@readersConnectTabPairedDevicesChooseReader": {
+        "description": "Tab Label to choose an RFID Reader to connect",
+        "type": "String",
+        "placeholders": {}
+    },
+    "readersConnectTabPairedDevicesPreviouslyPaired": "Previously Paired Devices",
+    "@readersConnectTabPairedDevicesPreviouslyPaired": {
+        "description": "Previously Paired Bluetooth Devices",
+        "type": "String",
+        "placeholders": {}
+    },
+    "readersConnectTabPairedDevicesSavedOrPaired": "Select Get Saved or new Reader from menu above",
+    "@readersConnectTabPairedDevicesSavedOrPaired": {
+        "description": "Label to switch between Saved or New reader",
+        "type": "String",
+        "placeholders": {}
+    },
+
     "readersConnectTabScanDevices": "Scan For Devices",
     "@readersConnectTabScanDevices": {
         "description": "Tab Label for Scan for Devices",

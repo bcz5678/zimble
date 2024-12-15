@@ -1,16 +1,18 @@
 import 'package:deep_link_client/deep_link_client.dart';
+import 'package:drift/drift.dart';
 import 'package:firebase_authentication_client/firebase_authentication_client.dart';
 import 'package:firebase_deep_link_client/firebase_deep_link_client.dart';
 import 'package:firebase_notifications_client/firebase_notifications_client.dart';
-import 'package:zimble/app/app.dart';
-import 'package:zimble/main/bootstrap/bootstrap.dart';
-import 'package:zimble/src/version.dart';
 import 'package:notifications_repository/notifications_repository.dart';
 import 'package:package_info_client/package_info_client.dart';
 import 'package:permission_client/permission_client.dart';
 import 'package:persistent_storage/persistent_storage.dart';
+import 'package:reader_repository/reader_repository.dart';
 import 'package:token_storage/token_storage.dart';
 import 'package:user_repository/user_repository.dart';
+import 'package:zimble/app/app.dart';
+import 'package:zimble/main/bootstrap/bootstrap.dart';
+import 'package:zimble/src/version.dart';
 
 void main() {
   bootstrap(
@@ -28,6 +30,8 @@ void main() {
       final persistentStorage = PersistentStorage(
         sharedPreferences: sharedPreferences,
       );
+
+      final driftStorage = DriftDatabase();
 
       final packageInfoClient = PackageInfoClient(
         appName: 'Flutter News Example',
@@ -62,6 +66,12 @@ void main() {
         permissionClient: permissionClient,
         storage: NotificationsStorage(storage: persistentStorage),
         notificationsClient: notificationsClient,
+      );
+
+
+      final readerRepository = ReaderRepository(
+          readerClient: readerClient,
+          storage: userStorage,
       );
 
 

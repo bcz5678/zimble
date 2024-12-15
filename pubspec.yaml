@@ -33,6 +33,10 @@ dependencies:
     path: packages/permission_client
   persistent_storage:
     path: packages/storage/persistent_storage
+  reader_client:
+    path: packages/reader_client/reader_client
+  reader_repository:
+    path: packages/reader_repository
   token_storage:
     path: packages/authentication_client/token_storage
   user_repository:
@@ -51,6 +55,9 @@ dependencies:
 
   #network Requests
   dio: ^5.4.0
+
+  #SQL local storage
+  drift: ^2.22.0
 
   #Class and object hash/id matching
   equatable: ^2.0.5
@@ -114,6 +121,9 @@ dependencies:
   #Updated Stream Manager
   rxdart: ^0.28.0
 
+  #SQL Libraries
+  sqlite3_flutter_libs: ^0.5.0
+
   #Access to device shared preferences
   shared_preferences: ^2.0.15
 
@@ -127,6 +137,7 @@ dev_dependencies:
     sdk: flutter
   mocktail: ^1.0.4
   very_good_analysis: ^6.0.0
+  build_runner: ^2.4.13
 
 flutter:
   uses-material-design: true
