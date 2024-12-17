@@ -7,6 +7,7 @@ import 'package:notifications_repository/notifications_repository.dart';
 import 'package:package_info_client/package_info_client.dart';
 import 'package:permission_client/permission_client.dart';
 import 'package:persistent_storage/persistent_storage.dart';
+import 'package:reader_client/reader_client.dart';
 import 'package:reader_repository/reader_repository.dart';
 import 'package:token_storage/token_storage.dart';
 import 'package:user_repository/user_repository.dart';
@@ -68,6 +69,12 @@ void main() {
         notificationsClient: notificationsClient,
       );
 
+
+      final ReaderClient readerClient = ReaderClient(
+          bluetoothReaderClient: bluetoothReaderClient,
+          networkReaderClient: networkReaderClient,
+          usbReaderClient: usbReaderClient
+      );
 
       final readerRepository = ReaderRepository(
           readerClient: readerClient,

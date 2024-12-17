@@ -51,7 +51,6 @@ class DisconnectFromBluetoothDeviceFailure extends ReaderFailure {
 /// [TODO] Add failure definitions here for exception logging and handling
 
 
-
 /// {@template reader_repository}
 /// Reader Repository
 /// {@endtemplate}
@@ -69,25 +68,104 @@ class ReaderRepository {
   /// Getter for current reader.
   /// [TODO] upgrade this to a multiple reader list
 
-  /*
-  Stream<Reader> get reader {
+
+  Stream<List<Reader>> get bluetoothPairedReadersList {
     // [DEBUG TEST]
     if (kDebugMode) {
-      print('reader_repository -> get reader -> Entry');
+      print('reader_repository -> get bluetoothPairedReadersList -> Entry');
     }
-
 
     return Rx.combineLatest(streams, combiner)<BluetoothReader, String, Reader>(
       _readerClient.reader,
       _placeholderData,
           (BluetoothReader, placeholderData) =>
           Reader.fromBluetoothReader(
-            authenticationUser: authenticationUser,
+
           ),
     ).asBroadcastStream();
-
   }
-*/
+
+
+  Stream<List<Reader>> get bluetoothScannedReadersList {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> get bluetoothScannedReadersList -> Entry');
+    }
+
+    return Rx.combineLatest(streams, combiner)<BluetoothReader, String, Reader>(
+      _readerClient.reader,
+      _placeholderData,
+          (BluetoothReader, placeholderData) =>
+          Reader.fromBluetoothReader(
+
+          ),
+    ).asBroadcastStream();
+  }
+
+  Stream<List<Reader>> get usbReadersList {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> get usbReadersList -> Entry');
+    }
+
+    return Rx.combineLatest(streams, combiner)<BluetoothReader, String, Reader>(
+      _readerClient.reader,
+      _placeholderData,
+          (BluetoothReader, placeholderData) =>
+          Reader.fromBluetoothReader(
+
+          ),
+    ).asBroadcastStream();
+  }
+
+  Stream<List<Reader>> get networkReadersList {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> get networkReadersList -> Entry');
+    }
+
+    return Rx.combineLatest(streams, combiner)<BluetoothReader, String, Reader>(
+      _readerClient.reader,
+      _placeholderData,
+          (BluetoothReader, placeholderData) =>
+          Reader.fromBluetoothReader(
+
+          ),
+    ).asBroadcastStream();
+  }
+
+  Stream<List<Reader>> get savedReadersList {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> get savedReadersList -> Entry');
+    }
+
+    return Rx.combineLatest(streams, combiner)<BluetoothReader, String, Reader>(
+      _readerClient.reader,
+      _placeholderData,
+          (BluetoothReader, placeholderData) =>
+          Reader.fromBluetoothReader(
+
+          ),
+    ).asBroadcastStream();
+  }
+
+  Stream<List<Reader>> get currentlyAttachedReadersList {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> get currentlyAttachedReadersList -> Entry');
+    }
+
+    return Rx.combineLatest(streams, combiner)<BluetoothReader, String, Reader>(
+      _readerClient.reader,
+      _placeholderData,
+          (BluetoothReader, placeholderData) =>
+          Reader.fromBluetoothReader(
+
+          ),
+    ).asBroadcastStream();
+  }
+
 
   final BehaviorSubject<String> _placeholderData = BehaviorSubject.seeded(
       'null');

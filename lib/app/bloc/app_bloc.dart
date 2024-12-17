@@ -56,7 +56,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       print('app_bloc -> _userChanged -> $user');
     }
     add(AppUserChanged(user));
-
   }
 
   /// Handles updating AppState based on  newly changed User data

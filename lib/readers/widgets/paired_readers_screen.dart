@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zimble/readers/bloc/readers_bloc.dart';
 import 'package:zimble/l10n/l10n.dart';
+import 'package:zimble/readers/bloc/readers_connect/readers_connect_bluetooth_paired/readers_connect_bluetooth_paired_bloc.dart';
 
 class PairedReadersScreen extends StatefulWidget {
   const PairedReadersScreen({super.key});
@@ -20,7 +22,7 @@ class _PairedReadersScreenState extends State<PairedReadersScreen> with Automati
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    context.read<ReadersBloc>().add(const GetPairedBluetoothDevices());
+    context.read<ReadersConnectBluetoothPairedBloc>().add(const GetPairedBluetoothDevices());
     context.read<ReadersBloc>().add(const GetCurrentReader());
     print("Paired_tab rebuilt");
   }
@@ -56,22 +58,22 @@ class _PairedReadersScreenState extends State<PairedReadersScreen> with Automati
                 ],
               ),
 
-              BlocBuilder<ReaderConnectPairedBloc, ReaderConnectPairedState>(
+              BlocBuilder<ReadersConnectBluetoothPairedBloc, ReadersConnectBluetoothPairedState>(
                   builder: (context, state) {
-                    if (state.stateStatus == ReaderConnectPairedStatus.pairedBluetoothDevicesInitial) {
+                    if (state.stateStatus == ReadersConnectBluetoothPairedStatus.initial) {
                       return Center(
                           child: Text(context.l10n.readersConnectTabPairedDevicesSavedOrPaired));
                     }
 
-                    if (state.stateStatus == ReaderConnectPairedStatus.pairedBluetoothDevicesLoading) {
+                    if (state.stateStatus == ReadersConnectBluetoothPairedStatus.loading) {
                       return const Center(
                           child: CupertinoActivityIndicator()
                       );
                     }
 
-                    if (state.stateStatus == ReaderConnectPairedStatus.pairedBluetoothDevicesDone ||
-                        state.stateStatus == ReaderConnectPairedStatus.connectToDeviceStatusLoading ||
-                        state.stateStatus == ReaderConnectPairedStatus.connectToDeviceStatusUpdate
+                    if (state.stateStatus == ReadersConnectBluetoothPairedStatus.done ||
+                        state.stateStatus == ReadersConnectBluetoothPairedStatus.loading ||
+                        state.stateStatus == ReadersConnectBluetoothPairedStatus.connectToDeviceStatusUpdate
                     ) {
                       if (state.pairedBluetoothDevices != null) {
                         return ListView.builder(
