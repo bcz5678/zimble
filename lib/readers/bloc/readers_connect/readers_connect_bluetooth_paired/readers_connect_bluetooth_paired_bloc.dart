@@ -14,26 +14,51 @@ class ReadersConnectBluetoothPairedBloc extends Bloc<ReadersConnectBluetoothPair
     required ReaderRepository readerRepository,
   })
       : _readerRepository = readerRepository,
-        super(ReadersConnectBluetoothPairedState.initial()) {
-    _bluetoothPairedReadersSubscription =
-        _readerRepository.bluetoothPairedReadersList.listen(
-            _bluetoothPairedReadersListChanged);
+        super(const ReadersConnectBluetoothPairedState.initial()) {
+      on<GetPairedBluetoothDevices> (onGetPairedBluetoothDevices);
+
   }
 
+  /// Initialize readerRepository and _bluetoothPairedReadersSubscription
+  /// to handle changes to the bluetooth list
   final ReaderRepository _readerRepository;
-  late StreamSubscription<List<Reader>> _bluetoothPairedReadersSubscription;
 
-  void _bluetoothPairedReadersListChanged(List<Reader> readers) {
-    // [DEBUG TEST]
+
+  void onGetPairedBluetoothDevices(
+      GetPairedBluetoothDevices event,
+      Emitter<ReadersConnectBluetoothPairedState> emit,
+      ) async {
+
+        emit(state.copyWith(
+            stateStatus: ReadersConnectBluetoothPairedStatus.loading,
+          ),
+        );
+
     if (kDebugMode) {
-      print(
-          "readers_connect_paired_bloc -> _bluetoothPairedReadersListChanged - adding - ${readers}");
+      print('readers_connect_bluetooth_paired_bloc -> onGetPairedBluetoothDevices -> Entry');
     }
-    add(ReadersConnectBluetoothPairedChanged(readers));
-  }
 
-  @override
-  Future<void> close() async {
-    _bluetoothPairedReadersSubscription.cancel();
+    try {
+      final bluetoothPairedReadersList = await _readerRepository.getPairedBluetoothDevices();
+
+      if (kDebugMode) {
+        print('readers_connect_bluetooth_paired_bloc -> onGetPairedBluetoothDevices -> bluetoothPairedReadersList - $bluetoothPairedReadersList');
+        print('readers_connect_bluetooth_paired_bloc -> onGetPairedBluetoothDevices -> bluetoothPairedReadersList.runtimeType - ${bluetoothPairedReadersList.runtimeType}');
+      }
+
+      emit(state.copyWith(
+          stateStatus: ReadersConnectBluetoothPairedStatus.done,
+          bluetoothPairedReaders: bluetoothPairedReadersList,
+        ),
+      );
+
+    } on DisconnectFromBluetoothDeviceFailure {
+      rethrow;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(
+          GetPairedBluetoothDevicesFailure(error),
+          stackTrace
+      );
+    }
   }
 }

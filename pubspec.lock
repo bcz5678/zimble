@@ -292,6 +292,21 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.22.1"
+  drift_flutter:
+    dependency: transitive
+    description:
+      name: drift_flutter
+      sha256: "69091c499a1550a84f153bafa3423f4297d26bfef3710323b141336ffe155dff"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.2"
+  drift_storage:
+    dependency: "direct main"
+    description:
+      path: "packages/storage/drift_storage"
+      relative: true
+    source: path
+    version: "0.1.0+1"
   email_launcher:
     dependency: "direct main"
     description:
@@ -874,10 +889,10 @@ packages:
     dependency: "direct main"
     description:
       name: path_provider
-      sha256: fec0d61223fba3154d87759e3cc27fe2c8dc498f6386c6d6fc80d1afdd1bf378
+      sha256: "50c5dd5b6e1aaf6fb3a78b33f6aa3afca52bf903a8a5298f53101fdaee55bbcd"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
   path_provider_android:
     dependency: transitive
     description:

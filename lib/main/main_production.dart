@@ -1,5 +1,5 @@
 import 'package:deep_link_client/deep_link_client.dart';
-import 'package:drift/drift.dart';
+import 'package:drift_storage/drift_storage.dart';
 import 'package:firebase_authentication_client/firebase_authentication_client.dart';
 import 'package:firebase_deep_link_client/firebase_deep_link_client.dart';
 import 'package:firebase_notifications_client/firebase_notifications_client.dart';
@@ -25,14 +25,13 @@ void main() {
         ) async {
       final tokenStorage = InMemoryTokenStorage();
 
-
       const permissionClient = PermissionClient();
 
       final persistentStorage = PersistentStorage(
         sharedPreferences: sharedPreferences,
       );
 
-      final driftStorage = DriftDatabase();
+      final driftStorage = AppDatabase();
 
       final packageInfoClient = PackageInfoClient(
         appName: 'Flutter News Example',
@@ -70,7 +69,12 @@ void main() {
       );
 
 
-      final ReaderClient readerClient = ReaderClient(
+      final bluetoothReaderClient = BluetoothReaderClient();
+
+      final networkReaderClient = NetworkReaderClient();
+      final usbReaderClient = UsbReaderClient();
+
+      final readerClient = ReaderClient(
           bluetoothReaderClient: bluetoothReaderClient,
           networkReaderClient: networkReaderClient,
           usbReaderClient: usbReaderClient
@@ -78,13 +82,12 @@ void main() {
 
       final readerRepository = ReaderRepository(
           readerClient: readerClient,
-          storage: userStorage,
+          storage: driftStorage,
       );
-
-
 
       return App(
         userRepository: userRepository,
+        readerRepository: readerRepository,
         notificationsRepository: notificationsRepository,
         analyticsRepository: analyticsRepository,
         user: await userRepository.user.first,

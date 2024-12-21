@@ -299,7 +299,10 @@ class  AndroidBluetoothController(
 
     //Updates _pairedDevices with devices already known to the host device
     private fun updatePairedDevices() {
+        Log.d("AndroidBluetoothController", "androidBluetoothController - updatePairedDevices -> Entry")
+
         if(!hasPermission((Manifest.permission.BLUETOOTH_CONNECT))) {
+            Log.d("AndroidBluetoothController", "androidBluetoothController - updatePairedDevices -> No Manifest Permissions")
             return
         }
 
@@ -316,14 +319,18 @@ class  AndroidBluetoothController(
     }
 
     fun getPairedDevices(): MutableList<Map<String, Any?>>{
-        /*
+        Log.d("AndroidBluetoothController", "androidBluetoothController - getPairedBluetoothDevices -> Entry")
+
+
         if (bluetoothAdapter?.isEnabled == false) {
-            promptForBluetoothEnable()
+            Log.d("AndroidBluetoothController", "androidBluetoothController - getPairedBluetoothDevices -> Bluetooth Not Enabled")
         }
-         */
+
         updatePairedDevices()
 
         var _bluetoothDevicesList:  MutableList<Map<String, Any?>> = mutableListOf()
+
+
 
         for (x in (0.._pairedDevices.value.size-1)) {
             val tempDevice: Map<String, Any?> = mapOf(
@@ -335,6 +342,7 @@ class  AndroidBluetoothController(
             _bluetoothDevicesList.add(tempDevice)
         }
 
+        Log.d("AndroidBluetoothController", "androidBluetoothController - getPairedBluetoothDevices -> _bluetoothDevicesList - $_bluetoothDevicesList")
         //Log.d("LOGGER", _bluetoothDevicesList.toString())
 
         return _bluetoothDevicesList

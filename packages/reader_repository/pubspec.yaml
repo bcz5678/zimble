@@ -18,6 +18,8 @@ dependencies:
     path: ../reader_client/reader_client
   storage:
     path: ../storage/storage
+  drift_storage:
+    path: ../storage/drift_storage
 
 dev_dependencies:
   flutter_test:

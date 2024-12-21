@@ -14,20 +14,18 @@ class ReadersNetworkBloc extends Bloc<ReadersNetworkEvent, ReadersNetworkState> 
     required ReaderRepository readerRepository,
   }) : _readerRepository = readerRepository,
     super(ReadersNetworkState.initial()) {
-    _networkReadersSubscription = _readerRepository.networkReadersList.listen(_networkReadersListChanged);
+
+    ///Add changes to networked readers to the Readers_network_event handlers
+    _networkReadersSubscription = _readerRepository.networkReadersList
+        .handleError(onError)
+        .listen((readers) => add(ReadersNetworkChanged(readers)));
   }
 
+  /// Initialize readerRepository and _networksSubscription to handle changes
+  /// to the networkReaders list
   final ReaderRepository _readerRepository;
-
   late StreamSubscription<List<Reader>> _networkReadersSubscription;
 
-  void _networkReadersListChanged(List<Reader> readers) {
-  // [DEBUG TEST]
-  if (kDebugMode) {
-    print("readers_main_bloc -> _networkReadersListChanged - adding - ${readers}");
-  }
-    add(ReadersNetworkChanged(readers));
-  }
 
   @override
   Future<void> close() async {

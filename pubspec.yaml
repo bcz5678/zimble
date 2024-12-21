@@ -17,6 +17,8 @@ dependencies:
     path: packages/authentication_client/authentication_client
   deep_link_client:
     path: packages/deep_link_client/deep_link_client
+  drift_storage:
+    path: packages/storage/drift_storage
   email_launcher:
     path: packages/email_launcher
   firebase_authentication_client:

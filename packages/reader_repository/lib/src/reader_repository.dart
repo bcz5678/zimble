@@ -1,13 +1,12 @@
 import 'dart:async';
 
+import 'package:drift_storage/drift_storage.dart' as drift;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:reader_client/reader_client.dart';
+import 'package:bluetooth_reader_client/bluetooth_reader_client.dart';
 import 'package:reader_repository/reader_repository.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:storage/storage.dart';
-
-part 'reader_storage.dart';
 
 /// {@template reader_repository}
 /// A base failure for the reader repository
@@ -58,33 +57,19 @@ class ReaderRepository {
   /// {@macro reader_repository}
   ReaderRepository({
       required ReaderClient readerClient,
-      required ReaderStorage storage,
+      required drift.AppDatabase storage,
   }) :  _readerClient = readerClient,
         _storage = storage;
 
   final ReaderClient _readerClient;
-  final ReaderStorage _storage;
+  final drift.AppDatabase _storage;
+
+  final _bluetoothReaderClient = BluetoothReaderClient();
+  final _usbReaderClient  = UsbReaderClient();
+  final _networkReaderClient = NetworkReaderClient();
 
   /// Getter for current reader.
   /// [TODO] upgrade this to a multiple reader list
-
-
-  Stream<List<Reader>> get bluetoothPairedReadersList {
-    // [DEBUG TEST]
-    if (kDebugMode) {
-      print('reader_repository -> get bluetoothPairedReadersList -> Entry');
-    }
-
-    return Rx.combineLatest(streams, combiner)<BluetoothReader, String, Reader>(
-      _readerClient.reader,
-      _placeholderData,
-          (BluetoothReader, placeholderData) =>
-          Reader.fromBluetoothReader(
-
-          ),
-    ).asBroadcastStream();
-  }
-
 
   Stream<List<Reader>> get bluetoothScannedReadersList {
     // [DEBUG TEST]
@@ -92,15 +77,20 @@ class ReaderRepository {
       print('reader_repository -> get bluetoothScannedReadersList -> Entry');
     }
 
-    return Rx.combineLatest(streams, combiner)<BluetoothReader, String, Reader>(
-      _readerClient.reader,
-      _placeholderData,
-          (BluetoothReader, placeholderData) =>
-          Reader.fromBluetoothReader(
-
-          ),
-    ).asBroadcastStream();
+    return _bluetoothReaderClient
+        .bluetoothScannedReadersList
+        .map((deviceList) {
+      List<Reader> tempList = [];
+      for (var device in deviceList) {
+        tempList.add(
+            Reader.fromBluetoothReader(bluetoothReader: device)
+        );
+      }
+      return tempList;
+    })
+        .asBroadcastStream();
   }
+
 
   Stream<List<Reader>> get usbReadersList {
     // [DEBUG TEST]
@@ -108,14 +98,19 @@ class ReaderRepository {
       print('reader_repository -> get usbReadersList -> Entry');
     }
 
-    return Rx.combineLatest(streams, combiner)<BluetoothReader, String, Reader>(
-      _readerClient.reader,
-      _placeholderData,
-          (BluetoothReader, placeholderData) =>
-          Reader.fromBluetoothReader(
+    return _bluetoothReaderClient
+        .bluetoothScannedReadersList
+        .map((deviceList) {
+      List<Reader> tempList = [];
+      for (var device in deviceList) {
+        tempList.add(
+            Reader.fromBluetoothReader(bluetoothReader: device)
+        );
+      }
+      return tempList;
+    })
+        .asBroadcastStream();
 
-          ),
-    ).asBroadcastStream();
   }
 
   Stream<List<Reader>> get networkReadersList {
@@ -124,14 +119,18 @@ class ReaderRepository {
       print('reader_repository -> get networkReadersList -> Entry');
     }
 
-    return Rx.combineLatest(streams, combiner)<BluetoothReader, String, Reader>(
-      _readerClient.reader,
-      _placeholderData,
-          (BluetoothReader, placeholderData) =>
-          Reader.fromBluetoothReader(
-
-          ),
-    ).asBroadcastStream();
+    return _bluetoothReaderClient
+        .bluetoothScannedReadersList
+        .map((deviceList) {
+      List<Reader> tempList = [];
+      for (var device in deviceList) {
+        tempList.add(
+            Reader.fromBluetoothReader(bluetoothReader: device)
+        );
+      }
+      return tempList;
+    })
+        .asBroadcastStream();
   }
 
   Stream<List<Reader>> get savedReadersList {
@@ -140,15 +139,21 @@ class ReaderRepository {
       print('reader_repository -> get savedReadersList -> Entry');
     }
 
-    return Rx.combineLatest(streams, combiner)<BluetoothReader, String, Reader>(
-      _readerClient.reader,
-      _placeholderData,
-          (BluetoothReader, placeholderData) =>
-          Reader.fromBluetoothReader(
-
-          ),
-    ).asBroadcastStream();
+    return _bluetoothReaderClient
+        .bluetoothScannedReadersList
+        .map((deviceList) {
+      List<Reader> tempList = [];
+      for (var device in deviceList) {
+        tempList.add(
+            Reader.fromBluetoothReader(bluetoothReader: device)
+        );
+      }
+      return tempList;
+    })
+        .asBroadcastStream();
   }
+
+
 
   Stream<List<Reader>> get currentlyAttachedReadersList {
     // [DEBUG TEST]
@@ -156,14 +161,18 @@ class ReaderRepository {
       print('reader_repository -> get currentlyAttachedReadersList -> Entry');
     }
 
-    return Rx.combineLatest(streams, combiner)<BluetoothReader, String, Reader>(
-      _readerClient.reader,
-      _placeholderData,
-          (BluetoothReader, placeholderData) =>
-          Reader.fromBluetoothReader(
-
-          ),
-    ).asBroadcastStream();
+    return _bluetoothReaderClient
+        .bluetoothScannedReadersList
+        .map((deviceList) {
+      List<Reader> tempList = [];
+      for (var device in deviceList) {
+        tempList.add(
+            Reader.fromBluetoothReader(bluetoothReader: device)
+        );
+      }
+      return tempList;
+    })
+        .asBroadcastStream();
   }
 
 
@@ -173,13 +182,22 @@ class ReaderRepository {
   /// Gets the currently paired bluetooth devices
   ///
   /// Throws a [getPairedBluetoothDevicesFailure] if an exception occurs.
-  Future<List<BluetoothReader>> getPairedBluetoothDevices() async {
+  Future<List<Reader>> getPairedBluetoothDevices() async {
     // [DEBUG TEST]
     if (kDebugMode) {
       print('reader_repository -> getPairedBluetoothDevices -> Entry');
     }
     try {
-      return await _readerClient.getPairedBluetoothDevices();
+      var deviceList = await _bluetoothReaderClient.getPairedBluetoothDevices();
+
+      List<Reader> returnList = [];
+      for (var device in deviceList) {
+        returnList.add(
+          Reader.fromBluetoothReader(bluetoothReader: device),
+        );
+      }
+      return returnList;
+
     } on GetPairedBluetoothDevicesFailure {
       rethrow;
     } catch (error, stackTrace) {
@@ -190,6 +208,7 @@ class ReaderRepository {
     }
   }
 
+
   /// Send the command to start scanning for Bluetooth devices to pair
   ///
   /// Throws a [startScanningBluetoothDevicesFailure] if an exception occurs.
@@ -199,7 +218,7 @@ class ReaderRepository {
       print('reader_repository -> startScanningBluetoothDevices -> Entry');
     }
     try {
-      return await _readerClient.startScanningBluetoothDevices();
+      return await _bluetoothReaderClient.startScanningBluetoothDevices();
     } on StartScanningBluetoothDevicesFailure {
       rethrow;
     } catch (error, stackTrace) {
@@ -219,7 +238,7 @@ class ReaderRepository {
       print('reader_repository -> stopScanningBluetoothDevices -> Entry');
     }
     try {
-      return await _readerClient.stopScanningBluetoothDevices();
+      return await _bluetoothReaderClient.stopScanningBluetoothDevices();
     } on StopScanningBluetoothDevicesFailure {
       rethrow;
     } catch (error, stackTrace) {
@@ -239,7 +258,7 @@ class ReaderRepository {
       print('reader_repository -> connectToBluetoothDevices -> Entry');
     }
     try {
-      return await _readerClient.connectToBluetoothDevice();
+      return await _bluetoothReaderClient.connectToBluetoothDevice();
     } on ConnectToBluetoothDeviceFailure {
       rethrow;
     } catch (error, stackTrace) {
@@ -259,7 +278,7 @@ class ReaderRepository {
       print('reader_repository -> disconnectFromBluetoothDevice -> Entry');
     }
     try {
-      return await _readerClient.disconnectFromBluetoothDevice();
+      return await _bluetoothReaderClient.disconnectFromBluetoothDevice();
     } on DisconnectFromBluetoothDeviceFailure {
       rethrow;
     } catch (error, stackTrace) {

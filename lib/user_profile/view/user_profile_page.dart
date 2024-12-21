@@ -63,6 +63,7 @@ class _UserProfileViewState extends State<UserProfileView>
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     final user = context.select((UserProfileBloc bloc) => bloc.state.user);

@@ -28,7 +28,7 @@ import kotlinx.coroutines.async
 class BluetoothDeviceChannels(context: Context) {
     val TAG = "BluetoothDeviceChannels"
     
-    ///Create Stream Channel Names to match FLlutter
+    ///Create Stream Channel Names to match Flutter
     private val BT_DEVICES_METHOD = "mtg_rfid_method/reader/bt_devices"
     private val BT_DEVICES_STREAM = "mtg_rfid_event/reader/bt_stream"
 
@@ -73,6 +73,7 @@ class BluetoothDeviceChannels(context: Context) {
                 call.method.equals("getPairedBluetoothDevices") -> {
                     Log.d(TAG, "in call method - getPairedBluetoothDevices")
                     var _pairedBluetoothDevices: MutableList<Map<String, Any?>> = _androidBluetoothController.getPairedDevices()
+                    Log.d(TAG, "in call method - getPairedBluetoothDevices - deviceList - ${_pairedBluetoothDevices}")
                     result.success(_pairedBluetoothDevices)
                 }
                 /// Start discovery and get a stream of discovered BluetoothDevices

@@ -5,12 +5,15 @@ enum ReadersConnectBluetoothPairedStatus {
   loading,
   done,
   error,
+  connectToDeviceStatusLoading,
+  connectToDeviceStatusUpdate
 }
 
 class ReadersConnectBluetoothPairedState {
   const ReadersConnectBluetoothPairedState({
     required this.stateStatus,
     this.bluetoothPairedReaders,
+    this.bluetoothDeviceToUpdate,
   });
 
   const ReadersConnectBluetoothPairedState.initial()
@@ -20,20 +23,23 @@ class ReadersConnectBluetoothPairedState {
 
   final ReadersConnectBluetoothPairedStatus? stateStatus;
   final List<Reader>? bluetoothPairedReaders;
+  final Reader? bluetoothDeviceToUpdate;
 
   @override
   List<Object?> get props => [
     stateStatus,
     bluetoothPairedReaders,
+    bluetoothDeviceToUpdate,
   ];
 
   ReadersConnectBluetoothPairedState copyWith({
     ReadersConnectBluetoothPairedStatus? stateStatus,
-    List<Reader>? savedReaders,
+    List<Reader>? bluetoothPairedReaders,
+    Reader? bluetoothDeviceToUpdate,
   }) {
     return ReadersConnectBluetoothPairedState (
       stateStatus: stateStatus ?? this.stateStatus,
-      bluetoothPairedReaders: savedReaders ?? this.bluetoothPairedReaders,
+      bluetoothPairedReaders: bluetoothPairedReaders ?? this.bluetoothPairedReaders,
     );
   }
 

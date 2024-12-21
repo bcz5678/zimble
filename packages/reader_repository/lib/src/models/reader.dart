@@ -11,6 +11,8 @@ class Reader extends Equatable{
     this.name,
     this.connectionStatus,
     this.modelNumber,
+    this.macAddress,
+    this.ipAddress,
     this.imageStub,
     this.readerDetails,
     this.triggerStatus,
@@ -27,6 +29,12 @@ class Reader extends Equatable{
 
   /// The current reader's rfid model
   final String? modelNumber;
+
+  /// The current Bluetooth/LAN reader's macAddress
+  final String? macAddress;
+
+  /// The current LAN reader's ipAddress
+  final String? ipAddress;
 
   /// The current reader's display image
   final String? imageStub;

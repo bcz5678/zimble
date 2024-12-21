@@ -1,7 +1,10 @@
 import 'package:deep_link_client/deep_link_client.dart';
+import 'package:drift_storage/drift_storage.dart';
 import 'package:firebase_authentication_client/firebase_authentication_client.dart';
 import 'package:firebase_deep_link_client/firebase_deep_link_client.dart';
 import 'package:firebase_notifications_client/firebase_notifications_client.dart';
+import 'package:reader_client/reader_client.dart';
+import 'package:reader_repository/reader_repository.dart';
 import 'package:zimble/app/app.dart';
 import 'package:zimble/main/bootstrap/bootstrap.dart';
 import 'package:zimble/src/version.dart';
@@ -11,6 +14,7 @@ import 'package:permission_client/permission_client.dart';
 import 'package:persistent_storage/persistent_storage.dart';
 import 'package:token_storage/token_storage.dart';
 import 'package:user_repository/user_repository.dart';
+
 
 void main() {
   bootstrap(
@@ -23,6 +27,8 @@ void main() {
       final tokenStorage = InMemoryTokenStorage();
 
       const permissionClient = PermissionClient();
+
+      final driftStorage = AppDatabase();
 
       final persistentStorage = PersistentStorage(
         sharedPreferences: sharedPreferences,
@@ -64,8 +70,25 @@ void main() {
         notificationsClient: notificationsClient,
       );
 
+
+      final bluetoothReaderClient = BluetoothReaderClient();
+      final networkReaderClient = NetworkReaderClient();
+      final usbReaderClient = UsbReaderClient();
+
+      final readerClient = ReaderClient(
+          bluetoothReaderClient: bluetoothReaderClient,
+          networkReaderClient: networkReaderClient,
+          usbReaderClient: usbReaderClient
+      );
+
+      final readerRepository = ReaderRepository(
+        readerClient: readerClient,
+        storage: driftStorage,
+      );
+
       return App(
         userRepository: userRepository,
+        readerRepository: readerRepository,
         notificationsRepository: notificationsRepository,
         analyticsRepository: analyticsRepository,
         user: await userRepository.user.first,

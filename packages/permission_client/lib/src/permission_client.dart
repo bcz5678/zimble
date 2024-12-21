@@ -19,8 +19,24 @@ class PermissionClient {
   Future<PermissionStatus> notificationsStatus() =>
       Permission.notification.status;
 
+  /// Returns a permission status for the device's bluetoothScan.
+  Future<PermissionStatus> bluetoothScanStatus() =>
+      Permission.bluetoothScan.status;
+
+  /// Returns a permission status for the device's notifications.
+  Future<PermissionStatus> requestBluetoothScan() =>
+      Permission.bluetoothScan.request();
+
+  /// Returns a permission status for the device's bluetoothScan.
+  Future<PermissionStatus> bluetoothConnectStatus() =>
+      Permission.bluetoothConnect.status;
+
+  /// Returns a permission status for the device's notifications.
+  Future<PermissionStatus> requestBluetoothConnect() =>
+      Permission.bluetoothConnect.request();
+
   /// Opens the app settings page.
-  ///
+
   /// Returns true if the settings could be opened, otherwise false.
   Future<bool> openPermissionSettings() => openAppSettings();
 }

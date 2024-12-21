@@ -2,9 +2,11 @@ import 'package:analytics_repository/analytics_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notifications_repository/notifications_repository.dart';
+import 'package:reader_repository/reader_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:zimble/analytics/analytics.dart';
 import 'package:zimble/app/app.dart';
+import 'package:zimble/readers/bloc/readers_bloc.dart';
 import 'package:zimble/l10n/l10n.dart';
 import 'package:zimble/login/login.dart';
 
@@ -12,17 +14,20 @@ import 'package:zimble/login/login.dart';
 class App extends StatelessWidget {
   const App({
     required UserRepository userRepository,
+    required ReaderRepository readerRepository,
     required NotificationsRepository notificationsRepository,
     required AnalyticsRepository analyticsRepository,
     required User user,
     super.key
   })
       : _userRepository = userRepository,
+        _readerRepository = readerRepository,
         _notificationsRepository = notificationsRepository,
         _analyticsRepository = analyticsRepository,
         _user = user;
 
   final UserRepository _userRepository;
+  final ReaderRepository _readerRepository;
   final NotificationsRepository _notificationsRepository;
   final AnalyticsRepository _analyticsRepository;
   final User _user;
@@ -32,6 +37,7 @@ class App extends StatelessWidget {
     return MultiRepositoryProvider(
         providers: [
           RepositoryProvider.value(value: _userRepository),
+          RepositoryProvider.value(value: _readerRepository),
           RepositoryProvider.value(value: _notificationsRepository),
           RepositoryProvider.value(value: _analyticsRepository),
         ],
@@ -44,16 +50,15 @@ class App extends StatelessWidget {
                 user: _user,
               )..add(const AppOpened()),
             ),
+            BlocProvider(
+              create: (_) => ReadersBloc(
+                readerRepository: _readerRepository,
+              ),
+            ),
             /*
             /// TO IMPLEMENT
             BlocProvider(create: (_) => ThemeModeBloc()),
              */
-            BlocProvider(
-              create: (_) => LoginWithEmailLinkBloc(
-                userRepository: _userRepository,
-              ),
-              lazy: false,
-            ),
             BlocProvider(
               create: (context) => AnalyticsBloc(
                 analyticsRepository: _analyticsRepository,

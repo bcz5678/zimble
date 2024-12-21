@@ -6,12 +6,3 @@ abstract class ReadersCurrentEvent extends Equatable{
   @override
   List<Object> get props => [];
 }
-
-class ReadersCurrentlyAttachedChanged extends ReadersCurrentEvent{
-  const ReadersCurrentlyAttachedChanged(this.readers);
-
-  final List<Reader> readers;
-
-  @override
-  List<Object> get props => [readers];
-}

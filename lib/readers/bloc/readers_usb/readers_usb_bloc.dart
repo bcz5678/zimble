@@ -14,20 +14,15 @@ class ReadersUsbBloc extends Bloc<ReadersUsbEvent, ReadersUsbState> {
     required ReaderRepository readerRepository,
   }) : _readerRepository = readerRepository,
     super(ReadersUsbState.initial()) {
-    _usbReadersSubscription = _readerRepository.usbReadersList.listen(_usbReadersListChanged);
+
+    _usbReadersSubscription = _readerRepository.usbReadersList
+        .handleError(onError)
+        .listen((readers) => add(ReadersUsbChanged(readers)));
   }
 
   final ReaderRepository _readerRepository;
-
   late StreamSubscription<List<Reader>> _usbReadersSubscription;
 
-  void _usbReadersListChanged(List<Reader> readers) {
-    // [DEBUG TEST]
-    if (kDebugMode) {
-      print("readers_main_bloc -> _usbReadersListChanged - adding - ${readers}");
-    }
-    add(ReadersUsbChanged(readers));
-  }
 
   @override
   Future<void> close() async {

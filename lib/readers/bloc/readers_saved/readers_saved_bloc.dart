@@ -16,24 +16,16 @@ class ReadersSavedBloc extends Bloc<ReadersSavedEvent, ReadersSavedState> {
   })
       : _readerRepository = readerRepository,
         super(ReadersSavedState.initial()) {
+
     _savedReadersSubscription =
-        _readerRepository.savedReadersList.listen(_savedReadersListChanged);
+        _readerRepository.savedReadersList
+            .handleError(onError)
+            .listen((readers) =>     add(ReadersSavedChanged(readers)));
   }
 
 
   final ReaderRepository _readerRepository;
   late StreamSubscription<List<Reader>> _savedReadersSubscription;
-
-
-  void _savedReadersListChanged(List<Reader> readers) {
-    // [DEBUG TEST]
-    if (kDebugMode) {
-      print(
-          "readers_saved_bloc -> _savedReadersListChanged - adding - ${readers}");
-    }
-    add(ReadersSavedChanged(readers));
-  }
-
 
   @override
   Future<void> close() async {

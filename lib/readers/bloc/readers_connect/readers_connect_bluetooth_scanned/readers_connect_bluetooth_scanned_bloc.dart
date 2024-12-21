@@ -14,21 +14,20 @@ class ReadersConnectBluetoothScannedBloc extends Bloc<ReadersConnectBluetoothSca
     required ReaderRepository readerRepository,
   }) : _readerRepository = readerRepository,
         super(ReadersConnectBluetoothScannedState.initial()) {
+
+    ///Add changes to bt scanned readers to the
+    ///Readers_connect_bluetooth_scanned_event handlers
     _bluetoothScannedReadersSubscription =
-        _readerRepository.bluetoothScannedReadersList.listen(
-            _bluetoothScannedReadersListChanged);
+        _readerRepository.bluetoothScannedReadersList
+            .handleError(onError)
+            .listen((readers) => add(ReadersConnectBluetoothScannedChanged(readers)));
   }
 
+  /// Initialize readerRepository and _bluetoothScannedReadersSubscription
+  /// to handle changes to the bluetooth list
   final ReaderRepository _readerRepository;
   late StreamSubscription<List<Reader>> _bluetoothScannedReadersSubscription;
 
-  void _bluetoothScannedReadersListChanged(List<Reader> readers) {
-    // [DEBUG TEST]
-    if (kDebugMode) {
-      print("readers_main_bloc -> _bluetoothScannedReadersListChanged - adding - ${readers}");
-    }
-    add(ReadersConnectBluetoothScannedChanged(readers));
-  }
 
   @override
   Future<void> close() async {
