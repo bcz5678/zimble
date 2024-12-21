@@ -115,7 +115,7 @@ dependencies:
   platform: ^3.0.2
 
   #path_provider:
-  path_provider: ^2.1.4
+  path_provider: ^2.1.5
 
   #Network Requests
   retrofit: ^4.1.0
