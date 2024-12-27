@@ -55,7 +55,11 @@ class Reader extends Equatable{
       readerType: data['readerType'] as ReaderType,
       name: data['display_name'] as String,
       modelNumber: data['model_number'] as String,
+      macAddress:  data['address'] as String,
       imageStub: data['image_stub'] as String,
+      connectionStatus: data['connectionStatus'] as bool,
+      readerDetails: data['readerDetails'] as Map<String, dynamic>?,
+      triggerStatus: data['triggerStatus'] as Map<String, dynamic>?,
     );
   }
 
@@ -67,7 +71,12 @@ class Reader extends Equatable{
       serialNumber: bluetoothReader.serialNumber,
       readerType: ReaderType.bluetooth,
       name: bluetoothReader.name,
+      modelNumber: bluetoothReader.modelNumber,
+      macAddress: bluetoothReader.macAddress,
       imageStub: bluetoothReader.imageStub,
+      connectionStatus: bluetoothReader.connectionStatus,
+      readerDetails: bluetoothReader.readerDetails,
+      triggerStatus: bluetoothReader.triggerStatus,
     );
 
   @override
@@ -76,7 +85,12 @@ class Reader extends Equatable{
     readerType,
     name,
     modelNumber,
+    macAddress,
+    ipAddress,
+    connectionStatus,
     imageStub,
+    readerDetails,
+    triggerStatus
   ];
 }
 

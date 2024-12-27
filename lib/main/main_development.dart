@@ -70,16 +70,7 @@ void main() {
         notificationsClient: notificationsClient,
       );
 
-
-      final bluetoothReaderClient = BluetoothReaderClient();
-      final networkReaderClient = NetworkReaderClient();
-      final usbReaderClient = UsbReaderClient();
-
-      final readerClient = ReaderClient(
-          bluetoothReaderClient: bluetoothReaderClient,
-          networkReaderClient: networkReaderClient,
-          usbReaderClient: usbReaderClient
-      );
+      final readerClient = ReaderClient();
 
       final readerRepository = ReaderRepository(
         readerClient: readerClient,

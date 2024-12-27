@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reader_client/reader_client.dart';
 import 'package:reader_repository/reader_repository.dart';
 
 part 'readers_network_event.dart';
@@ -16,20 +17,20 @@ class ReadersNetworkBloc extends Bloc<ReadersNetworkEvent, ReadersNetworkState> 
     super(ReadersNetworkState.initial()) {
 
     ///Add changes to networked readers to the Readers_network_event handlers
-    _networkReadersSubscription = _readerRepository.networkReadersList
+    _networkDevicesSubscription = _readerRepository.networkDevicesList
         .handleError(onError)
-        .listen((readers) => add(ReadersNetworkChanged(readers)));
+        .listen((devices) => add(ReadersNetworkChanged(devices)));
   }
 
   /// Initialize readerRepository and _networksSubscription to handle changes
   /// to the networkReaders list
   final ReaderRepository _readerRepository;
-  late StreamSubscription<List<Reader>> _networkReadersSubscription;
+  late StreamSubscription<List<NetworkDevice>> _networkDevicesSubscription;
 
 
   @override
   Future<void> close() async {
-    _networkReadersSubscription.cancel();
+    _networkDevicesSubscription.cancel();
     super.close();
   }
 

@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reader_client/reader_client.dart';
 import 'package:reader_repository/reader_repository.dart';
 
 part 'readers_saved_event.dart';
@@ -17,19 +18,19 @@ class ReadersSavedBloc extends Bloc<ReadersSavedEvent, ReadersSavedState> {
       : _readerRepository = readerRepository,
         super(ReadersSavedState.initial()) {
 
-    _savedReadersSubscription =
-        _readerRepository.savedReadersList
+    _savedDevicesSubscription =
+        _readerRepository.savedDevicesList
             .handleError(onError)
-            .listen((readers) =>     add(ReadersSavedChanged(readers)));
+            .listen((devices) => add(ReadersSavedChanged(devices)));
   }
 
 
   final ReaderRepository _readerRepository;
-  late StreamSubscription<List<Reader>> _savedReadersSubscription;
+  late StreamSubscription<List<GenericDevice>> _savedDevicesSubscription;
 
   @override
   Future<void> close() async {
-    _savedReadersSubscription.cancel();
+    _savedDevicesSubscription.cancel();
     super.close();
   }
 }

@@ -16,6 +16,12 @@ dependencies:
   #custom packages
   reader_client:
     path: ../reader_client/reader_client
+  bluetooth_device_client:
+    path: ../reader_client/bluetooth_device_client
+  network_device_client:
+    path: ../reader_client/network_device_client
+  usb_device_client:
+    path: ../reader_client/usb_device_client
   storage:
     path: ../storage/storage
   drift_storage:

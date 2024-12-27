@@ -14,12 +14,12 @@ dependencies:
   equatable: ^2.0.7
 
   #custom packages
-  bluetooth_reader_client:
-    path: ../bluetooth_reader_client
-  network_reader_client:
-    path: ../network_reader_client
-  usb_reader_client:
-    path: ../usb_reader_client
+  bluetooth_device_client:
+    path: ../bluetooth_device_client
+  network_device_client:
+    path: ../network_device_client
+  usb_device_client:
+    path: ../usb_device_client
 
 dev_dependencies:
   flutter_test:

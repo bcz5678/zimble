@@ -8,10 +8,10 @@ abstract class ReadersConnectBluetoothScannedEvent extends Equatable{
 }
 
 class ReadersConnectBluetoothScannedChanged extends ReadersConnectBluetoothScannedEvent{
-  const ReadersConnectBluetoothScannedChanged(this.readers);
+  const ReadersConnectBluetoothScannedChanged(this.devices);
 
-  final List<Reader> readers;
+  final List<BluetoothDevice> devices;
 
   @override
-  List<Object> get props => [readers];
+  List<Object> get props => [devices];
 }

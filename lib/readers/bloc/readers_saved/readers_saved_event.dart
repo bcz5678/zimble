@@ -8,10 +8,10 @@ abstract class ReadersSavedEvent  extends Equatable{
 }
 
 class ReadersSavedChanged extends ReadersSavedEvent{
-  const ReadersSavedChanged(this.readers);
+  const ReadersSavedChanged(this.devices);
 
-  final List<Reader> readers;
+  final List<GenericDevice> devices;
 
   @override
-  List<Object> get props => [readers];
+  List<Object> get props => [devices];
 }

@@ -102,10 +102,10 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "9.1.7"
-  bluetooth_reader_client:
+  bluetooth_device_client:
     dependency: transitive
     description:
-      path: "packages/reader_client/bluetooth_reader_client"
+      path: "packages/reader_client/bluetooth_device_client"
       relative: true
     source: path
     version: "0.1.0+1"
@@ -817,10 +817,10 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  network_reader_client:
+  network_device_client:
     dependency: transitive
     description:
-      path: "packages/reader_client/network_reader_client"
+      path: "packages/reader_client/network_device_client"
       relative: true
     source: path
     version: "0.1.0+1"
@@ -1412,10 +1412,10 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.0"
-  usb_reader_client:
+  usb_device_client:
     dependency: transitive
     description:
-      path: "packages/reader_client/usb_reader_client"
+      path: "packages/reader_client/usb_device_client"
       relative: true
     source: path
     version: "0.1.0+1"

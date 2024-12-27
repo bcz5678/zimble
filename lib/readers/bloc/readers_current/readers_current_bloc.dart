@@ -11,7 +11,28 @@ part 'readers_current_state.dart';
 
 class ReadersCurrentBloc extends Bloc<ReadersCurrentEvent, ReadersCurrentState> {
   ReadersCurrentBloc() :
-        super(ReadersCurrentState.initial()) {}
+        super(ReadersCurrentState.initial()) {
+    on<StartSensorStream> (onStartSensorStream);
+    on<StopSensorStream> (onStopSensorStream);
+  }
+
+
+  void onStartSensorStream(
+      StartSensorStream event,
+      Emitter<ReadersCurrentState> emit,
+      ) async {
+
+
+  }
+
+  void onStopSensorStream(
+      StopSensorStream event,
+      Emitter<ReadersCurrentState> emit,
+      ) async {
+
+
+  }
+
 
   @override
   Future<void> close() async {

@@ -1,1 +1,1 @@
-export 'bluetooth_readers.dart';
+export 'native_channels.dart';

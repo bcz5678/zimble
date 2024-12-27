@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reader_client/reader_client.dart';
 import 'package:reader_repository/reader_repository.dart';
 
 part 'readers_connect_bluetooth_scanned_event.dart';
@@ -17,21 +18,21 @@ class ReadersConnectBluetoothScannedBloc extends Bloc<ReadersConnectBluetoothSca
 
     ///Add changes to bt scanned readers to the
     ///Readers_connect_bluetooth_scanned_event handlers
-    _bluetoothScannedReadersSubscription =
-        _readerRepository.bluetoothScannedReadersList
+    _bluetoothScannedDevicesSubscription =
+        _readerRepository.bluetoothScannedDevicesList
             .handleError(onError)
-            .listen((readers) => add(ReadersConnectBluetoothScannedChanged(readers)));
+            .listen((devices) => add(ReadersConnectBluetoothScannedChanged(devices)));
   }
 
   /// Initialize readerRepository and _bluetoothScannedReadersSubscription
   /// to handle changes to the bluetooth list
   final ReaderRepository _readerRepository;
-  late StreamSubscription<List<Reader>> _bluetoothScannedReadersSubscription;
+  late StreamSubscription<List<BluetoothDevice>> _bluetoothScannedDevicesSubscription;
 
 
   @override
   Future<void> close() async {
-    _bluetoothScannedReadersSubscription.cancel();
+    _bluetoothScannedDevicesSubscription.cancel();
     super.close();
   }
 }

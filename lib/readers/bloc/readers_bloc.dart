@@ -18,20 +18,20 @@ class ReadersBloc extends Bloc<ReadersEvent, ReadersState> {
     //on<GetCurrentReaderMain>(onGetCurrentReaderMain);
     //on<UpdateCurrentReaderMain>(onUpdateCurrentReaderMain);
 
-    _currentlyAttachedReadersSubscription =
-        _readerRepository.currentlyAttachedReadersList
+    _currentlyConnectedReadersSubscription =
+        _readerRepository.currentlyConnectedReadersList
           .handleError(onError)
-          .listen((readers) => add(ReadersCurrentlyAttachedChanged(readers)));
+          .listen((readers) => add(ReadersCurrentlyConnectedChanged(readers)));
 
   }
 
   final ReaderRepository _readerRepository;
-  late StreamSubscription<List<Reader>> _currentlyAttachedReadersSubscription;
+  late StreamSubscription<List<Reader>> _currentlyConnectedReadersSubscription;
 
 
   @override
   Future<void> close() async {
-    _currentlyAttachedReadersSubscription.cancel();
+    _currentlyConnectedReadersSubscription.cancel();
     super.close();
   }
 }

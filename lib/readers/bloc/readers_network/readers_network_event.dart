@@ -8,10 +8,10 @@ abstract class ReadersNetworkEvent extends Equatable{
 }
 
 class ReadersNetworkChanged extends ReadersNetworkEvent{
-  const ReadersNetworkChanged(this.readers);
+  const ReadersNetworkChanged(this.devices);
 
-  final List<Reader> readers;
+  final List<NetworkDevice> devices;
 
   @override
-  List<Object> get props => [readers];
+  List<Object> get props => [devices];
 }

@@ -8,8 +8,8 @@ abstract class ReadersEvent extends Equatable{
 }
 
 
-class ReadersCurrentlyAttachedChanged extends ReadersEvent{
-  const ReadersCurrentlyAttachedChanged(this.readers);
+class ReadersCurrentlyConnectedChanged extends ReadersEvent{
+  const ReadersCurrentlyConnectedChanged(this.readers);
 
   final List<Reader> readers;
 

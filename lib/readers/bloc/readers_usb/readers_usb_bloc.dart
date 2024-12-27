@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reader_client/reader_client.dart';
 import 'package:reader_repository/reader_repository.dart';
 
 part 'readers_usb_event.dart';
@@ -15,18 +16,18 @@ class ReadersUsbBloc extends Bloc<ReadersUsbEvent, ReadersUsbState> {
   }) : _readerRepository = readerRepository,
     super(ReadersUsbState.initial()) {
 
-    _usbReadersSubscription = _readerRepository.usbReadersList
+    _usbDevicesSubscription = _readerRepository.usbDevicesList
         .handleError(onError)
-        .listen((readers) => add(ReadersUsbChanged(readers)));
+        .listen((devices) => add(ReadersUsbChanged(devices)));
   }
 
   final ReaderRepository _readerRepository;
-  late StreamSubscription<List<Reader>> _usbReadersSubscription;
+  late StreamSubscription<List<UsbDevice>> _usbDevicesSubscription;
 
 
   @override
   Future<void> close() async {
-    _usbReadersSubscription.cancel();
+    _usbDevicesSubscription.cancel();
     super.close();
   }
 

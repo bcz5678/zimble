@@ -1,63 +1,46 @@
 import 'dart:async';
 
-import 'package:bluetooth_reader_client/bluetooth_reader_client.dart';
 import 'package:flutter/foundation.dart';
-import 'package:network_reader_client/network_reader_client.dart';
-import 'package:usb_reader_client/usb_reader_client.dart';
-import 'package:reader_client/reader_client.dart';
+import 'package:native_channels_client/native_channels_client.dart';
+import 'package:rxdart/rxdart.dart';
 
 
 /// Exceptions from the authentication client.
-abstract class ReaderException implements Exception {
-  const ReaderException(this.error);
+abstract class ReaderClientException implements Exception {
+  const ReaderClientException(this.error);
 
   /// The error which was caught.
   final Object error;
 }
 
-/// Thrown during the get paired bluetooth devices process if a failure occurs.
-class GetPairedBluetoothDevicesFailure extends ReaderException {
-  const GetPairedBluetoothDevicesFailure(super.error);
+/// Thrown during process of starting an open sensor stream from the device.
+class StartSensorStreamFailure extends ReaderClientException {
+  const  StartSensorStreamFailure(super.error);
 }
 
-/// Thrown during the start scanning bluetooth devices process if a failure occurs.
-class StartScanningBluetoothDevicesFailure extends ReaderException {
-  const StartScanningBluetoothDevicesFailure(super.error);
+/// Thrown during process of closing the sensor stream from the device
+class StopSensorStreamFailure extends ReaderClientException {
+  const  StopSensorStreamFailure(super.error);
 }
 
-/// Thrown during the stop scanning bluetooth devices process if a failure occurs.
-class StopScanningBluetoothDevicesFailure extends ReaderException {
-  const StopScanningBluetoothDevicesFailure(super.error);
-}
 
-/// Thrown during the connect to bluetooth device process if a failure occurs.
-class ConnectToBluetoothDeviceFailure extends ReaderException {
-  const ConnectToBluetoothDeviceFailure(super.error);
-}
-
-/// Thrown during the disconnect from bluetooth device process if a failure occurs.
-class DisconnectFromBluetoothDeviceFailure extends ReaderException {
-  const DisconnectFromBluetoothDeviceFailure(super.error);
-}
 
 
 /// Reader client
 class ReaderClient {
-  const ReaderClient({
-    required BluetoothReaderClient bluetoothReaderClient,
-    required NetworkReaderClient networkReaderClient,
-    required UsbReaderClient usbReaderClient,
-  })
-      : _bluetoothReaderClient = bluetoothReaderClient,
-        _networkReaderClient = networkReaderClient,
-        _usbReaderClient = usbReaderClient;
+  ReaderClient();
 
-  final BluetoothReaderClient _bluetoothReaderClient;
-  final NetworkReaderClient _networkReaderClient;
-  final UsbReaderClient _usbReaderClient;
+  Stream<List<SensorData>> get sensorStream => _bluetoothPairedDevicesStream;
+
+  var sensorMethodChannel = NativeChannels().bluetoothMethod;
+  var sensorStreamChannel = NativeChannels().bluetoothEventStream;
+
+  late Stream<dynamic> _sensorStreamSubscription;
+  BehaviorSubject<List<SensorData>> _bluetoothPairedDevicesStream = BehaviorSubject<List<SensorData>>();
 
 
-  /// Stream of [BluetoothReader] which will emit the current reader when
+
+/// Stream of [BluetoothReader] which will emit the current reader when
   /// the connection process changes
   //Stream<BluetoothReader> get bluetoothReader;
 
@@ -69,6 +52,33 @@ class ReaderClient {
   /// the connection process changes
   //Stream<UsbReader> get usbReader;
 
-  /// Gets a list of Paired Bluetooth Readers
+  Future<String> startSensorStream() async {
+   try{
 
+     if (kDebugMode) {
+       print('reader_client -> startSensorStream -> Entry');
+     }
+
+     final startSensorStreamResult = await sensorMethodChannel.invokeMethod("startSensorStream").toString();
+
+     if (kDebugMode) {
+       print('reader_client -> startSensorStream -> Result: $startSensorStreamResult');
+     }
+
+     if(startSensorStreamResult == 'started') {
+       _sensorStreamSubscription =
+           sensorStreamChannel
+               .receiveBroadcastStream()
+               .distinct()
+               .map((event) {
+
+
+                 ///ANCHOR - PICK UP HERE
+               }
+     }
+
+   } catch (error, stackTrace) {
+     Error.throwWithStackTrace(StartSensorStreamFailure(error), stackTrace);
+    }
+  }
 }
