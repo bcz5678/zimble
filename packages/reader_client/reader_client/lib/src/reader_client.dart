@@ -77,6 +77,8 @@ class ReaderClient {
                }
      }
 
+     return startSensorStreamResult;
+
    } catch (error, stackTrace) {
      Error.throwWithStackTrace(StartSensorStreamFailure(error), stackTrace);
     }
