@@ -85,8 +85,8 @@ class MainActivity: FlutterActivity() {
         val readerMainChannels = ReaderMainChannels(context)
         readerMainChannels.initializeReaderMainChannels(messenger)
 
-        //val sensorChannels = SensorChannels(context)
-        //sensorChannels.initializeSensorChannels(messenger)
+        val sensorChannels = SensorChannels(context)
+        sensorChannels.initializeSensorChannels(messenger)
 
         //set Event StreamHandler
         //rfidEventChannel!!.setStreamHandler(MyStreamHandler(context))

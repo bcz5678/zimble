@@ -28,18 +28,18 @@ class SensorChannels(context: Context) {
 
     ///Create the Channels to use to transfer data
     private lateinit var _sensorMethodChannel : MethodChannel
-    public lateinit var _sensorStreamAccelerometerChannel : EventChannel
-    public lateinit var _sensorStreamGyroscopeChannel : EventChannel
-    public lateinit var _sensorStreamLinearAccelerationChannel : EventChannel
-    public lateinit var _sensorStreamRotationVectorChannel : EventChannel
+    public lateinit var sensorStreamAccelerometerChannel : EventChannel
+    public lateinit var sensorStreamGyroscopeChannel : EventChannel
+    public lateinit var sensorStreamLinearAccelerationChannel : EventChannel
+    public lateinit var sensorStreamRotationVectorChannel : EventChannel
 
     //Create a SensorManager Instance to pass
-    private lateinit var _sensorManager: SensorManager
+    private var _sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
     ///Creates a Sensor Stream Handler instances to pass to the controller and collector
     var accelerometerStreamHandler = SensorStreamHandler(
         _sensorManager,
-        Sensor.TYPE_ACCELEROMETER
+        Sensor.TYPE_ACCELEROMETER,
     )
 
     var gyroscopeStreamHandler = SensorStreamHandler(
@@ -65,17 +65,18 @@ class SensorChannels(context: Context) {
         _sensorMethodChannel = MethodChannel(messenger, SENSOR_METHOD)
         Log.d(TAG, "Sensor Methodchannel initialized ")
 
+
         //Event Stream Channel for sensor streams
-        _sensorStreamAccelerometerChannel = EventChannel(messenger, SENSOR_STREAM_ACCELEROMETER)
-        _sensorStreamGyroscopeChannel = EventChannel(messenger, SENSOR_STREAM_GYROSCOPE)
-        _sensorStreamLinearAccelerationChannel = EventChannel(messenger, SENSOR_STREAM_LINEAR_ACCELERATION)
-        _sensorStreamRotationVectorChannel = EventChannel(messenger, SENSOR_STREAM_ROTATION_VECTOR)
+        sensorStreamAccelerometerChannel = EventChannel(messenger, SENSOR_STREAM_ACCELEROMETER)
+        sensorStreamGyroscopeChannel = EventChannel(messenger, SENSOR_STREAM_GYROSCOPE)
+        sensorStreamLinearAccelerationChannel = EventChannel(messenger, SENSOR_STREAM_LINEAR_ACCELERATION)
+        sensorStreamRotationVectorChannel = EventChannel(messenger, SENSOR_STREAM_ROTATION_VECTOR)
 
         ///Assign StreamHandlers for each event channels
-        _sensorStreamAccelerometerChannel.setStreamHandler(accelerometerStreamHandler)
-        _sensorStreamGyroscopeChannel.setStreamHandler(gyroscopeStreamHandler)
-        _sensorStreamLinearAccelerationChannel.setStreamHandler(linearAccelerationStreamHandler)
-        _sensorStreamRotationVectorChannel.setStreamHandler(rotationVectorStreamHandler)
+        sensorStreamAccelerometerChannel.setStreamHandler(accelerometerStreamHandler)
+        sensorStreamGyroscopeChannel.setStreamHandler(gyroscopeStreamHandler)
+        sensorStreamLinearAccelerationChannel.setStreamHandler(linearAccelerationStreamHandler)
+        sensorStreamRotationVectorChannel.setStreamHandler(rotationVectorStreamHandler)
 
 
         Log.d(TAG, "Sensor Streamchannels initialized ")
@@ -88,7 +89,7 @@ class SensorChannels(context: Context) {
                 /// Call Type: InvokeMethod
                 /// Data Message Type: String
                 /// Return Type:
-                call.method.equals("startSensors") -> {
+                call.method.equals("startSensorStream") -> {
                     Log.d(TAG, "in call method - startSensors")
 
                     result.success("success")
@@ -98,7 +99,7 @@ class SensorChannels(context: Context) {
                 /// Call Type: InvokeMethod
                 /// Data Message Type: String
                 /// Return Type:
-                call.method.equals("stopSensors") -> {
+                call.method.equals("stopSensorStream") -> {
                     Log.d(TAG, "in call method - stopSensors")
 
                     result.success("success")

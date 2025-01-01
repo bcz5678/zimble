@@ -8,5 +8,5 @@ class NativeChannels{
   MethodChannel bluetoothMethod = MethodChannel("mtg_rfid_method/device/bt_devices");
   EventChannel bluetoothEventStream = EventChannel('mtg_rfid_event/device/bt_stream');
 
-
+  MethodChannel sensorMethod = MethodChannel('mtg_rfid_method/reader/sensor_method');
 }

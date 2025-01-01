@@ -38,20 +38,20 @@ class AccelerationData{
     this.zAxis,
   });
 
-  /// X-Axis data returned from method
-  late int? xAxis;
+  /// Acceleration force along the x axis, including gravity (m/s*2)
+  late double? xAxis;
 
-  /// X-Axis data returned from method
-  late int? yAxis;
+  /// Acceleration force along the y axis, including gravity (m/s*2)
+  late double? yAxis;
 
-  /// X-Axis data returned from method
-  late int? zAxis;
+  /// Acceleration force along the z axis, including gravity (m/s*2)
+  late double? zAxis;
 
   factory AccelerationData.fromJson (Map<String, dynamic> data) {
     return AccelerationData(
-      xAxis: data['x'] as int,
-      yAxis: data['y'] as int,
-      zAxis: data['z'] as int,
+      xAxis: data['x'] as double,
+      yAxis: data['y'] as double,
+      zAxis: data['z'] as double,
     );
   }
 }
@@ -63,13 +63,13 @@ class GyroscopeData{
     this.zAxis,
   });
 
-  /// X-Axis data returned from method
+  /// Rate of rotation around the x axis (rad/s)
   late int? xAxis;
 
-  /// X-Axis data returned from method
+  /// Rate of rotation around the y axis (rad/s)
   late int? yAxis;
 
-  /// X-Axis data returned from method
+  /// Rate of rotation around the z axis (rad/s)
   late int? zAxis;
 
   factory GyroscopeData.fromJson (Map<String, dynamic> data) {
@@ -88,20 +88,20 @@ class LinearAccelerationData{
     this.zAxis,
   });
 
-  /// X-Axis data returned from method
-  late int? xAxis;
+  /// Acceleration force along the x axis, excluding gravity (m/s*2)
+  late double? xAxis;
 
-  /// X-Axis data returned from method
-  late int? yAxis;
+  /// Acceleration force along the y axis, excluding gravity (m/s*2)
+  late double? yAxis;
 
-  /// X-Axis data returned from method
-  late int? zAxis;
+  /// Acceleration force along the z axis, excluding gravity (m/s*2)
+  late double? zAxis;
 
   factory LinearAccelerationData.fromJson (Map<String, dynamic> data) {
     return LinearAccelerationData(
-      xAxis: data['x'] as int,
-      yAxis: data['y'] as int,
-      zAxis: data['z'] as int,
+      xAxis: data['x'] as double,
+      yAxis: data['y'] as double,
+      zAxis: data['z'] as double,
     );
   }
 }
@@ -111,22 +111,27 @@ class RotationalVectorData{
     this.xAxis,
     this.yAxis,
     this.zAxis,
+    this.scalar,
   });
 
-  /// X-Axis data returned from method
-  late int? xAxis;
+  /// Rotation vector component along the x axis (x * sin(θ/2)).
+  late double? xAxis;
 
-  /// X-Axis data returned from method
-  late int? yAxis;
+  /// Rotation vector component along the y axis (y * sin(θ/2)).
+  late double? yAxis;
 
-  /// X-Axis data returned from method
-  late int? zAxis;
+  /// Rotation vector component along the y axis (y * sin(θ/2)).
+  late double? zAxis;
+
+  /// Scalar component of the rotation vector ((cos(θ/2)).
+  late double? scalar;
 
   factory RotationalVectorData.fromJson (Map<String, dynamic> data) {
     return RotationalVectorData(
-      xAxis: data['x'] as int,
-      yAxis: data['y'] as int,
-      zAxis: data['z'] as int,
+      xAxis: data['x'] as double,
+      yAxis: data['y'] as double,
+      zAxis: data['z'] as double,
+      scalar: data['scalar'] as double,
     );
   }
 }

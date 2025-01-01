@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:native_channels_client/native_channels_client.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:reader_client/reader_client.dart';
 
 
 /// Exceptions from the authentication client.
@@ -32,15 +33,15 @@ class ReaderClient {
 
   Stream<List<SensorData>> get sensorStream => _bluetoothPairedDevicesStream;
 
-  var sensorMethodChannel = NativeChannels().bluetoothMethod;
+  var sensorMethodChannel = NativeChannels().sensorMethod;
   var sensorStreamChannel = NativeChannels().bluetoothEventStream;
 
   late Stream<dynamic> _sensorStreamSubscription;
-  BehaviorSubject<List<SensorData>> _bluetoothPairedDevicesStream = BehaviorSubject<List<SensorData>>();
+  BehaviorSubject<
+      List<SensorData>> _bluetoothPairedDevicesStream = BehaviorSubject<List<SensorData>>();
 
 
-
-/// Stream of [BluetoothReader] which will emit the current reader when
+  /// Stream of [BluetoothReader] which will emit the current reader when
   /// the connection process changes
   //Stream<BluetoothReader> get bluetoothReader;
 
@@ -52,35 +53,79 @@ class ReaderClient {
   /// the connection process changes
   //Stream<UsbReader> get usbReader;
 
+
+  ///Starts Stream of sensorData to pass to the Reader_repository
   Future<String> startSensorStream() async {
-   try{
+    try {
+      if (kDebugMode) {
+        print('reader_client -> startSensorStream -> Entry');
+      }
 
-     if (kDebugMode) {
-       print('reader_client -> startSensorStream -> Entry');
-     }
+      final startSensorStreamResult = await sensorMethodChannel.invokeMethod(
+          "startSensorStream").toString();
 
-     final startSensorStreamResult = await sensorMethodChannel.invokeMethod("startSensorStream").toString();
+      if (kDebugMode) {
+        print(
+            'reader_client -> startSensorStream -> Result: $startSensorStreamResult');
+      }
 
-     if (kDebugMode) {
-       print('reader_client -> startSensorStream -> Result: $startSensorStreamResult');
-     }
+      if (startSensorStreamResult == 'started') {
+        _sensorStreamSubscription =
+            sensorStreamChannel
+                .receiveBroadcastStream()
+                .distinct()
+                .map((event) {
 
-     if(startSensorStreamResult == 'started') {
-       _sensorStreamSubscription =
-           sensorStreamChannel
-               .receiveBroadcastStream()
-               .distinct()
-               .map((event) {
+              ///ANCHOR - PICK UP HERE
+              ///[TODO] return sensordata
+              if (kDebugMode) {
+                print(
+                    'reader_client -> startSensorStream -> Result: $startSensorStreamResult');
+              }
+            });
+      }
+
+      return startSensorStreamResult;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(StartSensorStreamFailure(error), stackTrace);
+    }
+  }
+
+  ///Starts Stream of sensorData to pass to the Reader_repository
+  Future<String> stopSensorStream() async {
+    try {
+      if (kDebugMode) {
+        print('reader_client -> stopSensorStream -> Entry');
+      }
+
+      final stopSensorStreamResult = await sensorMethodChannel.invokeMethod(
+          "stopSensorStream").toString();
+
+      if (kDebugMode) {
+        print(
+            'reader_client -> startSensorStream -> Result: $stopSensorStreamResult');
+      }
 
 
-                 ///ANCHOR - PICK UP HERE
-               }
-     }
+      if (stopSensorStreamResult == 'started') {
+        _sensorStreamSubscription =
+            sensorStreamChannel
+                .receiveBroadcastStream()
+                .distinct()
+                .map((event) {
 
-     return startSensorStreamResult;
+              ///ANCHOR - PICK UP HERE
+              ///[TODO] return sensordata
+              if (kDebugMode) {
+                print(
+                    'reader_client -> startSensorStream -> Result: $stopSensorStreamResult');
+              }
+            });
+      }
 
-   } catch (error, stackTrace) {
-     Error.throwWithStackTrace(StartSensorStreamFailure(error), stackTrace);
+      return stopSensorStreamResult;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(StopSensorStreamFailure(error), stackTrace);
     }
   }
 }
