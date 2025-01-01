@@ -1,6 +1,5 @@
 package com.mtg.zimble.channels.domain
 
-
 import com.mtg.zimble.channels.data.MethodMapData
 import com.mtg.zimble.sensors.domain.SensorStreamHandler
 
@@ -65,6 +64,9 @@ class SensorChannels(context: Context) {
         _sensorMethodChannel = MethodChannel(messenger, SENSOR_METHOD)
         Log.d(TAG, "Sensor Methodchannel initialized ")
 
+        Log.d(TAG, "_sensorManager - ${_sensorManager}")
+        Log.d(TAG, "accelerometerStreamHandler - ${accelerometerStreamHandler.testVariable}")
+
 
         //Event Stream Channel for sensor streams
         sensorStreamAccelerometerChannel = EventChannel(messenger, SENSOR_STREAM_ACCELEROMETER)
@@ -79,20 +81,32 @@ class SensorChannels(context: Context) {
         sensorStreamRotationVectorChannel.setStreamHandler(rotationVectorStreamHandler)
 
 
-        Log.d(TAG, "Sensor Streamchannels initialized ")
+        Log.d(TAG, "SensorStreamchannels initialized ")
 
 
         //Define Sensor Method Calls
         _sensorMethodChannel.setMethodCallHandler { call, result ->
             when {
-                /// Starts Stream of Accelerometer Sensor information
+                /// Starts Stream of Sensor information
                 /// Call Type: InvokeMethod
                 /// Data Message Type: String
                 /// Return Type:
                 call.method.equals("startSensorStream") -> {
                     Log.d(TAG, "in call method - startSensors")
 
-                    result.success("success")
+                    try {
+
+                        accelerometerStreamHandler.initialize()
+                        gyroscopeStreamHandler.initialize()
+                        linearAccelerationStreamHandler.initialize()
+                        rotationVectorStreamHandler.initialize()
+
+                        Log.d(TAG, "in call method - startSensors - success")
+                        result.success("success")
+                    } catch (e: Exception) {
+                        Log.d(TAG, "in call method - startSensors - error")
+                        result.error("sensorStreamError", "There was a problem starting the Sensor Stream", null)
+                    }
                 }
 
                 ///  Stops Stream of Accelerometer Sensor information
@@ -101,8 +115,24 @@ class SensorChannels(context: Context) {
                 /// Return Type:
                 call.method.equals("stopSensorStream") -> {
                     Log.d(TAG, "in call method - stopSensors")
+                    try {
+                        ///Assign StreamHandlers for each event channels
+                        sensorStreamAccelerometerChannel.setStreamHandler(null)
+                        sensorStreamGyroscopeChannel.setStreamHandler(null)
+                        sensorStreamLinearAccelerationChannel.setStreamHandler(null)
+                        sensorStreamRotationVectorChannel.setStreamHandler(null)
 
-                    result.success("success")
+                        accelerometerStreamHandler.destroy()
+                        gyroscopeStreamHandler.destroy()
+                        linearAccelerationStreamHandler.destroy()
+                        rotationVectorStreamHandler.destroy()
+
+                        Log.d(TAG, "in call method - stopSensors - success")
+                        result.success("success")
+                    } catch (e: Exception) {
+                        Log.d(TAG, "in call method - stopSensors - error")
+                        result.error("sensorStreamError", "There was a problem stopping the Sensor Stream", null)
+                    }
                 }
             }
         }

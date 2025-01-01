@@ -69,7 +69,7 @@ class ReaderClient {
             'reader_client -> startSensorStream -> Result: $startSensorStreamResult');
       }
 
-      if (startSensorStreamResult == 'started') {
+      if (startSensorStreamResult == 'success') {
         _sensorStreamSubscription =
             sensorStreamChannel
                 .receiveBroadcastStream()
@@ -103,11 +103,11 @@ class ReaderClient {
 
       if (kDebugMode) {
         print(
-            'reader_client -> startSensorStream -> Result: $stopSensorStreamResult');
+            'reader_client -> stopSensorStream -> Result: $stopSensorStreamResult');
       }
 
 
-      if (stopSensorStreamResult == 'started') {
+      if (stopSensorStreamResult == 'success') {
         _sensorStreamSubscription =
             sensorStreamChannel
                 .receiveBroadcastStream()
@@ -118,7 +118,7 @@ class ReaderClient {
               ///[TODO] return sensordata
               if (kDebugMode) {
                 print(
-                    'reader_client -> startSensorStream -> Result: $stopSensorStreamResult');
+                    'reader_client -> stopSensorStream -> Result: $stopSensorStreamResult');
               }
             });
       }

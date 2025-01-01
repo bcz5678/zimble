@@ -5,10 +5,11 @@ import com.mtg.zimble.sensors.data.GyroscopeData
 import com.mtg.zimble.sensors.data.LinearAccelerationData
 import com.mtg.zimble.sensors.data.RotationVectorData
 
-import android.hardware.Sensor as Sensor
+import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
 import io.flutter.plugin.common.EventChannel
 
 class SensorStreamHandler(
@@ -18,13 +19,23 @@ class SensorStreamHandler(
     ):
         EventChannel.StreamHandler, SensorEventListener {
 
+    val TAG = "SensorStreamHandler"
+
     private val sensor = sensorManager.getDefaultSensor(sensorType)
-    private var eventSink: EventChannel.EventSink? = null
+    private var sensorEventSink: EventChannel.EventSink? = null
+
+    public var testVariable = "test Variable"
+
+    fun initialize() {
+        Log.d(TAG, "initlialize")
+        sensorManager.registerListener(this, sensor, interval)
+    }
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+        Log.d(TAG, "onListen")
         if (sensor != null){
-            eventSink = events
-            sensorManager.registerListener(this, sensor, interval)
+            sensorEventSink = events
+
         }
     }
 
@@ -46,7 +57,9 @@ class SensorStreamHandler(
                 null
             }
         }
-        eventSink?.success(sensorValues)
+        Log.d(TAG, sensorValues.toString())
+        sensorEventSink?.success(sensorValues)
+
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
@@ -54,8 +67,15 @@ class SensorStreamHandler(
     }
 
     override fun onCancel(arguments: Any?) {
+        Log.d(TAG, "onCancel")
         sensorManager.unregisterListener(this)
-        eventSink = null
+        sensorEventSink = null
+    }
+
+    fun destroy() {
+        Log.d(TAG, "destroy")
+        sensorManager.unregisterListener(this)
+        sensorEventSink = null
     }
 /*
     override fun onResume() {

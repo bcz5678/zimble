@@ -384,7 +384,7 @@ class ReaderRepository {
   Future<String> stopSensorStreams() async {
     // [DEBUG TEST]
     if (kDebugMode) {
-      print('reader_repository -> startSensorStreams -> Entry');
+      print('reader_repository -> stopSensorStreams -> Entry');
     }
     try {
       return await _readerClient.stopSensorStream();

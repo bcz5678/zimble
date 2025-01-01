@@ -45,6 +45,18 @@ class ReadersCurrentBloc extends Bloc<ReadersCurrentEvent, ReadersCurrentState> 
       Emitter<ReadersCurrentState> emit,
       ) async {
 
+    final stopSensorStreamResult = await _readerRepository.stopSensorStreams().toString();
+
+    if (kDebugMode) {
+      print('readers_current_bloc -> onStopSensorstream -> stopSensorStreamResult - ${stopSensorStreamResult}');
+    }
+
+    emit(state.copyWith(
+      stateStatus: ReadersCurrentStatus.done,
+      //[TODO] add sensorValues in after conversion
+      // sensorValues: TBD,
+    ),
+    );
 
   }
 
