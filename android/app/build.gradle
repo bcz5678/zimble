@@ -31,11 +31,11 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace "com.mtg.zimble"
     compileSdkVersion 34
-    ndkVersion = "26.1.10909125"
+    ndkVersion "27.2.12479018"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+                targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
@@ -54,7 +54,7 @@ android {
         minSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        multiDexEnabled true
+                multiDexEnabled true
     }
 
     signingConfigs {
@@ -100,7 +100,7 @@ android {
         release {
             release {
                 signingConfig signingConfigs.release
-                minifyEnabled true
+                        minifyEnabled true
                 proguardFiles getDefaultProguardFile('proguard-android.txt')
             }
             debug {
@@ -116,11 +116,11 @@ flutter {
 
 dependencies {
     implementation project(':Rfid.AsciiProtocol-Library')
-    implementation project(':DeviceList')
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation('org.jetbrains.kotlinx:kotlinx-datetime:0.6.0')
-    implementation("androidx.appcompat:appcompat")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.appcompat:appcompat-resources:1.7.0")
     implementation("androidx.activity:activity-ktx:1.9.0")
     implementation("androidx.fragment:fragment-ktx:1.8.1")
     implementation("androidx.lifecycle:lifecycle-common:2.8.3")

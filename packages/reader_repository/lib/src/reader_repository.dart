@@ -361,7 +361,7 @@ class ReaderRepository {
   /// Send command to start Sensor Streams and set stream subscription
   ///
   /// Throws a [StartSensorStreamFailure] if an exception occurs.
-  Future<String> startSensorStreams() async {
+  Future<bool> startSensorStreams() async {
     // [DEBUG TEST]
     if (kDebugMode) {
       print('reader_repository -> startSensorStreams -> Entry');
@@ -381,7 +381,7 @@ class ReaderRepository {
   /// Send command to start Sensor Streams and set stream subscription
   ///
   /// Throws a [StopSensorStreamFailure] if an exception occurs.
-  Future<String> stopSensorStreams() async {
+  Future<bool> stopSensorStreams() async {
     // [DEBUG TEST]
     if (kDebugMode) {
       print('reader_repository -> stopSensorStreams -> Entry');

@@ -6,9 +6,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
-
 import android.util.Log
-
 
 
 class bluetoothScanningCollector(

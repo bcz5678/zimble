@@ -35,7 +35,7 @@ class MainActivity: FlutterActivity() {
     // Initial Flutter entry point
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        initialConfig();
+        initialConfig(this);
     }
 
 
@@ -44,25 +44,25 @@ class MainActivity: FlutterActivity() {
         super.onDestroy()
     }
 
-    private fun initialConfig() {
+    private fun initialConfig(context: Context) {
         ///Initial App Config
 
         ///Make Sure Bluetooth enabled
         BluetoothCommand().setBluetoothEnabled(TriState.YES)
 
-        ///Initialize Main AsciCommander shared instance
-        AsciiCommander.createSharedInstance(applicationContext)
+        ///Initialize Main AsciiCommander shared instance
+        AsciiCommander.createSharedInstance(context)
         val commander = AsciiCommander.sharedInstance()
 
         // Ensure that all existing responders are removed
         commander.clearResponders()
 
-        Log.d(TAG, "Post AsciSharedInstance - ${commander}");
+        Log.d(TAG, "Post AsciiSharedInstance - ${commander}");
         Log.d(TAG, "ConnectedReader - ${commander.getConnectedDeviceName()}")
         commander.addResponder(LoggerResponder())
 
         //Create the ReaderManager shared instance
-        ReaderManager.create(applicationContext)
+        ReaderManager.create(context)
         Log.d(TAG, "ReaderManagerSharedInstance - ${ReaderManager.sharedInstance()}")
         ReaderManager.sharedInstance().initialiseList()
         Log.d(TAG, "ReaderList - ${ReaderManager.sharedInstance().getReaderList().list()}")
@@ -74,7 +74,7 @@ class MainActivity: FlutterActivity() {
         Log.d(TAG, "reader isConnected - ${commander.isConnected()}")
 
         //SetUp method and Event Channels
-        setupMainChannels(applicationContext, flutterEngine!!.dartExecutor.binaryMessenger)
+        setupMainChannels(context, flutterEngine!!.dartExecutor.binaryMessenger)
     }
 
     private fun setupMainChannels(context: Context, messenger: BinaryMessenger) {
@@ -85,8 +85,7 @@ class MainActivity: FlutterActivity() {
         val readerMainChannels = ReaderMainChannels(context)
         readerMainChannels.initializeReaderMainChannels(messenger)
 
-        val sensorChannels = SensorChannels(context)
-        sensorChannels.initializeSensorChannels(messenger)
+        SensorChannels(context, messenger)
 
         //set Event StreamHandler
         //rfidEventChannel!!.setStreamHandler(MyStreamHandler(context))
