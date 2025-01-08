@@ -3,7 +3,7 @@ import 'package:form_inputs/form_inputs.dart';
 import 'package:test/test.dart';
 
 void main() {
-  const emailString = 'test@gmail.com';
+  const emailString = 'test.dart@gmail.com';
   group('Email', () {
     group('constructors', () {
       test('pure creates correct instance', () {
@@ -29,7 +29,7 @@ void main() {
 
       test('returns invalid error when email is malformed', () {
         expect(
-          Email.dirty('test').error,
+          Email.dirty('test.dart').error,
           EmailValidationError.invalid,
         );
       });

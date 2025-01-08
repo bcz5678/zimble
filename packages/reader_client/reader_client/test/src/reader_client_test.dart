@@ -5,7 +5,7 @@ import 'package:reader_client/reader_client.dart';
 
 void main() {
   group('ReaderClient', () {
-    test('can be instantiated', () {
+    test.dart('can be instantiated', () {
       expect(ReaderClient(), isNotNull);
     });
   });

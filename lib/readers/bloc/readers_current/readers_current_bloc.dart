@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reader_client/reader_client.dart' show AccelerationData, SensorData;
 import 'package:reader_repository/reader_repository.dart';
 
 part 'readers_current_event.dart';
@@ -31,13 +33,27 @@ class ReadersCurrentBloc extends Bloc<ReadersCurrentEvent, ReadersCurrentState> 
       print('readers_current_bloc -> onStartSensorstream -> startSensorStreamResult - ${startSensorStreamResult}');
     }
 
-    emit(state.copyWith(
-      stateStatus: ReadersCurrentStatus.done,
-      //[TODO] add sensorValues in after conversion
-      // sensorValues: TBD,
-    ),
-    );
+    await emit.forEach(
+      _readerRepository.sensorDataStream,
+      onData: (SensorData  sensorStreamData) {
+        try {
 
+          if (kDebugMode) {
+            print('readers_current_bloc -> onStartSensorstream -> emit.foreach - ${sensorStreamData}');
+          }
+
+          return state.copyWith(
+            stateStatus: ReadersCurrentStatus.done,
+            sensorValues: sensorStreamData,
+          );
+        } catch (error, stackTrace){
+          return state.copyWith(
+            stateStatus: ReadersCurrentStatus.error,
+          );
+        }
+      },
+    );
+    transformer: restartable();
   }
 
   void onStopSensorStream(

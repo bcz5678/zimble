@@ -37,7 +37,7 @@ dart pub global activate very_good_cli
 To run all unit tests:
 
 ```sh
-very_good test --coverage
+very_good test.dart --coverage
 ```
 
 To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).

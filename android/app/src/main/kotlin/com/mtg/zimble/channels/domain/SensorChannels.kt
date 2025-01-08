@@ -1,6 +1,8 @@
 package com.mtg.zimble.channels.domain
 
 import com.mtg.zimble.channels.data.MethodMapData
+//import com.mtg.zimble.sensors.domain.SensorListenerBase
+//import com.mtg.zimble.sensors.domain.SensorStreamHandlerBase
 import com.mtg.zimble.sensors.domain.SensorStreamHandler
 
 import android.hardware.Sensor
@@ -12,7 +14,6 @@ import io.flutter.plugin.common.MethodChannel
 
 import android.content.Context
 import android.util.Log
-import com.mtg.zimble.sensors.domain.StreamHandler
 
 
 class SensorChannels(context: Context, messenger: BinaryMessenger) {
@@ -37,41 +38,36 @@ class SensorChannels(context: Context, messenger: BinaryMessenger) {
         initializeSensorChannels(context, messenger)
     }
 
+    //Create a SensorManager Instance to pass
+    val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
     ///Creates a Sensor Stream Handler instances to pass to the controller and collector
-
-    /*
-    var accelerometerStreamHandler = StreamHandler(
+    var accelerometerStreamHandler = SensorStreamHandler(
         sensorManager,
         Sensor.TYPE_ACCELEROMETER,
-        SensorManager.SENSOR_DELAY_NORMAL,
+        SensorManager.SENSOR_DELAY_GAME,
     )
 
-    var gyroscopeStreamHandler = StreamHandler(
+    var gyroscopeStreamHandler = SensorStreamHandler(
         sensorManager,
         Sensor.TYPE_GYROSCOPE,
-        SensorManager.SENSOR_DELAY_NORMAL,
+        SensorManager.SENSOR_DELAY_GAME,
     )
 
-    var linearAccelerationStreamHandler = StreamHandler(
+    var linearAccelerationStreamHandler = SensorStreamHandler(
         sensorManager,
         Sensor.TYPE_LINEAR_ACCELERATION,
-        SensorManager.SENSOR_DELAY_NORMAL,
+        SensorManager.SENSOR_DELAY_GAME,
     )
 
-    var rotationVectorStreamHandler = StreamHandler(
+    var rotationVectorStreamHandler = SensorStreamHandler(
         sensorManager,
         Sensor.TYPE_ROTATION_VECTOR,
-        SensorManager.SENSOR_DELAY_NORMAL,
+        SensorManager.SENSOR_DELAY_GAME,
     )
-     */
 
     fun initializeSensorChannels(context:Context, messenger: BinaryMessenger) {
-        //Create a SensorManager Instance to pass
-        val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-
         val accelerometerChannel = EventChannel(messenger, STREAM_SENSOR_ACCELEROMETER)
-        val accelerometerStreamHandler = SensorStreamHandler(sensorManager, Sensor.TYPE_ACCELEROMETER, SensorManager.SENSOR_DELAY_GAME)
 
 
         Log.d(TAG, "context -> ${context.toString()}")
@@ -86,19 +82,10 @@ class SensorChannels(context: Context, messenger: BinaryMessenger) {
 
 
         //Event Stream Channel for sensor streams
-        /*
         sensorStreamAccelerometerChannel = EventChannel(messenger, STREAM_SENSOR_ACCELEROMETER)
         sensorStreamGyroscopeChannel = EventChannel(messenger, STREAM_SENSOR_GYROSCOPE)
         sensorStreamLinearAccelerationChannel = EventChannel(messenger, STREAM_SENSOR_LINEAR_ACCELERATION)
         sensorStreamRotationVectorChannel = EventChannel(messenger, STREAM_SENSOR_ROTATION_VECTOR)
-
-        ///Assign StreamHandlers for each event channels
-        sensorStreamAccelerometerChannel.setStreamHandler(accelerometerStreamHandler)
-        sensorStreamGyroscopeChannel.setStreamHandler(gyroscopeStreamHandler)
-        sensorStreamLinearAccelerationChannel.setStreamHandler(linearAccelerationStreamHandler)
-        sensorStreamRotationVectorChannel.setStreamHandler(rotationVectorStreamHandler)
-         */
-
 
         //Define Sensor Method Calls
         _sensorMethodChannel.setMethodCallHandler { call, result ->
@@ -111,7 +98,14 @@ class SensorChannels(context: Context, messenger: BinaryMessenger) {
                     Log.d(TAG, "in call method - startSensors")
 
                     try {
-                        accelerometerChannel.setStreamHandler(accelerometerStreamHandler)
+
+                        ///Assign StreamHandlers for each event channels
+                        sensorStreamAccelerometerChannel.setStreamHandler(accelerometerStreamHandler)
+                        sensorStreamGyroscopeChannel.setStreamHandler(gyroscopeStreamHandler)
+                        sensorStreamLinearAccelerationChannel.setStreamHandler(linearAccelerationStreamHandler)
+                        sensorStreamRotationVectorChannel.setStreamHandler(rotationVectorStreamHandler)
+
+
                         result.success("sensorStreamSuccess")
                     } catch (e: Exception) {
                         Log.d(TAG, "in call method - startSensors - error")
@@ -127,15 +121,11 @@ class SensorChannels(context: Context, messenger: BinaryMessenger) {
                     Log.d(TAG, "in call method - stopSensors")
                     try {
                         ///Assign StreamHandlers for each event channels
-                        /*
+
                         sensorStreamAccelerometerChannel.setStreamHandler(null)
                         sensorStreamGyroscopeChannel.setStreamHandler(null)
                         sensorStreamLinearAccelerationChannel.setStreamHandler(null)
                         sensorStreamRotationVectorChannel.setStreamHandler(null)
-
-                         */
-
-                        accelerometerChannel.setStreamHandler(null)
 
                         Log.d(TAG, "in call method - stopSensors - success")
                         result.success("success")

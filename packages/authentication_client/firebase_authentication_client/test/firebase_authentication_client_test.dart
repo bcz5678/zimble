@@ -78,7 +78,7 @@ void main() {
     projectId: 'projectId',
   );
 
-  const email = 'test@gmail.com';
+  const email = 'test.dart@gmail.com';
   const emailLink = 'https://email.page.link';
   const appPackageName = 'app.package.name';
 
@@ -180,7 +180,7 @@ void main() {
             .thenReturn('');
       });
 
-      test('calls getAppleCredentials with correct scopes', () async {
+      test.dart('calls getAppleCredentials with correct scopes', () async {
         await firebaseAuthenticationClient.logInWithApple();
         expect(getAppleCredentialsCalls, [
           [
@@ -190,7 +190,7 @@ void main() {
         ]);
       });
 
-      test('calls signInWithCredential with correct credential', () async {
+      test.dart('calls signInWithCredential with correct credential', () async {
         const identityToken = 'identity-token';
         const accessToken = 'access-token';
         when(() => authorizationCredentialAppleID.identityToken)
@@ -201,7 +201,7 @@ void main() {
         verify(() => firebaseAuth.signInWithCredential(any())).called(1);
       });
 
-      test('throws LogInWithAppleFailure when exception occurs', () async {
+      test.dart('throws LogInWithAppleFailure when exception occurs', () async {
         when(() => firebaseAuth.signInWithCredential(any()))
             .thenThrow(Exception());
         expect(
@@ -229,17 +229,17 @@ void main() {
             .thenAnswer((_) => Future.value(MockUserCredential()));
       });
 
-      test('calls signIn authentication, and signInWithCredential', () async {
+      test.dart('calls signIn authentication, and signInWithCredential', () async {
         await firebaseAuthenticationClient.logInWithGoogle();
         verify(() => googleSignIn.signIn()).called(1);
         verify(() => firebaseAuth.signInWithCredential(any())).called(1);
       });
 
-      test('succeeds when signIn succeeds', () {
+      test.dart('succeeds when signIn succeeds', () {
         expect(firebaseAuthenticationClient.logInWithGoogle(), completes);
       });
 
-      test('throws LogInWithGoogleFailure when exception occurs', () async {
+      test.dart('throws LogInWithGoogleFailure when exception occurs', () async {
         when(() => firebaseAuth.signInWithCredential(any()))
             .thenThrow(Exception());
         expect(
@@ -248,7 +248,7 @@ void main() {
         );
       });
 
-      test('throws LogInWithGoogleCanceled when signIn returns null', () async {
+      test.dart('throws LogInWithGoogleCanceled when signIn returns null', () async {
         when(() => googleSignIn.signIn()).thenAnswer((_) async => null);
         expect(
           firebaseAuthenticationClient.logInWithGoogle(),
@@ -275,17 +275,17 @@ void main() {
             .thenAnswer((_) => Future.value(MockUserCredential()));
       });
 
-      test('calls login authentication and signInWithCredential', () async {
+      test.dart('calls login authentication and signInWithCredential', () async {
         await firebaseAuthenticationClient.logInWithFacebook();
         verify(() => facebookAuth.login()).called(1);
         verify(() => firebaseAuth.signInWithCredential(any())).called(1);
       });
 
-      test('succeeds when login succeeds', () {
+      test.dart('succeeds when login succeeds', () {
         expect(firebaseAuthenticationClient.logInWithFacebook(), completes);
       });
 
-      test(
+      test.dart(
           'throws LogInWithFacebookFailure '
           'when signInWithCredential throws', () async {
         when(() => firebaseAuth.signInWithCredential(any()))
@@ -296,7 +296,7 @@ void main() {
         );
       });
 
-      test(
+      test.dart(
           'throws LogInWithFacebookFailure '
           'when login result status is failed', () async {
         when(() => loginResult.status)
@@ -307,7 +307,7 @@ void main() {
         );
       });
 
-      test(
+      test.dart(
           'throws LogInWithFacebookFailure '
           'when login result access token is empty', () async {
         when(() => loginResult.accessToken).thenReturn(null);
@@ -317,7 +317,7 @@ void main() {
         );
       });
 
-      test(
+      test.dart(
           'throws LogInWithFacebookCanceled '
           'when login result status is cancelled', () async {
         when(() => loginResult.status)
@@ -348,18 +348,18 @@ void main() {
       });
 
 
-      test('calls loginV2 authentication and signInWithCredential', () async {
+      test.dart('calls loginV2 authentication and signInWithCredential', () async {
         await firebaseAuthenticationClient.logInWithTwitter();
         verify(() => twitterLogin.loginV2()).called(1);
         verify(() => firebaseAuth.signInWithCredential(any())).called(1);
       });
 
-      test('succeeds when login succeeds', () {
+      test.dart('succeeds when login succeeds', () {
         expect(firebaseAuthenticationClient.logInWithTwitter(), completes);
       });
 
 
-      test(
+      test.dart(
           'throws LogInWithTwitterFailure '
           'when signInWithCredential throws', () async {
         when(() => firebaseAuth.signInWithCredential(any()))
@@ -370,7 +370,7 @@ void main() {
         );
       });
 
-      test(
+      test.dart(
           'throws LogInWithTwitterFailure '
           'when login result status is error', () async {
         when(() => loginResult.status)
@@ -381,7 +381,7 @@ void main() {
         );
       });
 
-      test(
+      test.dart(
           'throws LogInWithTwitterFailure '
           'when login result auth token is empty', () async {
         when(() => loginResult.authToken).thenReturn(null);
@@ -391,7 +391,7 @@ void main() {
         );
       });
 
-      test(
+      test.dart(
           'throws LogInWithTwitterFailure '
           'when login result auth token secret is empty', () async {
         when(() => loginResult.authTokenSecret).thenReturn(null);
@@ -401,7 +401,7 @@ void main() {
         );
       });
 
-      test(
+      test.dart(
           'throws LogInWithTwitterCanceled '
           'when login result status is cancelledByUser', () async {
         when(() => loginResult.status)
@@ -426,7 +426,7 @@ void main() {
         ).thenAnswer((_) async {});
       });
 
-      test('calls sendSignInLinkToEmail', () async {
+      test.dart('calls sendSignInLinkToEmail', () async {
         await firebaseAuthenticationClient.sendLoginEmailLink(
           email: email,
           appPackageName: appPackageName,
@@ -463,7 +463,7 @@ void main() {
         ).called(1);
       });
 
-      test('succeeds when sendSignInLinkToEmail succeeds', () async {
+      test.dart('succeeds when sendSignInLinkToEmail succeeds', () async {
         expect(
           firebaseAuthenticationClient.sendLoginEmailLink(
             email: email,
@@ -473,7 +473,7 @@ void main() {
         );
       });
 
-      test(
+      test.dart(
           'throws SendLoginEmailLinkFailure '
           'when sendSignInLinkToEmail throws', () async {
         when(
@@ -499,7 +499,7 @@ void main() {
         ).thenAnswer((_) => true);
       });
 
-      test('calls isSignInWithEmailLink', () {
+      test.dart('calls isSignInWithEmailLink', () {
         firebaseAuthenticationClient.isLogInWithEmailLink(
           emailLink: emailLink,
         );
@@ -508,7 +508,7 @@ void main() {
         ).called(1);
       });
 
-      test('succeeds when isSignInWithEmailLink succeeds', () async {
+      test.dart('succeeds when isSignInWithEmailLink succeeds', () async {
         expect(
           firebaseAuthenticationClient.isLogInWithEmailLink(
             emailLink: emailLink,
@@ -517,7 +517,7 @@ void main() {
         );
       });
 
-      test(
+      test.dart(
           'throws IsLogInWithEmailLinkFailure '
           'when isSignInWithEmailLink throws', () async {
         when(
@@ -542,7 +542,7 @@ void main() {
         ).thenAnswer((_) => Future.value(MockUserCredential()));
       });
 
-      test('calls signInWithEmailLink', () async {
+      test.dart('calls signInWithEmailLink', () async {
         await firebaseAuthenticationClient.logInWithEmailLink(
           email: email,
           emailLink: emailLink,
@@ -555,7 +555,7 @@ void main() {
         ).called(1);
       });
 
-      test('succeeds when signInWithEmailLink succeeds', () async {
+      test.dart('succeeds when signInWithEmailLink succeeds', () async {
         expect(
           firebaseAuthenticationClient.logInWithEmailLink(
             email: email,
@@ -565,7 +565,7 @@ void main() {
         );
       });
 
-      test(
+      test.dart(
           'throws LogInWithEmailLinkFailure '
           'when signInWithEmailLink throws', () async {
         when(
@@ -585,7 +585,7 @@ void main() {
     });
 
     group('logOut', () {
-      test('calls signOut', () async {
+      test.dart('calls signOut', () async {
         when(() => firebaseAuth.signOut()).thenAnswer((_) async {});
         when(() => googleSignIn.signOut()).thenAnswer((_) async => null);
         await firebaseAuthenticationClient.logOut();
@@ -593,7 +593,7 @@ void main() {
         verify(() => googleSignIn.signOut()).called(1);
       });
 
-      test('throws LogOutFailure when signOut throws', () async {
+      test.dart('throws LogOutFailure when signOut throws', () async {
         when(() => firebaseAuth.signOut()).thenThrow(Exception());
         expect(
           firebaseAuthenticationClient.logOut(),
@@ -603,7 +603,7 @@ void main() {
     });
 
     group('deleteAccount', () {
-      test('calls deleteAccount', () async {
+      test.dart('calls deleteAccount', () async {
         final firebaseUser = MockFirebaseUser();
         when(firebaseUser.delete).thenAnswer((_) async {});
         when(() => firebaseAuth.currentUser).thenReturn(firebaseUser);
@@ -613,7 +613,7 @@ void main() {
         verify(firebaseUser.delete).called(1);
       });
 
-      test('throws DeleteAccountFailure if current user is null', () async {
+      test.dart('throws DeleteAccountFailure if current user is null', () async {
         when(() => firebaseAuth.currentUser).thenReturn(null);
 
         expect(
@@ -622,7 +622,7 @@ void main() {
         );
       });
 
-      test('throws DeleteAccountFailure when deleteAccount throws', () async {
+      test.dart('throws DeleteAccountFailure when deleteAccount throws', () async {
         final firebaseUser = MockFirebaseUser();
         when(firebaseUser.delete).thenThrow(Exception());
         when(() => firebaseAuth.currentUser).thenReturn(firebaseUser);
@@ -641,7 +641,7 @@ void main() {
       const returningUser =
           AuthenticationUser(id: userId, email: email, isNewUser: false);
 
-      test('emits anonymous user when firebase user is null', () async {
+      test.dart('emits anonymous user when firebase user is null', () async {
         when(firebaseAuth.authStateChanges)
             .thenAnswer((_) => Stream.value(null));
         await expectLater(
@@ -652,7 +652,7 @@ void main() {
         );
       });
 
-      test('emits new user when firebase user is not null', () async {
+      test.dart('emits new user when firebase user is not null', () async {
         final firebaseUser = MockFirebaseUser();
         final userMetadata = MockUserMetadata();
         final creationTime = DateTime(2020);
@@ -670,7 +670,7 @@ void main() {
         );
       });
 
-      test('emits returningUser user when firebase user is not null', () async {
+      test.dart('emits returningUser user when firebase user is not null', () async {
         final firebaseUser = MockFirebaseUser();
         final userMetadata = MockUserMetadata();
         final creationTime = DateTime(2020);
@@ -689,7 +689,7 @@ void main() {
         );
       });
 
-      test(
+      test.dart(
           'calls saveToken on TokenStorage '
           'when user changes to authenticated', () async {
         final firebaseUser = MockFirebaseUser();
@@ -709,7 +709,7 @@ void main() {
         verifyNever(tokenStorage.clearToken);
       });
 
-      test(
+      test.dart(
           'calls clearToken on TokenStorage '
           'when user changes to unauthenticated', () async {
         authStateChangesController.add(null);

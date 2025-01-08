@@ -1,15 +1,19 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
+import 'package:reader_client/reader_client.dart' show AccelerometerData, GyroscopeData, LinearAccelerationData, RotationVectorData;
 
 class SensorData extends Equatable{
   const SensorData({
-    this.accelerationData,
+    this.accelerometerData,
     this.gyroscopeData,
     this.linearAccelerationData,
-    this.rotationalVectorData,
+    this.rotationVectorData,
   });
 
   /// The current devices acceleration axis data
-  final AccelerationData? accelerationData;
+  final AccelerometerData? accelerometerData;
 
   /// The current devices gyroscope axis data
   final GyroscopeData? gyroscopeData;
@@ -18,120 +22,30 @@ class SensorData extends Equatable{
   final LinearAccelerationData? linearAccelerationData;
 
   /// The current devices rotational vector axis data
-  final RotationalVectorData? rotationalVectorData;
+  final RotationVectorData? rotationVectorData;
+   
+  factory SensorData.fromJson(Map<String, dynamic> data) {
 
+    /*
+    if (kDebugMode) {
+      print('sensor_data -> SensorData.fromJson -> data: ${data}');
+      print('sensor_data -> SensorData.fromJson -> data["sensorDataMap"]: ${data["sensorDataMap"]}');
+    }
+    */
+
+    return SensorData(
+      accelerometerData: AccelerometerData.fromJson(data['accelerometer'] as Map<String, dynamic>) ?? null
+      //gyroscopeData: GyroscopeData.fromJson(data['gyroscope'] as Map<String, dynamic>) ?? null,
+      //linearAccelerationData: LinearAccelerationData.fromJson(data['linearAcceleration'] as Map<String, dynamic>) ?? null,
+      //rotationVectorData: RotationVectorData.fromJson(data['rotationVector'] as Map<String, dynamic>) ?? null,
+    );
+  }
 
   @override
   List<Object?> get props => [
-    accelerationData,
+    accelerometerData,
     gyroscopeData,
     linearAccelerationData,
-    rotationalVectorData,
+    rotationVectorData,
   ];
-}
-
-
-class AccelerationData{
-  AccelerationData({
-    this.xAxis,
-    this.yAxis,
-    this.zAxis,
-  });
-
-  /// Acceleration force along the x axis, including gravity (m/s*2)
-  late double? xAxis;
-
-  /// Acceleration force along the y axis, including gravity (m/s*2)
-  late double? yAxis;
-
-  /// Acceleration force along the z axis, including gravity (m/s*2)
-  late double? zAxis;
-
-  factory AccelerationData.fromJson (Map<String, dynamic> data) {
-    return AccelerationData(
-      xAxis: data['x'] as double,
-      yAxis: data['y'] as double,
-      zAxis: data['z'] as double,
-    );
-  }
-}
-
-class GyroscopeData{
-  GyroscopeData({
-    this.xAxis,
-    this.yAxis,
-    this.zAxis,
-  });
-
-  /// Rate of rotation around the x axis (rad/s)
-  late int? xAxis;
-
-  /// Rate of rotation around the y axis (rad/s)
-  late int? yAxis;
-
-  /// Rate of rotation around the z axis (rad/s)
-  late int? zAxis;
-
-  factory GyroscopeData.fromJson (Map<String, dynamic> data) {
-    return GyroscopeData(
-      xAxis: data['x'] as int,
-      yAxis: data['y'] as int,
-      zAxis: data['z'] as int,
-    );
-  }
-}
-
-class LinearAccelerationData{
-  LinearAccelerationData({
-    this.xAxis,
-    this.yAxis,
-    this.zAxis,
-  });
-
-  /// Acceleration force along the x axis, excluding gravity (m/s*2)
-  late double? xAxis;
-
-  /// Acceleration force along the y axis, excluding gravity (m/s*2)
-  late double? yAxis;
-
-  /// Acceleration force along the z axis, excluding gravity (m/s*2)
-  late double? zAxis;
-
-  factory LinearAccelerationData.fromJson (Map<String, dynamic> data) {
-    return LinearAccelerationData(
-      xAxis: data['x'] as double,
-      yAxis: data['y'] as double,
-      zAxis: data['z'] as double,
-    );
-  }
-}
-
-class RotationalVectorData{
-  RotationalVectorData({
-    this.xAxis,
-    this.yAxis,
-    this.zAxis,
-    this.scalar,
-  });
-
-  /// Rotation vector component along the x axis (x * sin(θ/2)).
-  late double? xAxis;
-
-  /// Rotation vector component along the y axis (y * sin(θ/2)).
-  late double? yAxis;
-
-  /// Rotation vector component along the y axis (y * sin(θ/2)).
-  late double? zAxis;
-
-  /// Scalar component of the rotation vector ((cos(θ/2)).
-  late double? scalar;
-
-  factory RotationalVectorData.fromJson (Map<String, dynamic> data) {
-    return RotationalVectorData(
-      xAxis: data['x'] as double,
-      yAxis: data['y'] as double,
-      zAxis: data['z'] as double,
-      scalar: data['scalar'] as double,
-    );
-  }
 }

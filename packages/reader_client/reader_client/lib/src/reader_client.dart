@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
@@ -34,12 +35,21 @@ class ReaderClient {
   var sensorMethodChannel = NativeChannels().sensorMethod;
   var sensorAccelerometerStreamChannel = NativeChannels().sensorAccelerometerStream;
   var sensorGyroscopeStreamChannel = NativeChannels().sensorGyroscopeStream;
-  var sensorLinearAccelerationChannel = NativeChannels().sensorLinearAccelerationStream;
+  var sensorLinearAccelerationStreamChannel = NativeChannels().sensorLinearAccelerationStream;
   var sensorRotationVectorStreamChannel = NativeChannels().sensorRotationVectorStream;
 
 
-  late BehaviorSubject<String> _sensorStream;
-  late StreamSubscription<dynamic> _sensorChannelSubscription;
+  // Subscription to listen and process sensor Event Channel Data
+  late StreamSubscription<dynamic> _sensorAccelerometerSubscription;
+  late StreamSubscription<dynamic> _sensorGyroscopeSubscription;
+  late StreamSubscription<dynamic> _sensorLinearAccelerationSubscription;
+  late StreamSubscription<dynamic> _sensorRotationVectorSubscription;
+
+  // Post Processed stream from the _sensorChannelSubscription
+  // Used to set the sensorStream getter to pass to ReaderRepository
+  late BehaviorSubject<SensorData> _sensorStream = BehaviorSubject<SensorData>.seeded(SensorData());
+
+
 
 
   /// Stream of [BluetoothReader] which will emit the current reader when
@@ -54,7 +64,9 @@ class ReaderClient {
   /// the connection process changes
   //Stream<UsbReader> get usbReader;
 
-  Stream<String> get sensorStream => _sensorStream;
+  /// Stream of [SensorData] which will emit current sensor data streaming
+  /// from the attached mobile device
+  Stream<SensorData> get sensorStream => _sensorStream.stream;
 
 
   ///Starts Stream of sensorData to pass to the Reader_repository
@@ -64,35 +76,160 @@ class ReaderClient {
         print('reader_client -> startSensorStream -> Entry');
       }
 
+      // Call Method Channel to start and set the EventChannel streamHandlers
       final startSensorStreamResult = await sensorMethodChannel.invokeMethod(
           "startSensorStream").toString();
 
-      ///[ANCHOR]
-      _sensorChannelSubscription =
+      // Start _sensorAccelerometerSubscription listening to the EventChannel
+      // and format results
+      _sensorAccelerometerSubscription =
         sensorAccelerometerStreamChannel
             .receiveBroadcastStream()
             .distinct()
             .listen((event) {
-          if (kDebugMode) {
-            print('reader_client -> startSensorStream -> EventChannelData -> ${event}');
-          }
-          _sensorStream.add(event.toString());
-        }
-      );
-      return true;
-    } on PlatformException catch (e) {
 
+              // Decode all the event string json into the base of
+              // nested components to see return type (ie sensorData)
+              Map<String, dynamic>? sensorEvent = json.decode(event.toString()) as Map<String, dynamic>;
+
+              if (kDebugMode) {
+                print('reader_client -> startSensorStream -> EventChannelData -> ${sensorEvent}');
+              }
+
+
+              /// [ANCHOR]  - sensorData is full but have not json.decoded below that
+              // If sensorData is present, encode the sensor into
+              // SensorData entity and add to _sensorStream for getter
+              if(sensorEvent.containsKey("sensorData")) {
+                try {
+                  _sensorStream.add(SensorData.fromJson(sensorEvent["sensorData"] as Map<String, dynamic>));
+                } catch (error) {
+                  if (kDebugMode) {
+                    //print('reader_client -> startSensorStream -> _sensorStream.add -> ${error.toString()}');
+                  }
+                }
+              }
+            }
+      );
+
+      // Start _sensorGyroscopeSubscription listening to the EventChannel
+      // and format results
+      _sensorGyroscopeSubscription =
+          sensorGyroscopeStreamChannel
+              .receiveBroadcastStream()
+              .distinct()
+              .listen((event) {
+
+            // Decode all the event string json into the base of
+            // nested components to see return type (ie sensorData)
+            Map<String, dynamic>? sensorEvent = json.decode(event.toString()) as Map<String, dynamic>;
+
+            if (kDebugMode) {
+              print('reader_client -> startSensorStream -> EventChannelData -> ${sensorEvent}');
+            }
+
+
+            /// [ANCHOR]  - sensorData is full but have not json.decoded below that
+            // If sensorData is present, encode the sensor into
+            // SensorData entity and add to _sensorStream for getter
+            if(sensorEvent.containsKey("sensorData")) {
+              try {
+                _sensorStream.add(SensorData.fromJson(sensorEvent["sensorData"] as Map<String, dynamic>));
+              } catch (error) {
+                if (kDebugMode) {
+                  //print('reader_client -> startSensorStream -> _sensorStream.add -> ${error.toString()}');
+                }
+              }
+            }
+          }
+          );
+
+      // Start _sensorLinearAccelerationSubscription listening to the EventChannel
+      // and format results
+      _sensorLinearAccelerationSubscription =
+          sensorLinearAccelerationStreamChannel
+              .receiveBroadcastStream()
+              .distinct()
+              .listen((event) {
+
+            // Decode all the event string json into the base of
+            // nested components to see return type (ie sensorData)
+            Map<String, dynamic>? sensorEvent = json.decode(event.toString()) as Map<String, dynamic>;
+
+            if (kDebugMode) {
+              print('reader_client -> startSensorStream -> EventChannelData -> ${sensorEvent}');
+            }
+
+
+            /// [ANCHOR]  - sensorData is full but have not json.decoded below that
+            // If sensorData is present, encode the sensor into
+            // SensorData entity and add to _sensorStream for getter
+            if(sensorEvent.containsKey("sensorData")) {
+              try {
+                _sensorStream.add(SensorData.fromJson(sensorEvent["sensorData"] as Map<String, dynamic>));
+              } catch (error) {
+                if (kDebugMode) {
+                  //print('reader_client -> startSensorStream -> _sensorStream.add -> ${error.toString()}');
+                }
+              }
+            }
+          }
+          );
+
+      // Start _sensorRotationVectorSubscription listening to the EventChannel
+      // and format results
+      _sensorRotationVectorSubscription =
+          sensorRotationVectorStreamChannel
+              .receiveBroadcastStream()
+              .distinct()
+              .listen((event) {
+
+            // Decode all the event string json into the base of
+            // nested components to see return type (ie sensorData)
+            Map<String, dynamic>? sensorEvent = json.decode(event.toString()) as Map<String, dynamic>;
+
+            if (kDebugMode) {
+              print('reader_client -> startSensorStream -> EventChannelData -> ${sensorEvent}');
+            }
+
+
+            /// [ANCHOR]  - sensorData is full but have not json.decoded below that
+            // If sensorData is present, encode the sensor into
+            // SensorData entity and add to _sensorStream for getter
+            if(sensorEvent.containsKey("sensorData")) {
+              try {
+                _sensorStream.add(SensorData.fromJson(sensorEvent["sensorData"] as Map<String, dynamic>));
+              } catch (error) {
+                if (kDebugMode) {
+                  //print('reader_client -> startSensorStream -> _sensorStream.add -> ${error.toString()}');
+                }
+              }
+            }
+          }
+          );
+
+
+      // Return value that the stream has started successfully
+      return true;
+
+    } on PlatformException catch (e) {
+      // Native side returns error on start
       if (kDebugMode) {
         print('reader_client -> startSensorStream -> Error: ${e.message}');
       }
 
-      await _sensorChannelSubscription.cancel();
+      // Cancels the newly started _sensorChannelSubscription to free resources
+      await _sensorAccelerometerSubscription.cancel();
+      await _sensorGyroscopeSubscription.cancel();
+      await _sensorLinearAccelerationSubscription.cancel();
+      await _sensorRotationVectorSubscription.cancel();
 
       return false;
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(StartSensorStreamFailure(error), stackTrace);
     }
   }
+
 
   ///Starts Stream of sensorData to pass to the Reader_repository
   Future<bool> stopSensorStream() async {
@@ -101,7 +238,10 @@ class ReaderClient {
         print('reader_client -> stopSensorStream -> Entry');
       }
 
-      await _sensorChannelSubscription.cancel();
+      await _sensorAccelerometerSubscription.cancel();
+      await _sensorGyroscopeSubscription.cancel();
+      await _sensorLinearAccelerationSubscription.cancel();
+      await _sensorRotationVectorSubscription.cancel();
 
       final stopSensorStreamResult = await sensorMethodChannel.invokeMethod(
           "stopSensorStream").toString();

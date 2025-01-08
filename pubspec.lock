@@ -1296,7 +1296,7 @@ packages:
   test:
     dependency: transitive
     description:
-      name: test
+      name: test.dart
       sha256: "7ee44229615f8f642b68120165ae4c2a75fe77ae2065b1e55ae4711f6cf0899e"
       url: "https://pub.dev"
     source: hosted

@@ -23,7 +23,7 @@ class ReadersCurrentState {
 
   final ReadersCurrentStatus? stateStatus;
   late List<Reader>? currentlyAttachedReaders;
-  late List<List<String>>? sensorValues;
+  late SensorData? sensorValues;
 
 
   @override
@@ -37,7 +37,7 @@ class ReadersCurrentState {
   ReadersCurrentState copyWith({
     ReadersCurrentStatus? stateStatus,
     List<Reader>? currentlyAttachedReaders,
-    List<List<String>>? sensorValues,
+    SensorData? sensorValues,
   }) {
     return ReadersCurrentState (
       stateStatus: stateStatus ?? this.stateStatus,

@@ -1,6 +1,6 @@
 ---
 name: Chore
-about: Other changes that don't modify src or test files
+about: Other changes that don't modify src or test.dart files
 title: "chore: "
 labels: chore
 ---

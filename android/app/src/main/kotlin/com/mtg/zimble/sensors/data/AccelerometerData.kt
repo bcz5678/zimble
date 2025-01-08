@@ -1,5 +1,8 @@
 package com.mtg.zimble.sensors.data
 
+import com.google.gson.Gson
+
+
 class AccelerometerData(
     var xAxis: Float,
     var yAxis: Float,
@@ -16,5 +19,36 @@ class AccelerometerData(
                 "zAxis" to zAxis,
             )
         )
+    }
+
+    fun toMessageMap(): MutableMap<String, Any?> {
+        var map = mutableMapOf<String, Any?>()
+        var returnMap = mutableMapOf<String, Any?>()
+        var sensorDataMap = mutableMapOf<String, Any?>(
+            "xAxis" to xAxis,
+            "yAxis" to yAxis,
+            "zAxis" to zAxis,
+        )
+
+        map["sensorType"] = "accelerometer"
+        map["sensorDataMap"] = Gson().toJson(sensorDataMap)
+
+        returnMap.put("sensorData", map)
+        return returnMap
+    }
+
+    fun toJson(): String {
+        var map = mutableMapOf<String, Any?>()
+        var returnMap = mutableMapOf<String, Any?>()
+
+        map["sensorType"] = "accelerometer"
+        map["sensorDataMap"] = mutableMapOf<String, Any?>(
+            "xAxis" to xAxis,
+            "yAxis" to yAxis,
+            "zAxis" to zAxis,
+        )
+
+        returnMap.put("sensorData", map)
+        return Gson().toJson(returnMap)
     }
 }

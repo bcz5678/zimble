@@ -6,7 +6,7 @@ import 'package:reader_repository/reader_repository.dart';
 
 void main() {
   group('ReaderRepository', () {
-    test('can be instantiated', () {
+    test.dart('can be instantiated', () {
       expect(ReaderRepository(readerClient: null, storage: null), isNotNull);
     });
   });

@@ -58,14 +58,14 @@ void main() {
   });
 
   /*
-  test('exports LogInWithFacebookFailure', () {
+  test.dart('exports LogInWithFacebookFailure', () {
     expect(
       () => LogInWithFacebookFailure('oops'),
       returnsNormally,
     );
   });
 
-  test('exports LogInWithFacebookCanceled', () {
+  test.dart('exports LogInWithFacebookCanceled', () {
     expect(
       () => LogInWithFacebookCanceled('oops'),
       returnsNormally,
@@ -74,7 +74,7 @@ void main() {
    */
 
   /*
-  test('exports LogInWithTwitterFailure', () {
+  test.dart('exports LogInWithTwitterFailure', () {
     expect(
       () => LogInWithTwitterFailure('oops'),
       returnsNormally,

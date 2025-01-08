@@ -16,23 +16,24 @@ class SensorStreamHandler(
     private val sensorManager: SensorManager,
     sensorType: Int,
     private var interval: Int,
-    ):
-        EventChannel.StreamHandler, SensorEventListener {
+):
+    EventChannel.StreamHandler, SensorEventListener {
 
     val TAG = "SensorStreamHandler"
 
     private val sensor = sensorManager.getDefaultSensor(sensorType)
     private var sensorEventSink: EventChannel.EventSink? = null
 
-
+    // Overrides EventChannel onListen, from the flutter listen side
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-        Log.d(TAG, "onListen")
+        Log.d(TAG, "onListen - ${sensor}")
         if (sensor != null){
             sensorEventSink = events
             sensorManager.registerListener(this, sensor, interval)
         }
     }
 
+    // Overrides SensorEventListener onSensorChanged Method
     override fun onSensorChanged(event: SensorEvent) {
         var sensorValues = when(event.sensor.type) {
             Sensor.TYPE_ACCELEROMETER -> {
@@ -40,21 +41,21 @@ class SensorStreamHandler(
                     event!!.values[0],
                     event!!.values[1],
                     event!!.values[2],
-                ).toSensorData()
+                ).toJson()
             }
             Sensor.TYPE_GYROSCOPE -> {
                 GyroscopeData(
                     event!!.values[0],
                     event!!.values[1],
                     event!!.values[2],
-                ).toSensorData()
+                ).toJson()
             }
             Sensor.TYPE_LINEAR_ACCELERATION -> {
                 LinearAccelerationData(
                     event!!.values[0],
                     event!!.values[1],
                     event!!.values[2],
-                ).toSensorData()
+                ).toJson()
             }
             Sensor.TYPE_ROTATION_VECTOR -> {
                 RotationVectorData(
@@ -62,7 +63,7 @@ class SensorStreamHandler(
                     event!!.values[1],
                     event!!.values[2],
                     event!!.values[3],
-                ).toSensorData()
+                ).toJson()
             }
             else -> {
                 null
@@ -73,26 +74,29 @@ class SensorStreamHandler(
         sensorEventSink?.success(sensorValues.toString())
     }
 
+    //
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
+
+
+    //Overrides EventChannel onCancel to stop listening  on flutter stream .cancel()
     override fun onCancel(arguments: Any?) {
         Log.d(TAG, "onCancel")
         sensorManager.unregisterListener(this)
         sensorEventSink = null
     }
 
-/*
-    override fun onResume() {
-        super.onResume()
-        sensorManager.registerListener(this, sensor, interval)
-        // Register other sensors similarly
-    }
+    /*
+        override fun onResume() {
+            super.onResume()
+            sensorManager.registerListener(this, sensor, interval)
+            // Register other sensors similarly
+        }
 
-    override fun onPause() {
-        super.onPause()
-        sensorManager.unregisterListener(this)
-        // Unregister other sensors similarly
-    }
- */
-
+        override fun onPause() {
+            super.onPause()
+            sensorManager.unregisterListener(this)
+            // Unregister other sensors similarly
+        }
+     */
 }

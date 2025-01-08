@@ -171,6 +171,17 @@ class ReaderRepository {
   }
 
 
+  //
+  Stream<SensorData> get sensorDataStream  {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> get sensorDataStream -> Entry');
+    }
+
+
+    return _readerClient.sensorStream;
+  }
+
 
   final BehaviorSubject<String> _placeholderData = BehaviorSubject.seeded(
       'null');

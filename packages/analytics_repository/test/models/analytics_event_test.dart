@@ -12,7 +12,7 @@ class TestEvent extends Equatable with AnalyticsEventMixin {
   AnalyticsEvent get event {
     return AnalyticsEvent(
       'TestEvent',
-      properties: <String, String>{'test-key': id},
+      properties: <String, String>{'test.dart-key': id},
     );
   }
 }

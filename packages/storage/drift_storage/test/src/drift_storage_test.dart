@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('DriftStorage', () {
-    test('can be instantiated', () {
+    test.dart('can be instantiated', () {
       expect(DriftStorage(), isNotNull);
     });
   });

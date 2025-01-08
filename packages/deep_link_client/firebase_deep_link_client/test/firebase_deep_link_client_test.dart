@@ -32,7 +32,7 @@ void main() {
   group('FirebaseDeepLinkClient', () {
     group('getInitialLink', () {
       test('retrieves the latest link if present', () async {
-        final expectedUri = Uri.https('ham.app.test', '/test/path');
+        final expectedUri = Uri.https('ham.app.test.dart', '/test.dart/path');
         when(dynamicLinks.getInitialLink).thenAnswer(
           (_) => Future.value(PendingDynamicLinkData(link: expectedUri)),
         );
@@ -46,8 +46,8 @@ void main() {
 
     group('deepLinkStream', () {
       test('publishes values received through onLink stream', () {
-        final expectedUri1 = Uri.https('news.app.test', '/test/1');
-        final expectedUri2 = Uri.https('news.app.test', '/test/2');
+        final expectedUri1 = Uri.https('news.app.test.dart', '/test.dart/1');
+        final expectedUri2 = Uri.https('news.app.test.dart', '/test.dart/2');
 
         final client =
             FirebaseDeepLinkClient(firebaseDynamicLinks: dynamicLinks);

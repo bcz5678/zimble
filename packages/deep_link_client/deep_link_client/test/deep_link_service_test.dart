@@ -25,7 +25,7 @@ void main() {
 
   group('DeepLinkService', () {
     test('retrieves and publishes latest link if present', () {
-      final expectedUri = Uri.https('ham.app.test', '/test/path');
+      final expectedUri = Uri.https('ham.app.test.dart', '/test.dart/path');
       when(deepLinkClient.getInitialLink).thenAnswer(
         (_) => Future.value(expectedUri),
       );
@@ -56,8 +56,8 @@ void main() {
     });
 
     test('publishes values received through onAppLink callback', () {
-      final expectedUri1 = Uri.https('ham.app.test', '/test/1');
-      final expectedUri2 = Uri.https('ham.app.test', '/test/2');
+      final expectedUri1 = Uri.https('ham.app.test.dart', '/test.dart/1');
+      final expectedUri2 = Uri.https('ham.app.test.dart', '/test.dart/2');
 
       when(deepLinkClient.getInitialLink).thenAnswer((_) async => null);
 

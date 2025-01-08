@@ -68,7 +68,7 @@ void main() {
     });
 
     group('constructor', () {
-      test(
+      test.dart(
           'initializes categories preferences '
           'from FlutterNewsExampleApiClient.getCategories', () async {
         when(storage.fetchCategoriesPreferences).thenAnswer((_) async => null);
@@ -102,7 +102,7 @@ void main() {
         ).called(1);
       });
 
-      test(
+      test.dart(
           'throws an InitializeCategoriesPreferencesFailure '
           'when initialization fails', () async {
         Object? caughtError;
@@ -128,7 +128,7 @@ void main() {
 
     group('toggleNotifications', () {
       group('when enable is true', () {
-        test(
+        test.dart(
             'calls openPermissionSettings on PermissionClient '
             'when PermissionStatus is permanentlyDenied', () async {
           when(permissionClient.notificationsStatus)
@@ -147,7 +147,7 @@ void main() {
           verify(permissionClient.openPermissionSettings).called(1);
         });
 
-        test(
+        test.dart(
             'calls openPermissionSettings on PermissionClient '
             'when PermissionStatus is restricted', () async {
           when(permissionClient.notificationsStatus)
@@ -166,7 +166,7 @@ void main() {
           verify(permissionClient.openPermissionSettings).called(1);
         });
 
-        test(
+        test.dart(
             'calls requestNotifications on PermissionClient '
             'when PermissionStatus is denied', () async {
           when(permissionClient.requestNotifications)
@@ -185,7 +185,7 @@ void main() {
           verify(permissionClient.requestNotifications).called(1);
         });
 
-        test('subscribes to categories preferences', () async {
+        test.dart('subscribes to categories preferences', () async {
           const categoriesPreferences = {
             Category.top,
             Category.technology,
@@ -210,7 +210,7 @@ void main() {
           }
         });
 
-        test(
+        test.dart(
             'calls setNotificationsEnabled with true '
             'on NotificationsStorage', () async {
           when(permissionClient.notificationsStatus)
@@ -230,7 +230,7 @@ void main() {
       });
 
       group('when enabled is false', () {
-        test('unsubscribes from categories preferences', () async {
+        test.dart('unsubscribes from categories preferences', () async {
           const categoriesPreferences = {
             Category.top,
             Category.technology,
@@ -253,7 +253,7 @@ void main() {
           }
         });
 
-        test(
+        test.dart(
             'calls setNotificationsEnabled with false '
             'on NotificationsStorage', () async {
           await NotificationsRepository(
@@ -269,7 +269,7 @@ void main() {
         });
       });
 
-      test(
+      test.dart(
           'throws a ToggleNotificationsFailure '
           'when toggling notifications fails', () async {
         when(permissionClient.notificationsStatus).thenThrow(Exception());
@@ -287,7 +287,7 @@ void main() {
     });
 
     group('fetchNotificationsEnabled', () {
-      test(
+      test.dart(
           'returns true '
           'when the notification permission is granted '
           'and the notification setting is enabled', () async {
@@ -306,7 +306,7 @@ void main() {
         expect(result, isTrue);
       });
 
-      test(
+      test.dart(
           'returns false '
           'when the notification permission is not granted '
           'and the notification setting is enabled', () async {
@@ -325,7 +325,7 @@ void main() {
         expect(result, isFalse);
       });
 
-      test(
+      test.dart(
           'returns false '
           'when the notification permission is not granted '
           'and the notification setting is disabled', () async {
@@ -344,7 +344,7 @@ void main() {
         expect(result, isFalse);
       });
 
-      test(
+      test.dart(
           'returns false '
           'when the notification permission is granted '
           'and the notification setting is disabled', () async {
@@ -363,7 +363,7 @@ void main() {
         expect(result, isFalse);
       });
 
-      test(
+      test.dart(
           'throws a FetchNotificationsEnabledFailure '
           'when fetching notifications enabled fails', () async {
         when(permissionClient.notificationsStatus).thenThrow(Exception());
@@ -386,7 +386,7 @@ void main() {
         Category.technology,
       };
 
-      test('calls setCategoriesPreferences on NotificationsStorage', () async {
+      test.dart('calls setCategoriesPreferences on NotificationsStorage', () async {
         when(
           () => storage.setCategoriesPreferences(
             categories: any(named: 'categories'),
@@ -410,7 +410,7 @@ void main() {
         ).called(1);
       });
 
-      test('unsubscribes from previous categories preferences', () async {
+      test.dart('unsubscribes from previous categories preferences', () async {
         const previousCategoriesPreferences = {
           Category.health,
           Category.entertainment,
@@ -433,7 +433,7 @@ void main() {
         }
       });
 
-      test(
+      test.dart(
           'subscribes to categories preferences '
           'when notifications are enabled', () async {
         when(storage.fetchCategoriesPreferences)
@@ -457,7 +457,7 @@ void main() {
         }
       });
 
-      test(
+      test.dart(
           'throws a SetCategoriesPreferencesFailure '
           'when setting categories preferences fails', () async {
         when(
@@ -484,7 +484,7 @@ void main() {
         Category.technology,
       };
 
-      test('returns categories preferences from NotificationsStorage',
+      test.dart('returns categories preferences from NotificationsStorage',
           () async {
         when(storage.fetchCategoriesPreferences)
             .thenAnswer((_) async => categoriesPreferences);
@@ -499,7 +499,7 @@ void main() {
         expect(actualPreferences, equals(categoriesPreferences));
       });
 
-      test(
+      test.dart(
           'returns null '
           'when categories preferences do not exist in NotificationsStorage',
           () async {
@@ -515,7 +515,7 @@ void main() {
         expect(preferences, isNull);
       });
 
-      test(
+      test.dart(
           'throws a FetchCategoriesPreferencesFailure '
           'when read fails', () async {
         final notificationsRepository = NotificationsRepository(
@@ -540,31 +540,31 @@ void main() {
     final error = Exception('errorMessage');
 
     group('InitializeCategoriesPreferencesFailure', () {
-      test('has correct props', () {
+      test.dart('has correct props', () {
         expect(InitializeCategoriesPreferencesFailure(error).props, [error]);
       });
     });
 
     group('ToggleNotificationsFailure', () {
-      test('has correct props', () {
+      test.dart('has correct props', () {
         expect(ToggleNotificationsFailure(error).props, [error]);
       });
     });
 
     group('FetchNotificationsEnabledFailure', () {
-      test('has correct props', () {
+      test.dart('has correct props', () {
         expect(FetchNotificationsEnabledFailure(error).props, [error]);
       });
     });
 
     group('SetCategoriesPreferencesFailure', () {
-      test('has correct props', () {
+      test.dart('has correct props', () {
         expect(SetCategoriesPreferencesFailure(error).props, [error]);
       });
     });
 
     group('FetchCategoriesPreferencesFailure', () {
-      test('has correct props', () {
+      test.dart('has correct props', () {
         expect(FetchCategoriesPreferencesFailure(error).props, [error]);
       });
     });

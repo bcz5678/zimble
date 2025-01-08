@@ -1,8 +1,8 @@
 ---
 name: Test
 about: Adding missing tests or correcting existing tests
-title: "test: "
-labels: test
+title: "test.dart: "
+labels: test.dart
 ---
 
 **Description**

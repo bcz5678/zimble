@@ -5,7 +5,7 @@ import 'package:flutter_news_example_api/client.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:notifications_repository/notifications_repository.dart';
 import 'package:storage/storage.dart';
-import 'package:test/test.dart';
+import 'package:test.dart/test.dart.dart';
 
 class MockStorage extends Mock implements Storage {}
 
@@ -25,7 +25,7 @@ void main() {
     });
 
     group('setNotificationsEnabled', () {
-      test('saves the value in Storage', () async {
+      test.dart('saves the value in Storage', () async {
         const enabled = true;
 
         await NotificationsStorage(storage: storage)
@@ -41,7 +41,7 @@ void main() {
     });
 
     group('fetchNotificationsEnabled', () {
-      test('returns the value from Storage', () async {
+      test.dart('returns the value from Storage', () async {
         when(
           () =>
               storage.read(key: NotificationsStorageKeys.notificationsEnabled),
@@ -59,7 +59,7 @@ void main() {
         expect(result, isTrue);
       });
 
-      test('returns false when no value exists in Storage', () async {
+      test.dart('returns false when no value exists in Storage', () async {
         when(
           () =>
               storage.read(key: NotificationsStorageKeys.notificationsEnabled),
@@ -79,7 +79,7 @@ void main() {
     });
 
     group('setCategoriesPreferences', () {
-      test('saves the value in Storage', () async {
+      test.dart('saves the value in Storage', () async {
         const preferences = {
           Category.top,
           Category.health,
@@ -101,7 +101,7 @@ void main() {
     });
 
     group('fetchCategoriesPreferences', () {
-      test('returns the value from Storage', () async {
+      test.dart('returns the value from Storage', () async {
         const preferences = {
           Category.health,
           Category.entertainment,
@@ -128,7 +128,7 @@ void main() {
         expect(result, equals(preferences));
       });
 
-      test('returns null when no value exists in Storage', () async {
+      test.dart('returns null when no value exists in Storage', () async {
         when(
           () =>
               storage.read(key: NotificationsStorageKeys.categoriesPreferences),

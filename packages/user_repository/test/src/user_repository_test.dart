@@ -5,7 +5,7 @@
 /*
 void main() {
   group('UserRepository', () {
-    test('can be instantiated', () {
+    test.dart('can be instantiated', () {
       expect(UserRepository(authenticationClient: null), isNotNull);
     });
   });
