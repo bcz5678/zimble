@@ -172,14 +172,14 @@ class ReaderRepository {
 
 
   //
-  Stream<SensorData> get sensorDataStream  {
+  Stream<SensorData> get sensorDataStreamAll  {
     // [DEBUG TEST]
     if (kDebugMode) {
       print('reader_repository -> get sensorDataStream -> Entry');
     }
 
 
-    return _readerClient.sensorStream;
+    return _readerClient.streamSensorDataAll;
   }
 
 

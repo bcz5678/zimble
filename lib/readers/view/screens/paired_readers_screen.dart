@@ -49,8 +49,6 @@ class _PairedReadersScreenState extends State<PairedReadersScreen> with Automati
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     super.build(context);

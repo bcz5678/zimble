@@ -6,19 +6,19 @@ class GyroscopeData{
   });
 
   /// Rate of rotation around the x axis (rad/s)
-  late int? xAxis;
+  late double? xAxis;
 
   /// Rate of rotation around the y axis (rad/s)
-  late int? yAxis;
+  late double? yAxis;
 
   /// Rate of rotation around the z axis (rad/s)
-  late int? zAxis;
+  late double? zAxis;
 
   factory GyroscopeData.fromJson (Map<String, dynamic> data) {
     return GyroscopeData(
-      xAxis: data['x'] as int,
-      yAxis: data['y'] as int,
-      zAxis: data['z'] as int,
+      xAxis: data['xAxis'] as double,
+      yAxis: data['yAxis'] as double,
+      zAxis: data['zAxis'] as double,
     );
   }
 }

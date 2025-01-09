@@ -47,7 +47,10 @@ class ReaderClient {
 
   // Post Processed stream from the _sensorChannelSubscription
   // Used to set the sensorStream getter to pass to ReaderRepository
-  late BehaviorSubject<SensorData> _sensorStream = BehaviorSubject<SensorData>.seeded(SensorData());
+  late BehaviorSubject<AccelerometerData> _sensorAccelerometerStream = BehaviorSubject<AccelerometerData>.seeded(AccelerometerData());
+  late BehaviorSubject<GyroscopeData> _sensorGyroscopeStream = BehaviorSubject<GyroscopeData>.seeded(GyroscopeData());
+  late BehaviorSubject<LinearAccelerationData> _sensorLinearAccelerationStream = BehaviorSubject<LinearAccelerationData>.seeded(LinearAccelerationData());
+  late BehaviorSubject<RotationVectorData> _sensorRotationVectorStream = BehaviorSubject<RotationVectorData>.seeded(RotationVectorData());
 
 
 
@@ -66,7 +69,42 @@ class ReaderClient {
 
   /// Stream of [SensorData] which will emit current sensor data streaming
   /// from the attached mobile device
-  Stream<SensorData> get sensorStream => _sensorStream.stream;
+  Stream<SensorData> get streamSensorDataAll =>
+      Rx.combineLatest4<AccelerometerData, GyroscopeData,
+          LinearAccelerationData, RotationVectorData,
+          SensorData>
+        ( _sensorAccelerometerStream.stream,
+          _sensorGyroscopeStream.stream,
+          _sensorLinearAccelerationStream.stream,
+          _sensorRotationVectorStream.stream,
+          ( AccelerometerData,
+            GyroscopeData,
+            LinearAccelerationData,
+            RotationVectorData,
+          ) => SensorData(
+            accelerometerData: AccelerometerData,
+            gyroscopeData: GyroscopeData,
+            linearAccelerationData: LinearAccelerationData,
+            rotationVectorData: RotationVectorData,
+          ),
+      ).asBroadcastStream();
+
+
+  /// Stream of [AccelerometerData] which will emit current sensor Accelerometer data streaming
+  /// from the attached mobile device
+  Stream<AccelerometerData> get streamSensorDataAccelerometer => _sensorAccelerometerStream;
+
+  /// Stream of [GyroscopeData] which will emit current sensor Gyroscope data streaming
+  /// from the attached mobile device
+  Stream<GyroscopeData> get streamSensorDataGyroscope => _sensorGyroscopeStream;
+
+  /// Stream of [LinearAccelerationData] which will emit current sensor LinearAcceleration data streaming
+  /// from the attached mobile device
+  Stream<LinearAccelerationData> get streamSensorDataLinearAcceleration => _sensorLinearAccelerationStream;
+
+  /// Stream of [RotationVectorData] which will emit current sensor RotationVector data streaming
+  /// from the attached mobile device
+  Stream<RotationVectorData> get streamSensorDataRotationVector => _sensorRotationVectorStream;
 
 
   ///Starts Stream of sensorData to pass to the Reader_repository
@@ -92,20 +130,23 @@ class ReaderClient {
               // nested components to see return type (ie sensorData)
               Map<String, dynamic>? sensorEvent = json.decode(event.toString()) as Map<String, dynamic>;
 
-              if (kDebugMode) {
-                print('reader_client -> startSensorStream -> EventChannelData -> ${sensorEvent}');
-              }
-
-
               /// [ANCHOR]  - sensorData is full but have not json.decoded below that
               // If sensorData is present, encode the sensor into
               // SensorData entity and add to _sensorStream for getter
               if(sensorEvent.containsKey("sensorData")) {
-                try {
-                  _sensorStream.add(SensorData.fromJson(sensorEvent["sensorData"] as Map<String, dynamic>));
-                } catch (error) {
-                  if (kDebugMode) {
-                    //print('reader_client -> startSensorStream -> _sensorStream.add -> ${error.toString()}');
+                if (sensorEvent["sensorData"]["sensorType"] == "accelerometer") {
+                  try {
+                    _sensorAccelerometerStream.add(
+                        AccelerometerData.fromJson(
+                            sensorEvent["sensorData"]["sensorDataMap"] as Map<String, dynamic>,
+                        ),
+                    );
+                  } catch (error) {
+                    if (kDebugMode) {
+                      print(
+                          'reader_client -> startSensorStream -> acceleromter -> _sensorStream.add -> ${error
+                              .toString()}');
+                    }
                   }
                 }
               }
@@ -124,25 +165,28 @@ class ReaderClient {
             // nested components to see return type (ie sensorData)
             Map<String, dynamic>? sensorEvent = json.decode(event.toString()) as Map<String, dynamic>;
 
-            if (kDebugMode) {
-              print('reader_client -> startSensorStream -> EventChannelData -> ${sensorEvent}');
-            }
-
-
             /// [ANCHOR]  - sensorData is full but have not json.decoded below that
             // If sensorData is present, encode the sensor into
             // SensorData entity and add to _sensorStream for getter
             if(sensorEvent.containsKey("sensorData")) {
-              try {
-                _sensorStream.add(SensorData.fromJson(sensorEvent["sensorData"] as Map<String, dynamic>));
-              } catch (error) {
-                if (kDebugMode) {
-                  //print('reader_client -> startSensorStream -> _sensorStream.add -> ${error.toString()}');
+              if (sensorEvent["sensorData"]["sensorType"] == "gyroscope") {
+                try {
+                  _sensorGyroscopeStream.add(
+                    GyroscopeData.fromJson(
+                        sensorEvent["sensorData"]["sensorDataMap"] as Map<String, dynamic>,
+                    ),
+                  );
+                } catch (error) {
+                  if (kDebugMode) {
+                    print(
+                        'reader_client -> startSensorStream ->gyroscope -> _sensorStream.add -> ${error
+                            .toString()}');
+                  }
                 }
               }
             }
           }
-          );
+        );
 
       // Start _sensorLinearAccelerationSubscription listening to the EventChannel
       // and format results
@@ -156,25 +200,28 @@ class ReaderClient {
             // nested components to see return type (ie sensorData)
             Map<String, dynamic>? sensorEvent = json.decode(event.toString()) as Map<String, dynamic>;
 
-            if (kDebugMode) {
-              print('reader_client -> startSensorStream -> EventChannelData -> ${sensorEvent}');
-            }
-
 
             /// [ANCHOR]  - sensorData is full but have not json.decoded below that
             // If sensorData is present, encode the sensor into
             // SensorData entity and add to _sensorStream for getter
             if(sensorEvent.containsKey("sensorData")) {
-              try {
-                _sensorStream.add(SensorData.fromJson(sensorEvent["sensorData"] as Map<String, dynamic>));
-              } catch (error) {
-                if (kDebugMode) {
-                  //print('reader_client -> startSensorStream -> _sensorStream.add -> ${error.toString()}');
+              if (sensorEvent["sensorData"]["sensorType"] == "linearAcceleration") {
+                try {
+                  _sensorLinearAccelerationStream.add(
+                    LinearAccelerationData.fromJson(
+                      sensorEvent["sensorData"]["sensorDataMap"] as Map<String, dynamic>,
+                    ),
+                  );
+                } catch (error) {
+                  if (kDebugMode) {
+                    print(
+                        'reader_client -> startSensorStream -> linearAcceleration -> _sensorStream.add -> ${error.toString()}');
+                  }
                 }
               }
             }
           }
-          );
+        );
 
       // Start _sensorRotationVectorSubscription listening to the EventChannel
       // and format results
@@ -191,22 +238,27 @@ class ReaderClient {
             if (kDebugMode) {
               print('reader_client -> startSensorStream -> EventChannelData -> ${sensorEvent}');
             }
-
-
             /// [ANCHOR]  - sensorData is full but have not json.decoded below that
             // If sensorData is present, encode the sensor into
             // SensorData entity and add to _sensorStream for getter
             if(sensorEvent.containsKey("sensorData")) {
-              try {
-                _sensorStream.add(SensorData.fromJson(sensorEvent["sensorData"] as Map<String, dynamic>));
-              } catch (error) {
-                if (kDebugMode) {
-                  //print('reader_client -> startSensorStream -> _sensorStream.add -> ${error.toString()}');
+              if (sensorEvent["sensorData"]["sensorType"] == "rotationVector") {
+                try {
+                  _sensorRotationVectorStream.add(
+                    RotationVectorData.fromJson(
+                      sensorEvent["sensorData"]["sensorDataMap"] as Map<String, dynamic>,
+                    ),
+                  );
+                } catch (error) {
+                  if (kDebugMode) {
+                    print(
+                        'reader_client -> startSensorStream -> rotationVector -> _sensorStream.add -> ${error.toString()}');
+                  }
                 }
               }
             }
           }
-          );
+        );
 
 
       // Return value that the stream has started successfully

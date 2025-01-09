@@ -29,18 +29,10 @@ class ReadersCurrentBloc extends Bloc<ReadersCurrentEvent, ReadersCurrentState> 
 
     final startSensorStreamResult = await _readerRepository.startSensorStreams().toString();
 
-    if (kDebugMode) {
-      print('readers_current_bloc -> onStartSensorstream -> startSensorStreamResult - ${startSensorStreamResult}');
-    }
-
     await emit.forEach(
-      _readerRepository.sensorDataStream,
+      _readerRepository.sensorDataStreamAll,
       onData: (SensorData  sensorStreamData) {
         try {
-
-          if (kDebugMode) {
-            print('readers_current_bloc -> onStartSensorstream -> emit.foreach - ${sensorStreamData}');
-          }
 
           return state.copyWith(
             stateStatus: ReadersCurrentStatus.done,

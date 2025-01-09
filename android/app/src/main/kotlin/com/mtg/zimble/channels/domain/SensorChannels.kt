@@ -15,7 +15,6 @@ import io.flutter.plugin.common.MethodChannel
 import android.content.Context
 import android.util.Log
 
-
 class SensorChannels(context: Context, messenger: BinaryMessenger) {
     val TAG = "SensorChannels"
 
@@ -45,25 +44,25 @@ class SensorChannels(context: Context, messenger: BinaryMessenger) {
     var accelerometerStreamHandler = SensorStreamHandler(
         sensorManager,
         Sensor.TYPE_ACCELEROMETER,
-        SensorManager.SENSOR_DELAY_GAME,
+        SensorManager.SENSOR_DELAY_NORMAL,
     )
 
     var gyroscopeStreamHandler = SensorStreamHandler(
         sensorManager,
         Sensor.TYPE_GYROSCOPE,
-        SensorManager.SENSOR_DELAY_GAME,
+        SensorManager.SENSOR_DELAY_NORMAL,
     )
 
     var linearAccelerationStreamHandler = SensorStreamHandler(
         sensorManager,
         Sensor.TYPE_LINEAR_ACCELERATION,
-        SensorManager.SENSOR_DELAY_GAME,
+        SensorManager.SENSOR_DELAY_NORMAL,
     )
 
     var rotationVectorStreamHandler = SensorStreamHandler(
         sensorManager,
         Sensor.TYPE_ROTATION_VECTOR,
-        SensorManager.SENSOR_DELAY_GAME,
+        SensorManager.SENSOR_DELAY_NORMAL,
     )
 
     fun initializeSensorChannels(context:Context, messenger: BinaryMessenger) {

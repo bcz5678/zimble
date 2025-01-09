@@ -23,23 +23,6 @@ class SensorData extends Equatable{
 
   /// The current devices rotational vector axis data
   final RotationVectorData? rotationVectorData;
-   
-  factory SensorData.fromJson(Map<String, dynamic> data) {
-
-    /*
-    if (kDebugMode) {
-      print('sensor_data -> SensorData.fromJson -> data: ${data}');
-      print('sensor_data -> SensorData.fromJson -> data["sensorDataMap"]: ${data["sensorDataMap"]}');
-    }
-    */
-
-    return SensorData(
-      accelerometerData: AccelerometerData.fromJson(data['accelerometer'] as Map<String, dynamic>) ?? null
-      //gyroscopeData: GyroscopeData.fromJson(data['gyroscope'] as Map<String, dynamic>) ?? null,
-      //linearAccelerationData: LinearAccelerationData.fromJson(data['linearAcceleration'] as Map<String, dynamic>) ?? null,
-      //rotationVectorData: RotationVectorData.fromJson(data['rotationVector'] as Map<String, dynamic>) ?? null,
-    );
-  }
 
   @override
   List<Object?> get props => [

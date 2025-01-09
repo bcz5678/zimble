@@ -20,9 +20,9 @@ class RotationVectorData{
 
   factory RotationVectorData.fromJson (Map<String, dynamic> data) {
     return RotationVectorData(
-      xAxis: data['x'] as double,
-      yAxis: data['y'] as double,
-      zAxis: data['z'] as double,
+      xAxis: data['xAxis'] as double,
+      yAxis: data['yAxis'] as double,
+      zAxis: data['zAxis'] as double,
       scalar: data['scalar'] as double,
     );
   }

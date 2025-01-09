@@ -16,9 +16,9 @@ class AccelerometerData{
 
   factory AccelerometerData.fromJson (Map<String, dynamic> data) {
     return AccelerometerData(
-      xAxis: data['x'] as double,
-      yAxis: data['y'] as double,
-      zAxis: data['z'] as double,
+      xAxis: data['xAxis'] as double,
+      yAxis: data['yAxis'] as double,
+      zAxis: data['zAxis'] as double,
     );
   }
 }
