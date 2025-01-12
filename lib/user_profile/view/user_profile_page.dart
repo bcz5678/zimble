@@ -8,7 +8,6 @@ import 'package:zimble/analytics/analytics.dart';
 import 'package:zimble/app/app.dart';
 import 'package:zimble/l10n/l10n.dart';
 import 'package:zimble/notification_preferences/notification_preferences.dart';
-import 'package:zimble/terms_of_service/terms_of_service.dart';
 import 'package:zimble/user_profile/user_profile.dart';
 
 class UserProfilePage extends StatelessWidget {
@@ -166,14 +165,6 @@ class _UserProfileViewState extends State<UserProfileView>
                     const _UserProfileDivider(),
                     UserProfileSubtitle(
                       subtitle: l10n.userProfileLegalSubtitle,
-                    ),
-                    UserProfileItem(
-                      key: const Key('userProfilePage_termsOfServiceItem'),
-                      leading: Assets.icons.termsOfUseIcon.svg(),
-                      title:
-                          l10n.userProfileLegalTermsOfUseAndPrivacyPolicyTitle,
-                      onTap: () => Navigator.of(context)
-                          .push<void>(TermsOfServicePage.route()),
                     ),
                     UserProfileItem(
                       key: const Key('userProfilePage_aboutItem'),

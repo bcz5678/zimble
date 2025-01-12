@@ -27,13 +27,13 @@ class ReadersCurrentBloc extends Bloc<ReadersCurrentEvent, ReadersCurrentState> 
       Emitter<ReadersCurrentState> emit,
       ) async {
 
+    /// Send Method Call to start stream and confirm start
     final startSensorStreamResult = await _readerRepository.startSensorStreams().toString();
 
     await emit.forEach(
       _readerRepository.sensorDataStreamAll,
       onData: (SensorData  sensorStreamData) {
         try {
-
           return state.copyWith(
             stateStatus: ReadersCurrentStatus.done,
             sensorValues: sensorStreamData,
@@ -53,10 +53,11 @@ class ReadersCurrentBloc extends Bloc<ReadersCurrentEvent, ReadersCurrentState> 
       Emitter<ReadersCurrentState> emit,
       ) async {
 
+    /// Send Method Call to stop stream and confirm stop
     final stopSensorStreamResult = await _readerRepository.stopSensorStreams().toString();
 
     if (kDebugMode) {
-      print('readers_current_bloc -> onStopSensorstream -> stopSensorStreamResult - ${stopSensorStreamResult}');
+      print('readers_current_bloc -> onStopSensorStream -> stopSensorStreamResult - ${stopSensorStreamResult}');
     }
 
     emit(state.copyWith(
@@ -65,7 +66,6 @@ class ReadersCurrentBloc extends Bloc<ReadersCurrentEvent, ReadersCurrentState> 
       // sensorValues: TBD,
     ),
     );
-
   }
 
 

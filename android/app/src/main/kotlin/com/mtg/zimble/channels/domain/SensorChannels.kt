@@ -104,7 +104,6 @@ class SensorChannels(context: Context, messenger: BinaryMessenger) {
                         sensorStreamLinearAccelerationChannel.setStreamHandler(linearAccelerationStreamHandler)
                         sensorStreamRotationVectorChannel.setStreamHandler(rotationVectorStreamHandler)
 
-
                         result.success("sensorStreamSuccess")
                     } catch (e: Exception) {
                         Log.d(TAG, "in call method - startSensors - error")
@@ -118,14 +117,7 @@ class SensorChannels(context: Context, messenger: BinaryMessenger) {
                 /// Return Type:
                 call.method.equals("stopSensorStream") -> {
                     Log.d(TAG, "in call method - stopSensors")
-                    try {
-                        ///Assign StreamHandlers for each event channels
-
-                        sensorStreamAccelerometerChannel.setStreamHandler(null)
-                        sensorStreamGyroscopeChannel.setStreamHandler(null)
-                        sensorStreamLinearAccelerationChannel.setStreamHandler(null)
-                        sensorStreamRotationVectorChannel.setStreamHandler(null)
-
+                    try{
                         Log.d(TAG, "in call method - stopSensors - success")
                         result.success("success")
                     } catch (e: Exception) {

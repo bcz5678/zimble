@@ -13,21 +13,49 @@ part 'readers_state.dart';
 class ReadersBloc extends Bloc<ReadersEvent, ReadersState> {
   ReadersBloc({
     required ReaderRepository readerRepository,
-}) : _readerRepository = readerRepository,
-        super(const ReadersState()) {
-    //on<GetCurrentReaderMain>(onGetCurrentReaderMain);
-    //on<UpdateCurrentReaderMain>(onUpdateCurrentReaderMain);
+})
+  : _readerRepository = readerRepository,
+    super(ReadersState.initial()) {
+      on<GetCurrentlyConnectedReadersList> (onGetCurrentlyConnectedReadersList);
+      on<CurrentlyConnectedReadersListChanged> (onCurrentlyConnectedReadersListChanged);
 
-    _currentlyConnectedReadersSubscription =
-        _readerRepository.currentlyConnectedReadersList
-          .handleError(onError)
-          .listen((readers) => add(ReadersCurrentlyConnectedChanged(readers)));
-
-  }
+      _currentlyConnectedReadersSubscription =
+          _readerRepository.currentlyConnectedReadersList
+            .handleError(onError)
+            .listen((readers) => add(CurrentlyConnectedReadersListChanged(readers)));
+   }
 
   final ReaderRepository _readerRepository;
+
   late StreamSubscription<List<Reader>> _currentlyConnectedReadersSubscription;
 
+  Future<void> onGetCurrentlyConnectedReadersList(
+    GetCurrentlyConnectedReadersList event,
+    Emitter<ReadersState> emit,
+    ) async {
+
+    final currentlyConnectedReadersListResponse =
+      await _readerRepository.currentlyConnectedReadersList.last;
+
+    emit(state.copyWith(
+      stateStatus: ReadersStatus.done,
+      currentlyConnectedReadersList: currentlyConnectedReadersListResponse,
+      ),
+    );
+  }
+
+
+  void onCurrentlyConnectedReadersListChanged (
+        CurrentlyConnectedReadersListChanged event,
+        Emitter<ReadersState> emit,
+      ){
+
+      emit(state.copyWith(
+        stateStatus: ReadersStatus.done,
+        currentlyConnectedReadersList: event.currentlyConnectedReadersList,
+        ),
+     );
+  }
 
   @override
   Future<void> close() async {

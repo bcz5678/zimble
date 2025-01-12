@@ -100,6 +100,7 @@ class ReaderRepository {
 
   final _currentlyConnectedReadersListController = BehaviorSubject<List<Reader>>.seeded([]);
   final _sensorStreamsController = BehaviorSubject<List<SensorData>>.seeded([]);
+  final _bluetoothScannedDevicesListController = BehaviorSubject<List<BluetoothDevice>>.seeded([]);
 
 
   Stream<List<Reader>> get currentlyConnectedReadersList {
@@ -114,10 +115,10 @@ class ReaderRepository {
   /// Getter for current reader.
   /// [TODO] upgrade this to a multiple reader list
 
-  Stream<List<BluetoothDevice>> get bluetoothScannedDevicesList {
+  Stream<List<BluetoothDevice>> get bluetoothPairedDevicesList {
     // [DEBUG TEST]
     if (kDebugMode) {
-      print('reader_repository -> get bluetoothScannedDevicesList -> Entry');
+      print('reader_repository -> get bluetoothPairedDevicesList -> Entry');
     }
 
     return _bluetoothDeviceClient
@@ -137,6 +138,18 @@ class ReaderRepository {
     })
         .asBroadcastStream();
      */
+  }
+
+  /// Getter for current reader.
+  /// [TODO] upgrade this to a multiple reader list
+
+  Stream<List<BluetoothDevice>> get bluetoothScannedDevicesList {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> get bluetoothScannedDevicesList -> Entry');
+    }
+
+    return _bluetoothDeviceClient.bluetoothScannedDevicesList;
   }
 
 

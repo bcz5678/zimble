@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 
 class FoundDeviceReceiver(
     private val onDeviceFound: (BluetoothDevice) -> Unit
@@ -13,7 +14,7 @@ class FoundDeviceReceiver(
 
     @SuppressLint("MissingPermission")
     override fun onReceive(context: Context?, intent: Intent?) {
-        when(intent?.action) {
+         when(intent?.action) {
             BluetoothDevice.ACTION_FOUND -> {
                 val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     intent.getParcelableExtra(

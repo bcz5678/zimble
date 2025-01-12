@@ -11,7 +11,7 @@ import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 
 
-class ReaderMainChannels(context: Context) {
+class ReaderMainChannels(context: Context, messenger: BinaryMessenger) {
     //Debug Tag
     val TAG = "ReaderDeviceChannels"
 
@@ -29,8 +29,12 @@ class ReaderMainChannels(context: Context) {
     ///Instantiate reader controllers
     private val _androidReaderController = AndroidReaderController()
 
+    init {
+        initializeReaderMainChannels(context, messenger)
+    }
+
     ///Handler for all MethodChannel messages
-    fun initializeReaderMainChannels(messenger: BinaryMessenger) {
+    fun initializeReaderMainChannels(context: Context, messenger: BinaryMessenger) {
         Log.d(TAG, "initializing ReaderMain AndroidChannels")
 
         //READER_MAIN Method Channel for calls from Features->Reader

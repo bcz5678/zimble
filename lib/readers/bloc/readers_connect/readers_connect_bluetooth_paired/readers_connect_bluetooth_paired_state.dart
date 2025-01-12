@@ -6,14 +6,14 @@ enum ReadersConnectBluetoothPairedStatus {
   done,
   error,
   connectToDeviceStatusLoading,
-  connectToDeviceStatusUpdate
+  connectToDeviceStatusUpdate,
 }
 
 class ReadersConnectBluetoothPairedState {
   const ReadersConnectBluetoothPairedState({
     required this.stateStatus,
-    this.bluetoothPairedDevices,
-    this.bluetoothDeviceToUpdate,
+    this.bluetoothPairedDevicesList,
+    this.selectedBluetoothDevice,
     this.currentlyConnectedReadersList,
   });
 
@@ -23,28 +23,28 @@ class ReadersConnectBluetoothPairedState {
   );
 
   final ReadersConnectBluetoothPairedStatus? stateStatus;
-  final List<BluetoothDevice>? bluetoothPairedDevices;
-  final BluetoothDevice? bluetoothDeviceToUpdate;
+  final List<BluetoothDevice>? bluetoothPairedDevicesList;
+  final BluetoothDevice? selectedBluetoothDevice;
   final List<Reader>? currentlyConnectedReadersList;
 
   @override
   List<Object?> get props => [
     stateStatus,
-    bluetoothPairedDevices,
-    bluetoothDeviceToUpdate,
+    bluetoothPairedDevicesList,
+    selectedBluetoothDevice,
     currentlyConnectedReadersList,
   ];
 
   ReadersConnectBluetoothPairedState copyWith({
     ReadersConnectBluetoothPairedStatus? stateStatus,
-    List<BluetoothDevice>? bluetoothPairedDevices,
-    BluetoothDevice? bluetoothDeviceToUpdate,
+    List<BluetoothDevice>? bluetoothPairedDevicesList,
+    BluetoothDevice? selectedBluetoothDevice,
     List<Reader>? currentlyConnectedReadersList,
   }) {
     return ReadersConnectBluetoothPairedState (
       stateStatus: stateStatus ?? this.stateStatus,
-      bluetoothPairedDevices: bluetoothPairedDevices ?? this.bluetoothPairedDevices,
-      bluetoothDeviceToUpdate: bluetoothDeviceToUpdate ?? this.bluetoothDeviceToUpdate,
+      bluetoothPairedDevicesList: bluetoothPairedDevicesList ?? this.bluetoothPairedDevicesList,
+      selectedBluetoothDevice: selectedBluetoothDevice ?? this.selectedBluetoothDevice,
       currentlyConnectedReadersList: currentlyConnectedReadersList ?? this.currentlyConnectedReadersList,
     );
   }

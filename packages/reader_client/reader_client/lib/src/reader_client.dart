@@ -32,21 +32,24 @@ class StopSensorStreamFailure extends ReaderClientException {
 class ReaderClient {
   ReaderClient();
 
+  /// Method Channel to call start/stop sensors stream
   var sensorMethodChannel = NativeChannels().sensorMethod;
+
+  /// Event Channels for individual sensors Stream
   var sensorAccelerometerStreamChannel = NativeChannels().sensorAccelerometerStream;
   var sensorGyroscopeStreamChannel = NativeChannels().sensorGyroscopeStream;
   var sensorLinearAccelerationStreamChannel = NativeChannels().sensorLinearAccelerationStream;
   var sensorRotationVectorStreamChannel = NativeChannels().sensorRotationVectorStream;
 
 
-  // Subscription to listen and process sensor Event Channel Data
+  /// Subscription to listen and process sensor Event Channel Data
   late StreamSubscription<dynamic> _sensorAccelerometerSubscription;
   late StreamSubscription<dynamic> _sensorGyroscopeSubscription;
   late StreamSubscription<dynamic> _sensorLinearAccelerationSubscription;
   late StreamSubscription<dynamic> _sensorRotationVectorSubscription;
 
-  // Post Processed stream from the _sensorChannelSubscription
-  // Used to set the sensorStream getter to pass to ReaderRepository
+  /// Post Processed stream from the _sensorChannelSubscription
+  /// Used to set the sensorStream getter to pass to ReaderRepository
   late BehaviorSubject<AccelerometerData> _sensorAccelerometerStream = BehaviorSubject<AccelerometerData>.seeded(AccelerometerData());
   late BehaviorSubject<GyroscopeData> _sensorGyroscopeStream = BehaviorSubject<GyroscopeData>.seeded(GyroscopeData());
   late BehaviorSubject<LinearAccelerationData> _sensorLinearAccelerationStream = BehaviorSubject<LinearAccelerationData>.seeded(LinearAccelerationData());
@@ -290,13 +293,15 @@ class ReaderClient {
         print('reader_client -> stopSensorStream -> Entry');
       }
 
+      final stopSensorStreamResult = await sensorMethodChannel.invokeMethod(
+          "stopSensorStream").toString();
+
       await _sensorAccelerometerSubscription.cancel();
       await _sensorGyroscopeSubscription.cancel();
       await _sensorLinearAccelerationSubscription.cancel();
       await _sensorRotationVectorSubscription.cancel();
 
-      final stopSensorStreamResult = await sensorMethodChannel.invokeMethod(
-          "stopSensorStream").toString();
+
 
       return false;
     } catch (error, stackTrace) {

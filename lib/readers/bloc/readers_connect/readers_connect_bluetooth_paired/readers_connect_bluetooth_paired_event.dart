@@ -21,19 +21,6 @@ class GetPairedBluetoothDevices extends ReadersConnectBluetoothPairedEvent {
   const GetPairedBluetoothDevices();
 }
 
-class GetCurrentReader extends ReadersConnectBluetoothPairedEvent {
-  const GetCurrentReader();
-}
-
-class CurrentlyConnectedReadersListChanged extends ReadersConnectBluetoothPairedEvent {
-  const CurrentlyConnectedReadersListChanged(this.currentlyConnectedReadersList);
-
-  final List<Reader> currentlyConnectedReadersList;
-
-  @override
-  List<Object> get props => [currentlyConnectedReadersList];
-}
-
 
 class ConnectToBluetoothDevice extends ReadersConnectBluetoothPairedEvent {
   const ConnectToBluetoothDevice(this.device);

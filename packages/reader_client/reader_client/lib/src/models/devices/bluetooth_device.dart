@@ -2,20 +2,20 @@ import 'package:equatable/equatable.dart';
 
 class BluetoothDevice extends Equatable {
   const BluetoothDevice({
+    this.macAddress,
     this.name,
     this.serialNumber,
-    this.macAddress,
     this.connectionStatus,
   });
+
+  /// The current reader's MAC Address
+  final String? macAddress;
 
   /// The current reader's name
   final String? name;
 
   /// The current reader's serial number
   final String? serialNumber;
-
-  /// The current reader's MAC Address
-  final String? macAddress;
 
   /// IS the reader connected
   final bool? connectionStatus;
@@ -25,16 +25,25 @@ class BluetoothDevice extends Equatable {
 
   Map<String, dynamic> toJson() =>
     {
+      'macAddress': macAddress,
       'name': name,
       'serialNumber': serialNumber,
-      'macAddress': macAddress,
       'connectionStatus': connectionStatus,
     };
 
   factory BluetoothDevice.fromMessageData(Map<String, dynamic> data) {
     return BluetoothDevice(
-      name: data["name"] as String,
       macAddress: data["address"] as String,
+      name: data["name"] as String,
+      serialNumber: data['serial_number'] as String,
+      connectionStatus: data["connectionStatus"] as bool,
+    );
+  }
+
+  factory BluetoothDevice.fromJson(Map<String, dynamic> data) {
+    return BluetoothDevice(
+      macAddress: data["address"] as String,
+      name: data["name"] as String,
       serialNumber: data['serial_number'] as String,
       connectionStatus: data["connectionStatus"] as bool,
     );
@@ -43,9 +52,9 @@ class BluetoothDevice extends Equatable {
 
   @override
   List<Object?> get props =>[
+    macAddress,
     name,
     serialNumber,
-    macAddress,
     connectionStatus,
   ];
 }

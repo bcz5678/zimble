@@ -7,11 +7,29 @@ abstract class ReadersConnectBluetoothScannedEvent extends Equatable{
   List<Object> get props => [];
 }
 
-class ReadersConnectBluetoothScannedChanged extends ReadersConnectBluetoothScannedEvent{
-  const ReadersConnectBluetoothScannedChanged(this.devices);
+class StartScanningBluetoothDevices extends ReadersConnectBluetoothScannedEvent{
+  const StartScanningBluetoothDevices();
+}
 
-  final List<BluetoothDevice> devices;
+class StopScanningBluetoothDevices extends ReadersConnectBluetoothScannedEvent{
+  const StopScanningBluetoothDevices();
+}
+
+
+class ReadersConnectBluetoothScannedConnect extends ReadersConnectBluetoothScannedEvent{
+  const ReadersConnectBluetoothScannedConnect(this.device);
+
+  final List<BluetoothDevice> device;
 
   @override
-  List<Object> get props => [devices];
+  List<Object> get props => [device];
+}
+
+class ReadersConnectBluetoothScannedDisConnect extends ReadersConnectBluetoothScannedEvent{
+  const ReadersConnectBluetoothScannedDisConnect(this.device);
+
+  final List<BluetoothDevice> device;
+
+  @override
+  List<Object> get props => [device];
 }

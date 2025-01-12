@@ -9,34 +9,33 @@ import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.Context.RECEIVER_EXPORTED
+import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Build
-import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceEntity
+import android.util.Log
 import com.mtg.zimble.connection.bluetooth.domain.BluetoothController
+import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceEntity
 import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceScanningStreamHandler
 import com.mtg.zimble.connection.bluetooth.domain.ConnectionResult
 import com.mtg.zimble.connection.bluetooth.domain.bluetoothScanningCollector
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
-
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.UUID
-import android.util.Log
-
 
 
 //import com.mtg.zimble.bluetooth.data.BluetoothEnableActivity
-
-
 
 @SuppressLint("MissingPermission")
 class  AndroidBluetoothController(
     private val context: Context,
 ): BluetoothController {
 
+    var TAG = "AndroidBluetoothController"
 
     //Setting up the Bluetooth manager and adapter for use
     private val bluetoothManager by lazy {
@@ -46,9 +45,8 @@ class  AndroidBluetoothController(
         bluetoothManager?.adapter
     }
 
-
     // StateFlow for scanned devices
-    private val _scannedDevices = MutableStateFlow<List<BluetoothDeviceEntity>>(emptyList())
+    private var _scannedDevices = MutableStateFlow<List<BluetoothDeviceEntity>>(emptyList())
     override val scannedDevices: StateFlow<List<BluetoothDeviceEntity>>
         get() = _scannedDevices.asStateFlow()
 
@@ -106,32 +104,24 @@ class  AndroidBluetoothController(
 
     //Start scan for available Bluetooth devices
     override fun startDiscovery(streamHandlerInstanceTest: BluetoothDeviceScanningStreamHandler){
+        Log.d(TAG, "in startDiscovery")
+
         //stop previous discovery that may still be in background
         if(bluetoothAdapter?.isDiscovering() == true) {
             bluetoothAdapter?.cancelDiscovery()
             release()
         }
 
-        Log.d("LOGGING", "in startDiscovery")
+
         //Check we have manifest permissions for scanning
         if(!hasPermission(Manifest.permission.BLUETOOTH_SCAN)) {
             return
         }
 
-        //_scannedDevices.update(emptyList())
-
-       // Log.d("LOGGING", "streamHandlerInstanceTest Hash Code - ${streamHandlerInstanceTest.hashCode()}") //Log.d("LOGGING", "streamHandlerInstanceTest Reference Code - ${Integer.toHexString(System.identityHashCode(streamHandlerInstanceTest))}")
-
         //Initialize the Stateflow Collector to receive devices state changes
         bluetoothScanningCollector(streamHandlerInstanceTest, scannedDevices)
 
-        /*
-        if (bluetoothAdapter?.isEnabled == false) {
-            BluetoothEnableActivity.promptForBluetoothEnable()
-        }
-        */
-
-        Log.d("LOGGER", "ABTC - startDiscovery")
+        Log.d(TAG, "ABTC - startDiscovery")
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(
@@ -149,6 +139,11 @@ class  AndroidBluetoothController(
         // update paired devices before discovery
         updatePairedDevices()
 
+        // resets the scanned devices list to 0 to start a new scan
+        _scannedDevices.update {
+                devices -> ArrayList<BluetoothDeviceEntity>(0)
+        }
+
         //start new scan
         bluetoothAdapter?.startDiscovery()
     }
@@ -159,9 +154,9 @@ class  AndroidBluetoothController(
             return
         }
 
-        Log.d("LOGGING", "ABTC - stopDiscovery")
+        Log.d(TAG, "ABTC - stopDiscovery")
 
-        bluetoothAdapter?.cancelDiscovery()
+        var cancelDiscoveryResult = bluetoothAdapter?.cancelDiscovery()
 
         release()
     }
@@ -199,12 +194,12 @@ class  AndroidBluetoothController(
 
  */
     fun connectToDevice_old(device: BluetoothDeviceEntity): Flow<ConnectionResult> {
-        Log.d("LOGGER", "In ABTC - connectToDevice")
+        Log.d(TAG, "In ABTC - connectToDevice")
         return flow {
             if(!hasPermission((Manifest.permission.BLUETOOTH_CONNECT))) {
                 throw SecurityException("No BLUETOOTH_CONNECT permission")
             }
-            Log.d("LOGGER", "In ABTC - connectToDevice FLOW")
+            Log.d(TAG, "In ABTC - connectToDevice FLOW")
 
             if (bluetoothAdapter?.isDiscovering() == true) {
                 stopDiscovery()
@@ -215,7 +210,7 @@ class  AndroidBluetoothController(
                 ?.createRfcommSocketToServiceRecord(
                     UUID.fromString(SERVICE_UUID)
                 )
-            Log.d("LOGGER", "currentClientSocket - ${currentClientSocket.toString()}")
+            Log.d(TAG, "currentClientSocket - ${currentClientSocket.toString()}")
 
 
             currentClientSocket?.let{ socket ->
@@ -231,13 +226,13 @@ class  AndroidBluetoothController(
             }
         }.onCompletion {
             //closeConnection()
-            Log.d("LOGGER", "In ABTC - in onCompletion")
+            Log.d(TAG, "In ABTC - in onCompletion")
 
         }.flowOn(Dispatchers.IO)
     }
 
     override fun connectToDevice(device: BluetoothDeviceEntity): String {
-        Log.d("LOGGER", "In ABTC - connectToDevice")
+        Log.d(TAG, "In ABTC - connectToDevice")
 
             var connectionStatus: String  = "";
 
@@ -245,7 +240,7 @@ class  AndroidBluetoothController(
                 throw SecurityException("No BLUETOOTH_CONNECT permission")
             }
 
-            Log.d("LOGGER", "In ABTC - connectToDevice FLOW")
+            Log.d(TAG, "In ABTC - connectToDevice FLOW")
 
             if (bluetoothAdapter?.isDiscovering() == true) {
                 stopDiscovery()
@@ -256,19 +251,19 @@ class  AndroidBluetoothController(
                 ?.createRfcommSocketToServiceRecord(
                     UUID.fromString(SERVICE_UUID)
                 )
-            Log.d("LOGGER", "currentClientSocket - ${currentClientSocket.toString()}")
+            Log.d(TAG, "currentClientSocket - ${currentClientSocket.toString()}")
 
             currentClientSocket?.let{ socket ->
                 try {
                     socket.connect()
                     //emit(ConnectionResult.ConnectionEstablished(device.address))
-                    Log.d("LOGGER", "Connection Established")
+                    Log.d(TAG, "Connection Established")
                     connectionStatus = "isConnected"
                 } catch (e: IOException) {
                     socket.close()
                     currentClientSocket = null
                     //emit(ConnectionResult.Error("Connection was interrupted"))
-                    Log.d("LOGGER", "Connection Error")
+                    Log.d(TAG, "Connection Error")
                     connectionStatus =  "notConnected"
                 }
             }
@@ -299,10 +294,10 @@ class  AndroidBluetoothController(
 
     //Updates _pairedDevices with devices already known to the host device
     private fun updatePairedDevices() {
-        Log.d("AndroidBluetoothController", "androidBluetoothController - updatePairedDevices -> Entry")
+        Log.d(TAG, "androidBluetoothController - updatePairedDevices -> Entry")
 
         if(!hasPermission((Manifest.permission.BLUETOOTH_CONNECT))) {
-            Log.d("AndroidBluetoothController", "androidBluetoothController - updatePairedDevices -> No Manifest Permissions")
+            Log.d(TAG, "androidBluetoothController - updatePairedDevices -> No Manifest Permissions")
             return
         }
 
@@ -319,11 +314,11 @@ class  AndroidBluetoothController(
     }
 
     fun getPairedDevices(): MutableList<Map<String, Any?>>{
-        Log.d("AndroidBluetoothController", "androidBluetoothController - getPairedBluetoothDevices -> Entry")
+        Log.d(TAG, "androidBluetoothController - getPairedBluetoothDevices -> Entry")
 
 
         if (bluetoothAdapter?.isEnabled == false) {
-            Log.d("AndroidBluetoothController", "androidBluetoothController - getPairedBluetoothDevices -> Bluetooth Not Enabled")
+            Log.d(TAG, "androidBluetoothController - getPairedBluetoothDevices -> Bluetooth Not Enabled")
         }
 
         updatePairedDevices()
@@ -342,7 +337,7 @@ class  AndroidBluetoothController(
             _bluetoothDevicesList.add(tempDevice)
         }
 
-        Log.d("AndroidBluetoothController", "androidBluetoothController - getPairedBluetoothDevices -> _bluetoothDevicesList - $_bluetoothDevicesList")
+        Log.d(TAG, "androidBluetoothController - getPairedBluetoothDevices -> _bluetoothDevicesList - $_bluetoothDevicesList")
         //Log.d("LOGGER", _bluetoothDevicesList.toString())
 
         return _bluetoothDevicesList

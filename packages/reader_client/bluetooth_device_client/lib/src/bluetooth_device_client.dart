@@ -42,8 +42,9 @@ class DisconnectFromBluetoothDeviceFailure extends BluetoothClientException {
 
 
 /// Bluetooth implementation of Device_client
-class BluetoothDeviceClient{
+class BluetoothDeviceClient {
   BluetoothDeviceClient();
+
   /*
   BluetoothDeviceClient({
     required NativeChannelsClient nativeChannelClient,
@@ -54,19 +55,25 @@ class BluetoothDeviceClient{
   //late NativeChannelsClient _nativeChannelsClient;
 
 
-  Stream<List<BluetoothDevice>> get bluetoothPairedDevicesList => _bluetoothPairedDevicesStream;
-  Stream<List<BluetoothDevice>> get bluetoothScannedDevicesList => _bluetoothScannedDevicesStream;
+  Stream<List<BluetoothDevice>> get bluetoothPairedDevicesList =>
+      _bluetoothPairedDevicesStream;
+
+  Stream<List<BluetoothDevice>> get bluetoothScannedDevicesList =>
+      _bluetoothScannedDevicesStream.asBroadcastStream();
 
   //
   var btDevicesMethodChannel = NativeChannels().bluetoothMethod;
   var btDevicesStreamChannel = NativeChannels().bluetoothEventStream;
 
-  late Stream<dynamic> _bluetoothScanningStreamSubscription;
+  late StreamSubscription<dynamic> _bluetoothScanningStreamSubscription;
   late List<BluetoothDevice> _bluetoothScannedDevicesList = [];
 
-  BehaviorSubject<List<BluetoothDevice>> _bluetoothPairedDevicesStream = BehaviorSubject<List<BluetoothDevice>>();
-  BehaviorSubject<List<BluetoothDevice>> _bluetoothScannedDevicesStream = BehaviorSubject<List<BluetoothDevice>>();
-
+  BehaviorSubject<
+      List<BluetoothDevice>> _bluetoothPairedDevicesStream = BehaviorSubject<
+      List<BluetoothDevice>>();
+  BehaviorSubject<
+      List<BluetoothDevice>> _bluetoothScannedDevicesStream = BehaviorSubject<
+      List<BluetoothDevice>>();
 
 
   /// Gets a list of Paired Bluetooth Devices
@@ -79,41 +86,47 @@ class BluetoothDeviceClient{
 
       //Invoke method with top-level Return type ONLY to satisfy the StandardModelCodec return type of List<Object?>
       //Cannot ask for <List<Map<String, dynamic>>> as it will return error
-      final bluetoothDevicesTemp = await btDevicesMethodChannel.invokeMethod<List>(
+      final bluetoothDevicesTemp = await btDevicesMethodChannel.invokeMethod<
+          List>(
           "getPairedBluetoothDevices");
 
       if (kDebugMode) {
-        print('bluetooth_device_client -> getPairedBluetoothDevices -> in service return from BT method handler');
+        print(
+            'bluetooth_device_client -> getPairedBluetoothDevices -> in service return from BT method handler');
       }
 
       bluetoothPairedDevicesList.clear();
 
       if (kDebugMode) {
-        print('bluetooth_device_client -> getPairedBluetoothDevices -> bluetoothDevicesTemp - $bluetoothDevicesTemp');
-        print('bluetooth_device_client -> getPairedBluetoothDevices -> bluetoothDevicesTemp.runtimetype - ${bluetoothDevicesTemp.runtimeType}');
+        print(
+            'bluetooth_device_client -> getPairedBluetoothDevices -> bluetoothDevicesTemp - $bluetoothDevicesTemp');
+        print(
+            'bluetooth_device_client -> getPairedBluetoothDevices -> bluetoothDevicesTemp.runtimetype - ${bluetoothDevicesTemp
+                .runtimeType}');
       }
 
       // Casting the Returned List<Object?> to the BluetoothDevice
       // Members returned as _Map<Object?, Object?> are actually Map<dynamic, dynamic>
       // Casting known API key:value pairs to the BluetoothDeviceModel with typecasting
-      for (var device in bluetoothDevicesTemp!){
+      for (var device in bluetoothDevicesTemp!) {
         bluetoothPairedDevicesList.add(
             BluetoothDevice(
-                name: device?["name"] as String?,
-                macAddress: device["address"] as String,
-                connectionStatus: device["connectionStatus"] as bool?,
+              name: device?["name"] as String?,
+              macAddress: device["address"] as String,
+              connectionStatus: device["connectionStatus"] as bool?,
             )
         );
       }
 
       if (kDebugMode) {
-        print('bluetooth_device_client -> getPairedBluetoothDevices -> $bluetoothPairedDevicesList');
+        print(
+            'bluetooth_device_client -> getPairedBluetoothDevices -> $bluetoothPairedDevicesList');
       }
 
       return bluetoothPairedDevicesList;
-
     } catch (error, stackTrace) {
-      Error.throwWithStackTrace(GetPairedBluetoothDevicesFailure(error), stackTrace);
+      Error.throwWithStackTrace(
+          GetPairedBluetoothDevicesFailure(error), stackTrace);
     }
   }
 
@@ -121,44 +134,53 @@ class BluetoothDeviceClient{
   Future<String> startScanningBluetoothDevices() async {
     try {
       if (kDebugMode) {
-        print('bluetooth_device_client -> startScanningBluetoothDevices -> Entry');
+        print(
+            'bluetooth_device_client -> startScanningBluetoothDevices -> Entry');
       }
 
       //Invoke method with top-level Return type ONLY to satisfy the StandardModelCodec return type of List<Object?>
       //Cannot ask for <List<Map<String, dynamic>>> as it will return error
-      final startScanningBluetoothDevicesResult = await btDevicesMethodChannel.invokeMethod("startScanningBluetoothDevices").toString();
+      final startScanningBluetoothDevicesResult = await btDevicesMethodChannel
+          .invokeMethod("startScanningBluetoothDevices").toString();
 
       if (kDebugMode) {
-        print('bluetooth_device_client -> startScanningBluetoothDevices -> Result: $startScanningBluetoothDevicesResult');
+        print(
+            'bluetooth_device_client -> startScanningBluetoothDevices -> Result: $startScanningBluetoothDevicesResult');
       }
+      _bluetoothScanningStreamSubscription =
+          btDevicesStreamChannel
+              .receiveBroadcastStream()
+              .distinct()
+              .listen((event) {
+            _bluetoothScannedDevicesList.clear();
 
-      if (startScanningBluetoothDevicesResult == 'started') {
-        _bluetoothScanningStreamSubscription =
-            btDevicesStreamChannel
-                .receiveBroadcastStream()
-                .distinct()
-                .map((event) {
-              _bluetoothScannedDevicesList.clear();
+            var devicesList = event.toString().substring(1, event.toString().length - 1).replaceAll('}, {', '}++SPLIT++{').split('++SPLIT++');
 
-              var _deviceList = scannedStreamEventToList(event.toString());
+            for (final deviceObject in devicesList) {
+              final tempObject = json.decode(deviceObject) as Map<String, dynamic>;
 
-              _deviceList.forEach((_deviceObject) {
-                _bluetoothScannedDevicesList.add(
-                    BluetoothDevice(
-                      name: _deviceObject["name"] as String,
-                      macAddress: _deviceObject["address"] as String,
-                    )
-                );
-              });
-            });
+              _bluetoothScannedDevicesList.add(
+                  BluetoothDevice(
+                    macAddress: tempObject['address'] as String,
+                    name: tempObject['name'] !=null ? tempObject['name'] as String : "null" as String,
+                  ),
+              );
+            };
 
-        _bluetoothScannedDevicesStream.add(_bluetoothScannedDevicesList.reversed.toSet().toList());
-      }
+            _bluetoothScannedDevicesStream.add(_bluetoothScannedDevicesList.reversed.toSet().toList());
+          });
 
       return startScanningBluetoothDevicesResult;
 
+    }  on PlatformException catch (e) {
+
+      // Native side returns error on start
+      await _bluetoothScanningStreamSubscription.cancel();
+      return e.toString();
+
     } catch (error, stackTrace) {
-      Error.throwWithStackTrace(StartScanningBluetoothDevicesFailure(error), stackTrace);
+      Error.throwWithStackTrace(
+          StartScanningBluetoothDevicesFailure(error), stackTrace);
     }
   }
 
@@ -166,22 +188,40 @@ class BluetoothDeviceClient{
   Future<String> stopScanningBluetoothDevices() async {
     try {
       if (kDebugMode) {
-        print('bluetooth_device_client -> stopScanningBluetoothDevices -> Entry');
+        print(
+            'bluetooth_device_client -> stopScanningBluetoothDevices -> Entry');
       }
 
       final stopScanningBluetoothDevicesResult =
-        await btDevicesMethodChannel.invokeMethod("stopScanningBluetoothDevices");
+      await btDevicesMethodChannel.invokeMethod("stopScanningBluetoothDevices");
+      if (kDebugMode) {
+        print(
+            'bluetooth_device_client -> stopScanningBluetoothDevices -> ${stopScanningBluetoothDevicesResult}');
+      }
+
+      await _bluetoothScanningStreamSubscription.cancel();
+
+      if (kDebugMode) {
+        print(
+            'bluetooth_device_client -> stopScanningBluetoothDevices -> subscriptionCancelled');
+      }
 
       return stopScanningBluetoothDevicesResult.toString();
 
-    } catch (error, stackTrace) {
-      Error.throwWithStackTrace(StopScanningBluetoothDevicesFailure(error), stackTrace);
-    }
+    }  on PlatformException catch (e) {
+      // Native side returns error on start
+      await _bluetoothScanningStreamSubscription.cancel();
+      return e.toString();
 
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(
+          StopScanningBluetoothDevicesFailure(error), stackTrace);
+    }
   }
 
   /// Sends the command to device to connect to a specific bluetooth
-  Future<BluetoothDevice> connectToBluetoothDevice(BluetoothDevice device) async {
+  Future<BluetoothDevice> connectToBluetoothDevice(
+      BluetoothDevice device) async {
     try {
       if (kDebugMode) {
         print('bluetooth_Device_client -> connectToBluetoothDevice -> Entry');
@@ -191,17 +231,18 @@ class BluetoothDeviceClient{
       var data = MethodChannelData(device.toJson()).encodeSendMap();
 
       final connectToBluetoothDeviceResult =
-        await btDevicesMethodChannel
-            .invokeMapMethod("connectToBluetoothDevice", data);
+      await btDevicesMethodChannel
+          .invokeMapMethod("connectToBluetoothDevice", data);
 
       if (kDebugMode) {
-        print('bluetooth_Device_client -> connectToBluetoothDevice -> connectToBluetoothDeviceResult - $connectToBluetoothDeviceResult');
+        print(
+            'bluetooth_Device_client -> connectToBluetoothDevice -> connectToBluetoothDeviceResult - $connectToBluetoothDeviceResult');
       }
 
       return BluetoothDevice();
-
     } catch (error, stackTrace) {
-      Error.throwWithStackTrace(ConnectToBluetoothDeviceFailure(error), stackTrace);
+      Error.throwWithStackTrace(
+          ConnectToBluetoothDeviceFailure(error), stackTrace);
     }
   }
 
@@ -209,50 +250,19 @@ class BluetoothDeviceClient{
   Future<BluetoothDevice> disconnectFromBluetoothDevice() async {
     try {
       if (kDebugMode) {
-        print('bluetooth_Device_client -> disconnectFromBluetoothDevice -> Entry');
+        print(
+            'bluetooth_Device_client -> disconnectFromBluetoothDevice -> Entry');
       }
 
       /// [TODO]
       return BluetoothDevice();
-
     } catch (error, stackTrace) {
-      Error.throwWithStackTrace(DisconnectFromBluetoothDeviceFailure(error), stackTrace);
+      Error.throwWithStackTrace(
+          DisconnectFromBluetoothDeviceFailure(error), stackTrace);
     }
-
   }
-
-  List<dynamic> scannedStreamEventToList(String event) {
-    final streamResult = event;
-    late List<dynamic> _deviceListToReturn = [];
-
-    //Clean/Split stream string into a list of devices
-    List<String> tempList = streamResult
-        .replaceAll('[{', '')
-        .replaceAll('}]', '')
-        .replaceAll('=', ': ')
-        .split('}, {');
-
-    // Formatting the Returned Stream String Devices to the BluetoothDeviceModel which extends the BluetoothDeviceEntity
-    // Casting known API key:value pairs to the BluetoothDeviceModel with typecasting
-    for (var device in tempList){
-      late String tempDevice = device
-          .replaceAll('name', r'"name"')
-          .replaceAll('address', r'"address"')
-          .replaceAll('": ', r'": "')
-          .replaceAll(', "', r'", "');
-
-      tempDevice = "{$tempDevice\"}";
-
-      var _deviceObject = json.decode(tempDevice);
-
-      if(_deviceObject["name"] != "null") {
-        _deviceListToReturn.add(_deviceObject);
-      }
-    }
-
-    return _deviceListToReturn;
-  }
-
 }
+
+
 
 

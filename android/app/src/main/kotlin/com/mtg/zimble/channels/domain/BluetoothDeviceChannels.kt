@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.async
 
 
-class BluetoothDeviceChannels(context: Context) {
+class BluetoothDeviceChannels(context: Context, messenger: BinaryMessenger) {
     val TAG = "BluetoothDeviceChannels"
     
     ///Create Stream Channel Names to match Flutter
@@ -37,7 +37,7 @@ class BluetoothDeviceChannels(context: Context) {
     public lateinit var bluetoothDeviceStreamChannel : EventChannel
 
     ///Creates a Scanning Stream Handler instance to pass to the controller and collector
-    var btStreamHandlerInstance = BluetoothDeviceScanningStreamHandler()
+    var bluetoothStreamHandler = BluetoothDeviceScanningStreamHandler()
 
     ///Instantiate controllers
     private val _androidBluetoothController = AndroidBluetoothController(context)
@@ -47,8 +47,12 @@ class BluetoothDeviceChannels(context: Context) {
     ///Instantiate connectionHandler
     private val _bluetoothConnectionHandler = BluetoothConnectionHandler(bluetoothController = _androidBluetoothController, context = context)
 
+    init{
+        initializeBluetoothDeviceChannels(context, messenger)
+    }
+
     ///Handler for all MethodChannel messages
-    fun initializeBluetoothDeviceChannels(messenger: BinaryMessenger) {
+    fun initializeBluetoothDeviceChannels(context: Context, messenger: BinaryMessenger) {
         Log.d(TAG, "initializing BT Android Channels")
 
         //Bluetooth Method Channel for calls from Features->Reader
@@ -57,9 +61,6 @@ class BluetoothDeviceChannels(context: Context) {
 
         //Bluetooth Stream Channel for scanned device streams from Features->Reader
         bluetoothDeviceStreamChannel = EventChannel(messenger, BT_DEVICES_STREAM)
-
-        ///Assign StreamHandler for scanned devices
-        bluetoothDeviceStreamChannel.setStreamHandler(btStreamHandlerInstance)
 
         Log.d(TAG, "BT Streamchannels initialized ")
 
@@ -81,18 +82,31 @@ class BluetoothDeviceChannels(context: Context) {
                 /// Data Message Type: String
                 /// Return Type: String - "started"  (Also starts btStreamHandler)
                 call.method.equals("startScanningBluetoothDevices") -> {
-                    Log.d(TAG, "in call method - startScanningBluetoothDevices")
-                    _androidBluetoothController.startDiscovery(btStreamHandlerInstance)
-                    result.success("started")
+                    try {
+                        Log.d(TAG, "in call method - startScanningBluetoothDevices")
+
+                        ///Assign StreamHandler for scanned devices
+                        bluetoothDeviceStreamChannel.setStreamHandler(bluetoothStreamHandler)
+                        _androidBluetoothController.startDiscovery(bluetoothStreamHandler)
+
+                        result.success("started")
+                    } catch (e: Exception) {
+                        Log.d(TAG, "in call method - startScanningBluetoothDevices - error")
+                        result.error("startScanningBluetoothDevicesError", "There was a problem starting the BLuetoothScan Stream", null)
+                    }
                 }
                 /// Stop discovery of BluetoothDevices
                 /// Call Type: InvokeMethod
                 /// Data Message Type: String
                 /// Return Type: String - "stopped"
                 call.method.equals("stopScanningBluetoothDevices") -> {
-                    Log.d(TAG, "in call method - stopScanningBluetoothDevices")
-                    _androidBluetoothController.stopDiscovery()
-                    result.success("stopped")
+                    try {
+                        _androidBluetoothController.stopDiscovery()
+                        result.success("stopped")
+                    } catch (e: Exception) {
+                        Log.d(TAG, "in call method - stopScanningBluetoothDevices - error")
+                        result.error("staopScanningBluetoothDevicesError", "There was a problem stopping the BLuetoothScan Stream - ${e.message.toString()}", null)
+                    }
                 }
                 /// Connect to a specific BluetoothDevice
                 /// Call Type: InvokeMapMethod

@@ -7,12 +7,15 @@ abstract class ReadersEvent extends Equatable{
   List<Object> get props => [];
 }
 
+class GetCurrentlyConnectedReadersList extends ReadersEvent {
+  const GetCurrentlyConnectedReadersList();
+}
 
-class ReadersCurrentlyConnectedChanged extends ReadersEvent{
-  const ReadersCurrentlyConnectedChanged(this.readers);
+class CurrentlyConnectedReadersListChanged extends ReadersEvent {
+  const CurrentlyConnectedReadersListChanged(this.currentlyConnectedReadersList);
 
-  final List<Reader> readers;
+  final List<Reader> currentlyConnectedReadersList;
 
   @override
-  List<Object> get props => [readers];
+  List<Object> get props => [currentlyConnectedReadersList];
 }

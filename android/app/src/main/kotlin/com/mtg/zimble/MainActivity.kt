@@ -79,12 +79,8 @@ class MainActivity: FlutterActivity() {
 
     private fun setupMainChannels(context: Context, messenger: BinaryMessenger) {
 
-        val bluetoothDeviceChannels = BluetoothDeviceChannels(context)
-        bluetoothDeviceChannels.initializeBluetoothDeviceChannels(messenger)
-
-        val readerMainChannels = ReaderMainChannels(context)
-        readerMainChannels.initializeReaderMainChannels(messenger)
-
+        BluetoothDeviceChannels(context, messenger)
+        ReaderMainChannels(context, messenger)
         SensorChannels(context, messenger)
 
         //set Event StreamHandler

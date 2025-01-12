@@ -1,13 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import 'package:permission_client/permission_client.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_client/permission_client.dart';
 import 'package:reader_client/reader_client.dart';
 import 'package:reader_repository/reader_repository.dart';
-import 'package:zimble/readers/bloc/readers_bloc.dart';
 import 'package:zimble/l10n/l10n.dart';
+import 'package:zimble/readers/bloc/readers_bloc.dart';
 import 'package:zimble/readers/bloc/readers_connect/readers_connect_bluetooth_paired/readers_connect_bluetooth_paired_bloc.dart';
 
 class PairedReadersScreen extends StatefulWidget {
@@ -33,7 +32,7 @@ class _PairedReadersScreenState extends State<PairedReadersScreen> with Automati
     context.read<ReadersConnectBluetoothPairedBloc>()
         .add(const GetPairedBluetoothDevices());
 
-        if(kDebugMode) {
+    if(kDebugMode) {
       print('paired_readers_screen -> didChangeDependencies - screen rebuilt');
     }
   }
@@ -93,15 +92,15 @@ class _PairedReadersScreenState extends State<PairedReadersScreen> with Automati
                 ReadersConnectBluetoothPairedStatus.done ||
                 state.stateStatus == ReadersConnectBluetoothPairedStatus
                     .connectToDeviceStatusUpdate) {
-              if (state.bluetoothPairedDevices != null) {
+              if (state.bluetoothPairedDevicesList != null) {
                 return SliverList(
                   delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                      return PairedReaderListItem(
-                        device: state.bluetoothPairedDevices![index],
+                      return PairedDeviceListItem(
+                        device: state.bluetoothPairedDevicesList![index],
                       );
                     },
-                    childCount: state.bluetoothPairedDevices!.length,
+                    childCount: state.bluetoothPairedDevicesList!.length,
                   ),
                 );
               }
@@ -116,15 +115,15 @@ class _PairedReadersScreenState extends State<PairedReadersScreen> with Automati
   }
 }
 
-class PairedReaderListItem extends StatelessWidget {
-  const PairedReaderListItem({
+class PairedDeviceListItem extends StatelessWidget {
+  const PairedDeviceListItem({
     required this.device,
     super.key
   });
 
   final BluetoothDevice device;
 
-  Reader? readerMACAddressInList(BluetoothDevice device, List<Reader> listOfReaders) {
+  Reader? deviceMACAddressInReaderList(BluetoothDevice device, List<Reader> listOfReaders) {
     var readerMatchToReturn = listOfReaders.where(
             (readerToCheck) => readerToCheck.macAddress == device.macAddress);
     if(readerMatchToReturn.isNotEmpty) {
@@ -139,20 +138,20 @@ class PairedReaderListItem extends StatelessWidget {
     return BlocBuilder<ReadersConnectBluetoothPairedBloc, ReadersConnectBluetoothPairedState>(
       builder: (context, state) {
         return ListTile(
-          key: Key('pairedReaderListItem_${device.macAddress}'),
+          key: Key('pairedDeviceListItem_${device.macAddress}'),
           title: device.name != 'null'
               ? Text(device.name.toString())
-              : const Text('(no name)'),
+              : Text(context.l10n.readersConnectTabUnnamedDevice),
           subtitle: device.macAddress != null
               ? Text('MAC: ${device.macAddress}')
-              : const Text(''),
+              : Text(''),
           trailing: ElevatedButton(
             child: Builder(
               builder: (context) {
                 if (state.stateStatus ==
                     ReadersConnectBluetoothPairedStatus
                       .connectToDeviceStatusLoading
-                    && state.bluetoothDeviceToUpdate!.macAddress ==
+                    && state.selectedBluetoothDevice!.macAddress ==
                         device.macAddress) {
                   /// Adds Circular Loading indicator to button that is pressed
                   /// while the device tries to connect
@@ -161,23 +160,23 @@ class PairedReaderListItem extends StatelessWidget {
                 } else if (state.stateStatus ==
                     ReadersConnectBluetoothPairedStatus
                         .connectToDeviceStatusUpdate
-                    && readerMACAddressInList(
+                    && deviceMACAddressInReaderList(
                         device,
-                        state.currentlyConnectedReadersList!,
+                      context.select((ReadersBloc bloc) => bloc.state.currentlyConnectedReadersList!),
                     ) != null) {
                   /// State has a connection Status to update and the
                   /// current reader matches the device to update
-                    return const Text('Disconnect');
+                    return Text(context.l10n.readersConnectTabButtonConnect);
                 } else {
-                  return const Text('Connect');
+                  return Text(context.l10n.readersConnectTabButtonDisconnect);
                 }
                 return const Text('Test');
               },
             ),
             onPressed: () {
-              if (readerMACAddressInList(
+              if (deviceMACAddressInReaderList(
                         device,
-                        state.currentlyConnectedReadersList!,
+                        context.select((ReadersBloc bloc) => bloc.state.currentlyConnectedReadersList!),
                     ) != null) {
                 context
                     .read<ReadersConnectBluetoothPairedBloc>()

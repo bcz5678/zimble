@@ -17,11 +17,7 @@ class ReadersConnectBluetoothPairedBloc extends Bloc<ReadersConnectBluetoothPair
       : _readerRepository = readerRepository,
         super(const ReadersConnectBluetoothPairedState.initial()) {
       on<GetPairedBluetoothDevices> (onGetPairedBluetoothDevices);
-      on<CurrentlyConnectedReadersListChanged> (onCurrentlyConnectedReadersListChanged);
       on<ConnectToBluetoothDevice> (onConnectToBluetoothDevice);
-
-      _currentlyConnectedReadersList = _readerRepository.currentlyConnectedReadersList.listen(_currentlyConnectedReadersListChanged);
-
   }
 
   /// Initialize readerRepository and _bluetoothPairedReadersSubscription
@@ -29,33 +25,6 @@ class ReadersConnectBluetoothPairedBloc extends Bloc<ReadersConnectBluetoothPair
   final ReaderRepository _readerRepository;
 
   late StreamSubscription<List<Reader>> _currentlyConnectedReadersList;
-
-  void _currentlyConnectedReadersListChanged(
-      List<Reader> currentlyConnectedReadersList
-      ) {
-    // [DEBUG TEST]
-    if (kDebugMode) {
-      print('readers_connect_bluetooth_paired_bloc -> _currentlyConnectedReadersListChanged -> $currentlyConnectedReadersList');
-    }
-    add(CurrentlyConnectedReadersListChanged(currentlyConnectedReadersList));
-  }
-
-  void onCurrentlyConnectedReadersListChanged(
-      CurrentlyConnectedReadersListChanged event,
-      Emitter<ReadersConnectBluetoothPairedState> emit,
-      ) async {
-    if (kDebugMode) {
-      print('readers_connect_bluetooth_paired_bloc -> onCurrentlyConnectedReadersListChanged -> Entry');
-    }
-
-    final currentlyConnectedReadersList = event.currentlyConnectedReadersList;
-
-    emit(state.copyWith(
-        stateStatus: ReadersConnectBluetoothPairedStatus.done,
-        currentlyConnectedReadersList: currentlyConnectedReadersList,
-      ),
-    );
-  }
 
 
   void onGetPairedBluetoothDevices(
@@ -81,7 +50,7 @@ class ReadersConnectBluetoothPairedBloc extends Bloc<ReadersConnectBluetoothPair
 
       emit(state.copyWith(
           stateStatus: ReadersConnectBluetoothPairedStatus.done,
-          bluetoothPairedDevices: bluetoothPairedDevicesList,
+          bluetoothPairedDevicesList: bluetoothPairedDevicesList,
         ),
       );
   }
@@ -93,7 +62,7 @@ class ReadersConnectBluetoothPairedBloc extends Bloc<ReadersConnectBluetoothPair
 
     emit(state.copyWith(
         stateStatus: ReadersConnectBluetoothPairedStatus.connectToDeviceStatusLoading,
-        bluetoothDeviceToUpdate: event.device,
+        selectedBluetoothDevice: event.device,
       ),
     );
 
@@ -102,7 +71,7 @@ class ReadersConnectBluetoothPairedBloc extends Bloc<ReadersConnectBluetoothPair
 
     emit(state.copyWith(
         stateStatus: ReadersConnectBluetoothPairedStatus.connectToDeviceStatusUpdate,
-        bluetoothDeviceToUpdate: deviceConnectBluetoothResponse,
+        selectedBluetoothDevice: deviceConnectBluetoothResponse,
       ),
     );
   }

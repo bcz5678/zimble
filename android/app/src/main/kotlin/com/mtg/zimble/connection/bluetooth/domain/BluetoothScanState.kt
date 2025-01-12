@@ -14,7 +14,6 @@ class bluetoothScanningCollector(
     private val btStreamHandlerInstance: BluetoothDeviceScanningStreamHandler,
     private val scannedDevicesState: StateFlow<List<BluetoothDeviceEntity>>
 ) {
-
     private val TAG = "BluetoothScanState"
 
     init {
@@ -33,9 +32,6 @@ class bluetoothScanningCollector(
 
     // Sending Scan Updates to the Stream Handler
     private fun sendDataToStreamHandler(btStreamHandlerInstance: BluetoothDeviceScanningStreamHandler, devicesList: List<BluetoothDeviceEntity>) {
-        Log.d(TAG, "Kotlin -> In sendDataToStreamHandler")
-        Log.d(TAG, "${devicesList}")
-
         btStreamHandlerInstance.updateBluetoothScanList(devicesList)
     }
 

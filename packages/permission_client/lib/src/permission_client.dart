@@ -35,6 +35,15 @@ class PermissionClient {
   Future<PermissionStatus> requestBluetoothConnect() =>
       Permission.bluetoothConnect.request();
 
+  /// Returns a permission status for the device's notifications.
+  Future<PermissionStatus> locationStatus() =>
+      Permission.location.status;
+
+  /// Returns a permission status for the device's notifications.
+  Future<PermissionStatus> requestLocation() =>
+      Permission.location.request();
+
+
   /// Opens the app settings page.
 
   /// Returns true if the settings could be opened, otherwise false.
