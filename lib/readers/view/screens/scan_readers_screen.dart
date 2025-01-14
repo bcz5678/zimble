@@ -34,7 +34,7 @@ class _ScanReadersScreenState extends State<ScanReadersScreen>  with AutomaticKe
   }
 
   Future<void> getBTPermissions() async {
-    //[TODO] flesh out permissions handling
+    //[TODO] flesh out permissions handling Zimble, zimble, libmain
     var btScanPermissions = await permissionClient.requestBluetoothScan();
     var btConnectPermissions = await permissionClient.requestBluetoothConnect();
     var locationPermissions = await permissionClient.requestLocation();
