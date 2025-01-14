@@ -91,20 +91,18 @@ class  AndroidBluetoothController(
 
     init {
         updatePairedDevices()
-        context.registerReceiver(
-            bluetoothStateReceiver,
-            IntentFilter().apply {
-                addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)
-                addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
-                addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
-            },
-            RECEIVER_EXPORTED
-        )
+        if (!bluetoothStateReceiver.isRegistered) {
+            bluetoothStateReceiver.registerAsReceiver(context)
+        }
     }
 
     //Start scan for available Bluetooth devices
     override fun startDiscovery(streamHandlerInstanceTest: BluetoothDeviceScanningStreamHandler){
         Log.d(TAG, "in startDiscovery")
+
+        if (!bluetoothStateReceiver.isRegistered) {
+            bluetoothStateReceiver.registerAsReceiver(context)
+        }
 
         //stop previous discovery that may still be in background
         if(bluetoothAdapter?.isDiscovering() == true) {
@@ -123,17 +121,8 @@ class  AndroidBluetoothController(
 
         Log.d(TAG, "ABTC - startDiscovery")
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(
-                foundDeviceReceiver,
-                IntentFilter(BluetoothDevice.ACTION_FOUND),
-                RECEIVER_EXPORTED,
-            )
-        } else {
-            context.registerReceiver(
-                foundDeviceReceiver,
-                IntentFilter(BluetoothDevice.ACTION_FOUND),
-            )
+        if (!foundDeviceReceiver.isRegistered) {
+            foundDeviceReceiver.registerAsReceiver(context)
         }
 
         // update paired devices before discovery
@@ -159,76 +148,6 @@ class  AndroidBluetoothController(
         var cancelDiscoveryResult = bluetoothAdapter?.cancelDiscovery()
 
         release()
-    }
-
-/*
-    override fun startBluetoothServer(): Flow<ConnectionResult> {
-        return flow {
-            if(!hasPermission((Manifest.permission.BLUETOOTH_CONNECT))) {
-                throw SecurityException("No BLUETOOTH_CONNECT permission")
-            }
-
-            currentServerSocket = bluetoothAdapter?.listenUsingRfcommWithServiceRecord(
-                "MTG_RFID Service",
-                    UUID.fromString(SERVICE_UUID)
-            )
-
-            var shouldListen = true
-            while(shouldListen) {
-                currentClientSocket = try{
-                    currentServerSocket?.accept()
-                } catch (e: IOException) {
-                    shouldListen = false
-                    null
-                }
-                emit(ConnectionResult.ConnectionEstablished)
-                currentClientSocket?.let {
-                    currentServerSocket?.close()
-                }
-            }
-        }.onCompletion {
-            closeConnection()
-        }.flowOn(Dispatchers.IO)
-    }
-
-
- */
-    fun connectToDevice_old(device: BluetoothDeviceEntity): Flow<ConnectionResult> {
-        Log.d(TAG, "In ABTC - connectToDevice")
-        return flow {
-            if(!hasPermission((Manifest.permission.BLUETOOTH_CONNECT))) {
-                throw SecurityException("No BLUETOOTH_CONNECT permission")
-            }
-            Log.d(TAG, "In ABTC - connectToDevice FLOW")
-
-            if (bluetoothAdapter?.isDiscovering() == true) {
-                stopDiscovery()
-            }
-
-            currentClientSocket = bluetoothAdapter
-                ?.getRemoteDevice(device.address)
-                ?.createRfcommSocketToServiceRecord(
-                    UUID.fromString(SERVICE_UUID)
-                )
-            Log.d(TAG, "currentClientSocket - ${currentClientSocket.toString()}")
-
-
-            currentClientSocket?.let{ socket ->
-                try {
-                    socket.connect()
-                    emit(ConnectionResult.ConnectionEstablished(device.address))
-                    Log.d("LOGGER", "Connection Established")
-                } catch (e: IOException) {
-                    socket.close()
-                    currentClientSocket = null
-                    emit(ConnectionResult.Error("Connection was interrupted"))
-                }
-            }
-        }.onCompletion {
-            //closeConnection()
-            Log.d(TAG, "In ABTC - in onCompletion")
-
-        }.flowOn(Dispatchers.IO)
     }
 
     override fun connectToDevice(device: BluetoothDeviceEntity): String {
@@ -287,8 +206,8 @@ class  AndroidBluetoothController(
 
     //Release the Broadcast receiver for memory management
     override fun release() {
-        context.unregisterReceiver(foundDeviceReceiver)
-        context.unregisterReceiver(bluetoothStateReceiver)
+        foundDeviceReceiver.unregisterAsReceiver(context)
+        bluetoothStateReceiver.unregisterAsReceiver(context)
         closeConnection()
     }
 

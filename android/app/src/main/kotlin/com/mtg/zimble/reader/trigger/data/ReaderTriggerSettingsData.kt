@@ -40,7 +40,7 @@ class ReaderTriggerSettingsData (
 
     companion object {
         /// Mapping From MethodCall JSON object to ReaderTriggerSettingsData
-        fun JsonToTriggerSettings(data: Any?): ReaderTriggerSettingsData {
+        fun fromJson(data: Any?): ReaderTriggerSettingsData {
             var triggerSettings =
                 Gson().fromJson(data as String?, ReaderTriggerSettingsData::class.java)
             return triggerSettings

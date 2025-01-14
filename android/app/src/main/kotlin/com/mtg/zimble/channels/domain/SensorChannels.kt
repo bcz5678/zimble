@@ -121,7 +121,7 @@ class SensorChannels(context: Context, messenger: BinaryMessenger) {
                         Log.d(TAG, "in call method - stopSensors - success")
                         result.success("success")
                     } catch (e: Exception) {
-                        Log.d(TAG, "in call method - stopSensors - error")
+                        Log.d(TAG, "in call method - stopSensors - ${e.message.toString()}")
                         result.error("sensorStreamError", "There was a problem stopping the Sensor Stream", null)
                     }
                 }

@@ -56,4 +56,17 @@ class BluetoothDeviceEntity(
         returnMap.put("bluetoothDeviceEntity", map)
         return Gson().toJson(returnMap)
     }
+
+    companion object {
+        //Constructor to map from Json object
+        fun fromJson(jsonData: Map<String, Any?>): BluetoothDeviceEntity {
+            return BluetoothDeviceEntity(
+                name = jsonData["name"] as String?,
+                address = jsonData["macAddress"] as String,
+                connectionStatus = jsonData["connectionStatus"] as String?,
+                readerDetails = jsonData["readerDetails"] as ReaderDevicePropertiesData?,
+                triggerSettings = jsonData["triggerSettings"] as ReaderTriggerSettingsData?,
+            )
+        }
+    }
 }

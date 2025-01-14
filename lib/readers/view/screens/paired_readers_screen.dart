@@ -116,20 +116,21 @@ class _PairedReadersScreenState extends State<PairedReadersScreen> with Automati
 }
 
 class PairedDeviceListItem extends StatelessWidget {
-  const PairedDeviceListItem({
+  PairedDeviceListItem({
     required this.device,
     super.key
   });
 
   final BluetoothDevice device;
+  late bool isDeviceCurrentlyConnected;
 
-  Reader? deviceMACAddressInReaderList(BluetoothDevice device, List<Reader> listOfReaders) {
+  bool isDeviceMACAddressInReaderList(BluetoothDevice device, List<Reader> listOfReaders) {
     var readerMatchToReturn = listOfReaders.where(
             (readerToCheck) => readerToCheck.macAddress == device.macAddress);
     if(readerMatchToReturn.isNotEmpty) {
-      return readerMatchToReturn.first;
+      return true;
     } else {
-      return null;
+      return false;
     }
   }
 
@@ -137,6 +138,13 @@ class PairedDeviceListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ReadersConnectBluetoothPairedBloc, ReadersConnectBluetoothPairedState>(
       builder: (context, state) {
+
+        isDeviceCurrentlyConnected = isDeviceMACAddressInReaderList(
+            device,
+            context.select((ReadersBloc bloc) => bloc.state.currentlyConnectedReadersList ?? []
+            )
+        );
+
         return ListTile(
           key: Key('pairedDeviceListItem_${device.macAddress}'),
           title: device.name != 'null'
@@ -160,29 +168,32 @@ class PairedDeviceListItem extends StatelessWidget {
                 } else if (state.stateStatus ==
                     ReadersConnectBluetoothPairedStatus
                         .connectToDeviceStatusUpdate
-                    && deviceMACAddressInReaderList(
-                        device,
-                      context.select((ReadersBloc bloc) => bloc.state.currentlyConnectedReadersList!),
-                    ) != null) {
+                    && isDeviceCurrentlyConnected) {
                   /// State has a connection Status to update and the
                   /// current reader matches the device to update
-                    return Text(context.l10n.readersConnectTabButtonConnect);
+                    return Text(context.l10n.readersConnectTabButtonDisconnect);
                 } else {
-                  return Text(context.l10n.readersConnectTabButtonDisconnect);
+                  return Text(context.l10n.readersConnectTabButtonConnect);
                 }
-                return const Text('Test');
+                return Text(context.l10n.readersConnectTabButtonConnect);
               },
             ),
             onPressed: () {
-              if (deviceMACAddressInReaderList(
-                        device,
-                        context.select((ReadersBloc bloc) => bloc.state.currentlyConnectedReadersList!),
-                    ) != null) {
+              if (isDeviceCurrentlyConnected) {
+                if(kDebugMode) {
+                  print('paired_readers_screen -> onPressed -> disconnect');
+
+                }
                 context
                     .read<ReadersConnectBluetoothPairedBloc>()
                     .add(
                     DisconnectFromBluetoothDevice(device));
               } else {
+
+                if(kDebugMode) {
+                  print('paired_readers_screen -> onPressed -> connect');
+
+                }
                 context
                     .read<ReadersConnectBluetoothPairedBloc>()
                     .add(ConnectToBluetoothDevice(device));

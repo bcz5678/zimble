@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -35,12 +37,6 @@ class _ScanReadersScreenState extends State<ScanReadersScreen>  with AutomaticKe
     var btScanPermissions = await permissionClient.requestBluetoothScan();
     var btConnectPermissions = await permissionClient.requestBluetoothConnect();
     var locationPermissions = await permissionClient.requestLocation();
-
-    if(kDebugMode) {
-      print('scanned_readers_screen -> getBTPermissions - btscanstatus - $btScanPermissions');
-      print('scanned_readers_screen -> getBTPermissions - btconnectstatus -  $btConnectPermissions');
-      print('scanned_readers_screen -> getBTPermissions - locationStatus - $locationPermissions');
-    }
   }
 
   @override
@@ -116,27 +112,36 @@ class _ScanReadersScreenState extends State<ScanReadersScreen>  with AutomaticKe
 }
 
 class ScannedDeviceListItem extends StatelessWidget {
-  const ScannedDeviceListItem({
+  ScannedDeviceListItem({
     required this.device,
     super.key
   });
 
   final BluetoothDevice device;
+  late bool isDeviceCurrentlyConnected;
 
-  Reader? deviceMACAddressInReaderList(BluetoothDevice device, List<Reader> listOfReaders) {
+  bool isDeviceMACAddressInReaderList(BluetoothDevice device, List<Reader> listOfReaders) {
     var readerMatchToReturn = listOfReaders.where(
             (readerToCheck) => readerToCheck.macAddress == device.macAddress);
     if(readerMatchToReturn.isNotEmpty) {
-      return readerMatchToReturn.first;
+      return true;
     } else {
-      return null;
+      return false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+
     return BlocBuilder<ReadersConnectBluetoothScannedBloc, ReadersConnectBluetoothScannedState>(
       builder: (context, state) {
+
+        isDeviceCurrentlyConnected = isDeviceMACAddressInReaderList(
+            device,
+            context.select((ReadersBloc bloc) => bloc.state.currentlyConnectedReadersList ?? []
+            )
+        );
+
         return ListTile(
           key: Key('scannedDeviceListItem_${device.macAddress}'),
           title: device.name != 'null'
@@ -159,29 +164,31 @@ class ScannedDeviceListItem extends StatelessWidget {
 
                   } else if (state.stateStatus ==
                     ReadersConnectBluetoothPairedStatus.connectToDeviceStatusUpdate
-                    && deviceMACAddressInReaderList(
-                      device,
-                      context.select((ReadersBloc bloc) => bloc.state.currentlyConnectedReadersList!),
-                    ) != null) {
+                    && isDeviceCurrentlyConnected) {
                     /// State has a connection Status to update and the
                     /// current reader matches the device to update
-                    return Text(context.l10n.readersConnectTabButtonConnect);
-                  } else {
                     return Text(context.l10n.readersConnectTabButtonDisconnect);
+                  } else {
+                    return Text(context.l10n.readersConnectTabButtonConnect);
                   }
-                  return const Text('Test');
+                  return Text(context.l10n.readersConnectTabButtonConnect);
                 },
               ),
               onPressed: () {
-                if (deviceMACAddressInReaderList(
-                device,
-                context.select((ReadersBloc bloc) => bloc.state.currentlyConnectedReadersList!),
-                ) != null) {
+                if (isDeviceCurrentlyConnected) {
+                  if(kDebugMode) {
+                    print('scanned_readers_screen -> onPressed -> disconnect');
+
+                  }
                 context
                     .read<ReadersConnectBluetoothPairedBloc>()
-                    .add(
-                DisconnectFromBluetoothDevice(device));
+                    .add(DisconnectFromBluetoothDevice(device));
                 } else {
+
+                  if(kDebugMode) {
+                    print('scanned_readers_screen -> onPressed -> connect');
+
+                  }
                 context
                     .read<ReadersConnectBluetoothPairedBloc>()
                     .add(ConnectToBluetoothDevice(device));
@@ -193,53 +200,3 @@ class ScannedDeviceListItem extends StatelessWidget {
     );
   }
 }
-
-
-/*
-                           trailing: ElevatedButton(
-                            child: Builder(
-                                builder: (context) {
-                                  if (state.stateStatus == ReadersConnectBluetoothScannedStatus.connectToDeviceStatusLoading
-                                      && state.selectedBluetoothDevice!.macAddress == state.bluetoothScannedDevicesList![index].macAddress) {
-                                    return const CupertinoActivityIndicator();
-                                  } else if (state.stateStatus == ReadersConnectBluetoothScannedStatus.connectToDeviceStatusUpdate &&
-                                      state.currentlyConnectedReader!.macAddress == state.bluetoothScannedDevicesList![index].macAddress) {
-                                    if(state.currentlyConnectedReader!.connectionStatus == "isConnected") {
-                                      return Text(context.l10n.readersConnectTabScanButtonDisconnect);
-                                    } else {
-                                      return Text(context.l10n.readersConnectTabScanButtonConnect);
-                                    }
-                                  } else {
-                                    return Text(context.l10n.readersConnectTabScanButtonConnect);
-                                  }
-                                }
-                            ),
-                            onPressed: () {
-                              if (state.currentlyConnectedReader!.macAaddress == state.bluetoothScannedDevicesList![index].macAddress) {
-                                context
-                                    .read<ReadersConnectBluetoothScannedBloc>()
-                                    .add(
-                                    DisconnectFromBluetoothDevice(state.bluetoothScannedDevicesList![index]));
-                              } else {
-                                context
-                                    .read<ReadersConnectBluetoothScannedBloc>()
-                                    .add(ConnectToBluetoothDevice(state.bluetoothScannedDevicesList![index]));
-                              }
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                } else {
-                  return const SizedBox();
-                }
-              } else {
-                return const SizedBox();
-              }
-            }
-        ),
-      ],
-    );
-
- */

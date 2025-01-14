@@ -16,7 +16,7 @@ class ReadersConnectBluetoothScannedBloc extends Bloc<ReadersConnectBluetoothSca
   ReadersConnectBluetoothScannedBloc({
     required ReaderRepository readerRepository,
   }) : _readerRepository = readerRepository,
-        super(ReadersConnectBluetoothScannedState.initial()) {
+        super(const ReadersConnectBluetoothScannedState.initial()) {
 
     on<StartScanningBluetoothDevices> (onStartScanningBluetoothDevices);
     on<StopScanningBluetoothDevices> (onStopScanningBluetoothDevices);
@@ -26,13 +26,10 @@ class ReadersConnectBluetoothScannedBloc extends Bloc<ReadersConnectBluetoothSca
   /// Initialize readerRepository and _bluetoothScannedReadersSubscription
   /// to handle changes to the bluetooth list
   final ReaderRepository _readerRepository;
-  late BehaviorSubject<List<BluetoothDevice>> _bluetoothScannedDeviceSubscription;
 
-
-
-  void onStartScanningBluetoothDevices(
+  Future<void> onStartScanningBluetoothDevices(
       StartScanningBluetoothDevices event,
-      Emitter<ReadersConnectBluetoothScannedState> emit
+      Emitter<ReadersConnectBluetoothScannedState> emit,
       ) async {
 
     emit(state.copyWith(
@@ -64,16 +61,17 @@ class ReadersConnectBluetoothScannedBloc extends Bloc<ReadersConnectBluetoothSca
     transformer: restartable();
   }
 
-  void onStopScanningBluetoothDevices(
+  Future<void> onStopScanningBluetoothDevices(
     StopScanningBluetoothDevices event,
-    Emitter<ReadersConnectBluetoothScannedState> emit
+    Emitter<ReadersConnectBluetoothScannedState> emit,
   ) async {
 
     final stopScanningBluetoothDevicesResult = await _readerRepository.stopScanningBluetoothDevices();
+    final _bluetoothScannedDevicesList = await _readerRepository.bluetoothScannedDevicesList.last;
 
     emit(state.copyWith(
         stateStatus: ReadersConnectBluetoothScannedStatus.done,
-        bluetoothScannedDevicesList: _bluetoothScannedDeviceSubscription.value,
+        bluetoothScannedDevicesList: _bluetoothScannedDevicesList,
       ),
     );
 
@@ -85,7 +83,6 @@ class ReadersConnectBluetoothScannedBloc extends Bloc<ReadersConnectBluetoothSca
 
   @override
   Future<void> close() async {
-    await _bluetoothScannedDeviceSubscription.done;
     super.close();
   }
 }

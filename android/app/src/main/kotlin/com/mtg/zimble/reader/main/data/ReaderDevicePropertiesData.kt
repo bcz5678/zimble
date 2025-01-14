@@ -24,7 +24,7 @@ class ReaderDevicePropertiesData (
 
     companion object {
         /// Mapping From MethodCall JSON object to ReaderTriggerSettingsData
-        fun JsonToDeviceProperties(data: Any?): ReaderDevicePropertiesData{
+        fun fromJson(data: Any?): ReaderDevicePropertiesData{
             var devicePropertiesData =
                 Gson().fromJson(data as String?, ReaderDevicePropertiesData::class.java)
             return devicePropertiesData

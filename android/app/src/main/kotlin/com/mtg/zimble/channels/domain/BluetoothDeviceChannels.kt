@@ -6,7 +6,6 @@ import com.mtg.zimble.reader.main.data.AndroidReaderController
 import com.mtg.zimble.reader.trigger.data.AndroidTriggerController
 
 //Entities
-import com.mtg.zimble.connection.bluetooth.data.JsonToBluetoothDeviceEntity
 
 import android.content.Context
 import android.util.Log
@@ -91,7 +90,7 @@ class BluetoothDeviceChannels(context: Context, messenger: BinaryMessenger) {
 
                         result.success("started")
                     } catch (e: Exception) {
-                        Log.d(TAG, "in call method - startScanningBluetoothDevices - error")
+                        Log.d(TAG, "in call method - startScanningBluetoothDevices - ${e.message.toString()}")
                         result.error("startScanningBluetoothDevicesError", "There was a problem starting the BLuetoothScan Stream", null)
                     }
                 }
@@ -104,7 +103,7 @@ class BluetoothDeviceChannels(context: Context, messenger: BinaryMessenger) {
                         _androidBluetoothController.stopDiscovery()
                         result.success("stopped")
                     } catch (e: Exception) {
-                        Log.d(TAG, "in call method - stopScanningBluetoothDevices - error")
+                        Log.d(TAG, "in call method - stopScanningBluetoothDevices - ${e.message.toString()}")
                         result.error("staopScanningBluetoothDevicesError", "There was a problem stopping the BLuetoothScan Stream - ${e.message.toString()}", null)
                     }
                 }
@@ -117,7 +116,7 @@ class BluetoothDeviceChannels(context: Context, messenger: BinaryMessenger) {
 
                     //Parse messageData from MethodCall
                     var messageData = call.argument<Map<String, Any?>>("messageData")!!
-                    var bluetoothDeviceToConnect: BluetoothDeviceEntity = JsonToBluetoothDeviceEntity(messageData)
+                    var bluetoothDeviceToConnect: BluetoothDeviceEntity = BluetoothDeviceEntity.fromJson(messageData)
 
                     Log.d(TAG, "bluetoothDeviceToConnect - ${bluetoothDeviceToConnect}")
 
@@ -195,7 +194,7 @@ class BluetoothDeviceChannels(context: Context, messenger: BinaryMessenger) {
                             }
                         } catch  (e: Exception) {
                             //SDK Connection Error Return
-                            Log.d(TAG, "Error - ${e}")
+                            Log.d(TAG, "Error - ${e.message.toString()}")
                             result.error("connectionError", "There was a problem connecting to this reader", null)
                         }
                     }
@@ -209,7 +208,7 @@ class BluetoothDeviceChannels(context: Context, messenger: BinaryMessenger) {
 
                     //Parse messageData from MethodCall
                     var messageData = call.argument<Map<String, Any?>>("messageData")!!
-                    var bluetoothDeviceToDisconnect: BluetoothDeviceEntity = JsonToBluetoothDeviceEntity(messageData)
+                    var bluetoothDeviceToDisconnect: BluetoothDeviceEntity = BluetoothDeviceEntity.fromJson(messageData)
 
                     Log.d(TAG, "bluetoothDeviceToDisconnect - ${bluetoothDeviceToDisconnect}")
 
@@ -244,7 +243,7 @@ class BluetoothDeviceChannels(context: Context, messenger: BinaryMessenger) {
                             }
                         } catch  (e: Exception) {
                             //Error Return
-                            Log.d(TAG, "Error - ${e}")
+                            Log.d(TAG, "Error - ${e.message.toString()}")
                             result.error("connectionError", "There was a problem disconnecting from this reader", null)
                         }
                     }
