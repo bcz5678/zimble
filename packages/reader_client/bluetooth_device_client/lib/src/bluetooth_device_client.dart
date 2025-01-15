@@ -220,7 +220,7 @@ class BluetoothDeviceClient {
   }
 
   /// Sends the command to device to connect to a specific bluetooth
-  Future<BluetoothDevice> connectToBluetoothDevice(
+  Future<BluetoothReader> connectToBluetoothDevice(
       BluetoothDevice device) async {
     try {
       if (kDebugMode) {
@@ -239,7 +239,9 @@ class BluetoothDeviceClient {
             'bluetooth_Device_client -> connectToBluetoothDevice -> connectToBluetoothDeviceResult - $connectToBluetoothDeviceResult');
       }
 
-      return BluetoothDevice();
+
+      /// [ANCHOR]
+      return BluetoothReader.fromMessageData(connectToBluetoothDeviceResult["messageData"]);
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(
           ConnectToBluetoothDeviceFailure(error), stackTrace);

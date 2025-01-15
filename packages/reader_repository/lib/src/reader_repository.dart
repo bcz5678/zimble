@@ -285,6 +285,7 @@ class ReaderRepository {
         print('reader_repository -> connectToBluetoothDevice -> bluetoothDeviceToReturn - $bluetoothDeviceToReturn');
       }
 
+      ///[ANCHOR]
       return BluetoothDevice();
       /*
       if(bluetoothDeviceToReturn.macAddress != null) {
@@ -296,7 +297,9 @@ class ReaderRepository {
       }
 
       return Reader.fromBluetoothDevice(bluetoothDevice: bluetoothDeviceToReturn);
+
        */
+
     } on ConnectToBluetoothDeviceFailure {
       rethrow;
     } catch (error, stackTrace) {

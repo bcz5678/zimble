@@ -57,14 +57,14 @@ class _ScanReadersScreenState extends State<ScanReadersScreen>  with AutomaticKe
                     onPressed: () {
                       if (_btScanningState == false) {
                         context
-                            .read<ReadersConnectBluetoothScannedBloc>()
+                            .read<ReadersConnectBloc>()
                             .add(StartScanningBluetoothDevices());
                         setState(() {
                           _btScanningState = !_btScanningState;
                         });
                       } else {
                         context
-                            .read<ReadersConnectBluetoothScannedBloc>()
+                            .read<ReadersConnectBloc>()
                             .add(StopScanningBluetoothDevices());
                         setState(() {
                           _btScanningState = !_btScanningState;
@@ -81,19 +81,23 @@ class _ScanReadersScreenState extends State<ScanReadersScreen>  with AutomaticKe
           ),
 
         ),
-        BlocBuilder<ReadersConnectBluetoothScannedBloc, ReadersConnectBluetoothScannedState>(
+        BlocBuilder<ReadersConnectBloc, ReadersConnectState>(
           builder: (context, state) {
-            if (state.stateStatus == ReadersConnectBluetoothScannedStatus.loading) {
+            if (state.stateStatus == ReadersConnectStatus.scannedLoading) {
               return SliverToBoxAdapter(
                   child: CupertinoActivityIndicator()
               );
             } else
-            if (state.stateStatus == ReadersConnectBluetoothScannedStatus.scannedBluetoothDevicesUpdated) {
+            if ([ ReadersConnectStatus.scannedDone,
+                  ReadersConnectStatus.scannedBluetoothDevicesUpdated,
+                  ReadersConnectStatus.connectToDeviceStatusInProgress,
+                  ReadersConnectStatus.connectToDeviceStatusUpdate,
+                ].contains(state.stateStatus)) {
               if (state.bluetoothScannedDevicesList!.isNotEmpty) {
                 return SliverList(
                     delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                      return ScannedDeviceListItem(
+                      return ConnectDeviceListItem(
                           device: state.bluetoothScannedDevicesList![index]
                       );
                     },
@@ -108,96 +112,6 @@ class _ScanReadersScreenState extends State<ScanReadersScreen>  with AutomaticKe
           },
         ),
       ],
-    );
-  }
-}
-
-class ScannedDeviceListItem extends StatelessWidget {
-  ScannedDeviceListItem({
-    required this.device,
-    super.key
-  });
-
-  final BluetoothDevice device;
-  late bool isDeviceCurrentlyConnected;
-
-  bool isDeviceMACAddressInReaderList(BluetoothDevice device, List<Reader> listOfReaders) {
-    var readerMatchToReturn = listOfReaders.where(
-            (readerToCheck) => readerToCheck.macAddress == device.macAddress);
-    if(readerMatchToReturn.isNotEmpty) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return BlocBuilder<ReadersConnectBluetoothScannedBloc, ReadersConnectBluetoothScannedState>(
-      builder: (context, state) {
-
-        isDeviceCurrentlyConnected = isDeviceMACAddressInReaderList(
-            device,
-            context.select((ReadersBloc bloc) => bloc.state.currentlyConnectedReadersList ?? []
-            )
-        );
-
-        return ListTile(
-          key: Key('scannedDeviceListItem_${device.macAddress}'),
-          title: device.name != 'null'
-            ? Text(device.name.toString())
-            : Text(context.l10n.readersConnectTabUnnamedDevice),
-          subtitle: device.macAddress != null
-            ? Text('MAC: ${device.macAddress}')
-            : Text(''),
-          trailing: ElevatedButton(
-            child: Builder(
-              builder: (context) {
-                if (state.stateStatus ==
-                  ReadersConnectBluetoothScannedStatus
-                    .connectToDeviceStatusLoading
-                  && state.selectedBluetoothDevice!.macAddress ==
-                  device.macAddress) {
-                    /// Adds Circular Loading indicator to button that is pressed
-                    /// while the device tries to connect
-                    return const CupertinoActivityIndicator();
-
-                  } else if (state.stateStatus ==
-                    ReadersConnectBluetoothPairedStatus.connectToDeviceStatusUpdate
-                    && isDeviceCurrentlyConnected) {
-                    /// State has a connection Status to update and the
-                    /// current reader matches the device to update
-                    return Text(context.l10n.readersConnectTabButtonDisconnect);
-                  } else {
-                    return Text(context.l10n.readersConnectTabButtonConnect);
-                  }
-                  return Text(context.l10n.readersConnectTabButtonConnect);
-                },
-              ),
-              onPressed: () {
-                if (isDeviceCurrentlyConnected) {
-                  if(kDebugMode) {
-                    print('scanned_readers_screen -> onPressed -> disconnect');
-
-                  }
-                context
-                    .read<ReadersConnectBluetoothPairedBloc>()
-                    .add(DisconnectFromBluetoothDevice(device));
-                } else {
-
-                  if(kDebugMode) {
-                    print('scanned_readers_screen -> onPressed -> connect');
-
-                  }
-                context
-                    .read<ReadersConnectBluetoothPairedBloc>()
-                    .add(ConnectToBluetoothDevice(device));
-              }
-            },
-          ),
-        );
-      }
     );
   }
 }

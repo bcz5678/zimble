@@ -1,4 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'reader_details.dart';
+import 'trigger_details.dart';
+
 
 class BluetoothReader extends Equatable{
   const BluetoothReader ({
@@ -32,10 +35,24 @@ class BluetoothReader extends Equatable{
   final bool? connectionStatus;
 
   /// The current reader details
-  final Map<String, dynamic>? readerDetails;
+  final ReaderDetails? readerDetails;
 
   /// The current reader details
-  final Map<String, dynamic>? triggerStatus;
+  final TriggerDetails? triggerStatus;
+
+  factory BluetoothReader.fromMessageData(Map<String, dynamic> messageData) {
+    final result = messageData['bluetoothDeviceEntity'] as Map<String, dynamic>;
+    return BluetoothReader(
+      name: result['name'] as String,
+      serialNumber: result['serialNumber'] as String,
+      macAddress: result['adddress'] as String,
+      imageStub: result['imageStub'] as String,
+      connectionStatus: result['connectionStatus'] as bool,
+      readerDetails: ReaderDetails.fromJson(result['readerDetails'] as Map<String, dynamic>),
+      triggerStatus: TriggerDetails.fromJson(result['triggerDetails']as Map<String, dynamic>),
+
+    );
+  }
 
   @override
   List<Object?> get props =>[

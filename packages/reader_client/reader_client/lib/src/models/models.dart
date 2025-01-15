@@ -5,6 +5,8 @@ export 'devices/usb_device.dart';
 export 'readers/bluetooth_reader.dart';
 export 'readers/network_reader.dart';
 export 'readers/usb_reader.dart';
+export 'readers/reader_details.dart';
+export 'readers/trigger_details.dart';
 export 'sensors/accelerometer_data.dart';
 export 'sensors/gyroscope_data.dart';
 export 'sensors/linear_acceleration_data.dart';

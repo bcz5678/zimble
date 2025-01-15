@@ -2,12 +2,8 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reader_repository/reader_repository.dart';
-import 'package:zimble/app/app.dart';
 import 'package:zimble/l10n/l10n.dart';
-import 'package:zimble/login/view/login_modal.dart';
-import 'package:zimble/navigation/navigation.dart';
 import 'package:zimble/readers/readers.dart';
-import 'package:zimble/user_profile/user_profile.dart';
 
 class ConnectNewReadersScreen extends StatefulWidget {
   const ConnectNewReadersScreen({super.key});
@@ -69,13 +65,8 @@ class _ConnectNewReadersScreenState extends State<ConnectNewReadersScreen>
             readerRepository: _readerRepository,
           ),
         ),
-        BlocProvider<ReadersConnectBluetoothPairedBloc>(
-          create: (_) => ReadersConnectBluetoothPairedBloc(
-            readerRepository: _readerRepository,
-          ),
-        ),
-        BlocProvider<ReadersConnectBluetoothScannedBloc>(
-          create: (_) => ReadersConnectBluetoothScannedBloc(
+        BlocProvider<ReadersConnectBloc>(
+          create: (_) => ReadersConnectBloc(
             readerRepository: _readerRepository,
           ),
         ),
