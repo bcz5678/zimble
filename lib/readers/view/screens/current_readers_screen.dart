@@ -1,8 +1,10 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reader_repository/reader_repository.dart';
-import 'package:zimble/readers/bloc/readers_current/readers_current_bloc.dart';
+import 'package:zimble/l10n/l10n.dart';
+import 'package:zimble/readers/readers.dart';
 
 class CurrentReadersScreen extends StatefulWidget {
   const CurrentReadersScreen({super.key});
@@ -11,331 +13,99 @@ class CurrentReadersScreen extends StatefulWidget {
   State<CurrentReadersScreen> createState() => _CurrentReadersScreenState();
 }
 
-class _CurrentReadersScreenState extends State<CurrentReadersScreen> {
+class _CurrentReadersScreenState extends State<CurrentReadersScreen>
+    with TickerProviderStateMixin  {
 
-  late ReaderRepository _readerRepository = context.read<ReaderRepository>();
+  late TabController _tabControllerCurrent;
+  double? scrolledUnderElevation;
+  bool shadowColor = false;
+  late List<Tab> currentNavTabs;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    currentNavTabs = _buildCurrentNavTabsList(context);
+    _tabControllerCurrent = TabController(
+        vsync: this,
+        length: currentNavTabs.length
+    );
+  }
+
+  @override
+  void dispose() {
+    _tabControllerCurrent.dispose();
+    super.dispose();
+  }
+
+  List<Tab> _buildCurrentNavTabsList(BuildContext context) {
+    return [
+      Tab(
+        text: context.l10n.readersCurrentTabAttached,
+      ),
+      Tab(
+        text: context.l10n.readersCurrentTabSensors,
+      ),
+    ];
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          ReadersCurrentBloc(
+    late ReaderRepository _readerRepository = context.read<ReaderRepository>();
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ReadersBloc>(
+          create: (_) => ReadersBloc(
             readerRepository: _readerRepository,
           ),
-      child: SensorView(),
-    );
-  }
-}
-
-class SensorView extends StatefulWidget {
-  const SensorView({super.key});
-
-  @override
-  State<SensorView> createState() => _SensorViewState();
-}
-
-class _SensorViewState extends State<SensorView> {
-  late bool _sensorsActiveToggle = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        AccelerometerReadout(),
-        Divider(),
-        GyroscopeReadout(),
-        Divider(),
-        LinearAccelerationReadout(),
-        Divider(),
-        RotationVectorReadout(),
-        Divider(),
-        ElevatedButton(
-            onPressed: () {
-              if (kDebugMode) {
-                print('current_readers_screen -> onPressed -> Entry');
-              }
-              if (_sensorsActiveToggle == false) {
-                if (kDebugMode) {
-                  print('current_readers_screen -> onPressed ->false');
-                }
-                context.read<ReadersCurrentBloc>().add(
-                    const StartSensorStream());
-              } else {
-                if (kDebugMode) {
-                  print('current_readers_screen -> onPressed -> true');
-                }
-                context.read<ReadersCurrentBloc>().add(
-                    const StopSensorStream());
-              };
-
-              setState(() {
-                _sensorsActiveToggle = !_sensorsActiveToggle;
-              });
-            },
-            child: _sensorsActiveToggle
-                ? Text("Stop Sensors")
-                : Text("Start Sensors")
-        )
+        ),
+        BlocProvider<ReadersCurrentBloc>(
+          create: (_) => ReadersCurrentBloc(
+            readerRepository: _readerRepository,
+          ),
+        ),
+        BlocProvider<ReadersAttachedBloc>(
+          create: (_) => ReadersAttachedBloc(
+            readerRepository: _readerRepository,
+          ),
+        ),
+        BlocProvider<ReadersSensorsBloc>(
+          create: (_) => ReadersSensorsBloc(
+            readerRepository: _readerRepository,
+          ),
+        ),
       ],
+      child: Column(
+        children: [
+          Container(
+            color: AppColors.lingoWhite,
+            child: TabBar(
+              controller: _tabControllerCurrent,
+              indicatorColor: AppColors.lingoOrange_100,
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorWeight: 3,
+              labelStyle: TextStyle(
+                color: AppColors.lingoOrange_100,
+              ),
+              unselectedLabelStyle: TextStyle(
+                color: AppColors.grey,
+              ),
+              tabs: currentNavTabs,
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabControllerCurrent,
+              children: [
+                AttachedReadersScreen(),
+                SensorsReadersScreen(),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
-
-class AccelerometerReadout extends StatefulWidget {
-  const AccelerometerReadout({super.key});
-
-  @override
-  State<AccelerometerReadout> createState() => _AccelerometerReadoutState();
-}
-
-class _AccelerometerReadoutState extends State<AccelerometerReadout> {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ReadersCurrentBloc, ReadersCurrentState>(
-      builder: (context, state) {
-        return Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Accelerometer'),
-                  ]
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('x: '),
-                    if (state.sensorValues == null)
-                      Text('0')
-                    else
-                      Text(state.sensorValues!.accelerometerData!.xAxis
-                          .toString()),
-                  ]
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('y: '),
-                    if (state.sensorValues == null)
-                      Text('0')
-                    else
-                      Text(state.sensorValues!.accelerometerData!.yAxis
-                          .toString()),
-                  ]
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('z: '),
-                    if (state.sensorValues == null)
-                      Text('0')
-                    else
-                      Text(state.sensorValues!.accelerometerData!.zAxis
-                          .toString()),
-                  ]
-              ),
-            ]
-        );
-      },
-    );
-  }
-}
-
-class GyroscopeReadout extends StatefulWidget {
-  const GyroscopeReadout({super.key});
-
-  @override
-  State<GyroscopeReadout> createState() => _GyroscopeReadoutState();
-}
-
-class _GyroscopeReadoutState extends State<GyroscopeReadout> {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ReadersCurrentBloc, ReadersCurrentState>(
-      builder: (context, state) {
-        return Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Gyroscope'),
-                  ]
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('x: '),
-                    if (state.sensorValues == null)
-                      Text('0')
-                    else
-                      Text(state.sensorValues!.gyroscopeData!.xAxis
-                          .toString()),
-                  ]
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('y: '),
-                    if (state.sensorValues == null)
-                      Text('0')
-                    else
-                      Text(state.sensorValues!.gyroscopeData!.yAxis
-                          .toString()),
-                  ]
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('z: '),
-                    if (state.sensorValues == null)
-                      Text('0')
-                    else
-                      Text(state.sensorValues!.gyroscopeData!.zAxis
-                          .toString()),
-                  ]
-              ),
-            ]
-        );
-      },
-    );
-  }
-}
-
-class LinearAccelerationReadout extends StatefulWidget {
-  const LinearAccelerationReadout({super.key});
-
-  @override
-  State<LinearAccelerationReadout> createState() => _LinearAccelerationReadoutState();
-}
-
-class _LinearAccelerationReadoutState extends State<LinearAccelerationReadout> {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ReadersCurrentBloc, ReadersCurrentState>(
-      builder: (context, state) {
-        return Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Linear Acceleration'),
-                  ]
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('x: '),
-                    if (state.sensorValues == null)
-                      Text('0')
-                    else
-                      Text(state.sensorValues!.linearAccelerationData!.xAxis
-                          .toString()),
-                  ]
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('y: '),
-                    if (state.sensorValues == null)
-                      Text('0')
-                    else
-                      Text(state.sensorValues!.linearAccelerationData!.yAxis
-                          .toString()),
-                  ]
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('z: '),
-                    if (state.sensorValues == null)
-                      Text('0')
-                    else
-                      Text(state.sensorValues!.linearAccelerationData!.zAxis
-                          .toString()),
-                  ]
-              ),
-            ]
-        );
-      },
-    );
-  }
-}
-
-class RotationVectorReadout extends StatefulWidget {
-  const RotationVectorReadout({super.key});
-
-  @override
-  State<RotationVectorReadout> createState() => _RotationVectorReadoutState();
-}
-
-class _RotationVectorReadoutState extends State<RotationVectorReadout> {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ReadersCurrentBloc, ReadersCurrentState>(
-      builder: (context, state) {
-        return Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Rotation Vector'),
-                  ]
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('x: '),
-                    if (state.sensorValues == null)
-                      Text('0')
-                    else
-                      Text(state.sensorValues!.rotationVectorData!.xAxis
-                          .toString()),
-                  ]
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('y: '),
-                    if (state.sensorValues == null)
-                      Text('0')
-                    else
-                      Text(state.sensorValues!.rotationVectorData!.yAxis
-                          .toString()),
-                  ]
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('z: '),
-                    if (state.sensorValues == null)
-                      Text('0')
-                    else
-                      Text(state.sensorValues!.rotationVectorData!.zAxis
-                          .toString()),
-                  ]
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('scalar: '),
-                    if (state.sensorValues == null)
-                      Text('0')
-                    else
-                      Text(state.sensorValues!.rotationVectorData!.scalar
-                          .toString()),
-                  ]
-              ),
-            ]
-        );
-      },
-    );
-  }
-}
-
-

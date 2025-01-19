@@ -3,13 +3,13 @@ part of 'readers_bloc.dart';
 enum ReadersStatus {
   initial,
   done,
-  currentlyConnectedReaderUpdated,
+  currentlyAttachedReaderUpdated,
 }
 
 class ReadersState extends Equatable {
   ReadersState({
     this.stateStatus,
-    this.currentlyConnectedReadersList,
+    this.currentlyAttachedReadersList,
   });
 
   ReadersState.initial()
@@ -18,21 +18,21 @@ class ReadersState extends Equatable {
   );
 
 final ReadersStatus? stateStatus;
-final List<Reader>? currentlyConnectedReadersList;
+final List<Reader>? currentlyAttachedReadersList;
 
   @override
   List<Object?> get props => [
     stateStatus,
-    currentlyConnectedReadersList,
+    currentlyAttachedReadersList,
   ];
 
   ReadersState copyWith({
     ReadersStatus? stateStatus,
-    List<Reader>? currentlyConnectedReadersList,
+    List<Reader>? currentlyAttachedReadersList,
   }) {
     return ReadersState (
       stateStatus: stateStatus ?? this.stateStatus,
-      currentlyConnectedReadersList: currentlyConnectedReadersList,
+      currentlyAttachedReadersList: currentlyAttachedReadersList,
     );
   }
 }

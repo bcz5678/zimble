@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:reader_client/reader_client.dart';
 
 class NetworkReader extends Equatable{
   const NetworkReader ({
@@ -9,7 +10,7 @@ class NetworkReader extends Equatable{
     this.imageStub,
     this.connectionStatus,
     this.readerDetails,
-    this.triggerStatus,
+    this.triggerSettings,
   });
 
   /// The current reader's name
@@ -31,10 +32,10 @@ class NetworkReader extends Equatable{
   final bool? connectionStatus;
 
   /// The current reader details
-  final Map<String, dynamic>? readerDetails;
+  final ReaderDetails? readerDetails;
 
   /// The current reader details
-  final Map<String, dynamic>? triggerStatus;
+  final TriggerSettings? triggerSettings;
 
   @override
   List<Object?> get props =>[
@@ -45,6 +46,6 @@ class NetworkReader extends Equatable{
     imageStub,
     connectionStatus,
     readerDetails,
-    triggerStatus,
+    triggerSettings,
   ];
 }

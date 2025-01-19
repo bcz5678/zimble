@@ -98,17 +98,17 @@ class ReaderRepository {
   final _usbDeviceClient  = UsbDeviceClient();
   final _networkDeviceClient = NetworkDeviceClient();
 
-  final _currentlyConnectedReadersListController = BehaviorSubject<List<Reader>>.seeded([]);
+  final _currentlyAttachedReadersListController = BehaviorSubject<List<Reader>>.seeded([]);
   final _sensorStreamsController = BehaviorSubject<List<SensorData>>.seeded([]);
   final _bluetoothScannedDevicesListController = BehaviorSubject<List<BluetoothDevice>>.seeded([]);
 
 
-  Stream<List<Reader>> get currentlyConnectedReadersList {
+  BehaviorSubject<List<Reader>> get currentlyAttachedReadersList {
     // [DEBUG TEST]
     if (kDebugMode) {
-      print('reader_repository -> get currentlyConnectedReadersList -> Entry');
+      print('reader_repository -> get currentlyAttachedReadersList -> Entry');
     }
-      return _currentlyConnectedReadersListController.stream;
+      return _currentlyAttachedReadersListController;
   }
 
 
@@ -272,7 +272,7 @@ class ReaderRepository {
   /// Send the command to connect to a Bluetooth device
   ///
   /// Throws a [connectToBluetoothDeviceFailure] if an exception occurs.
-  Future<BluetoothDevice> connectToBluetoothDevice(BluetoothDevice bluetoothDevice) async {
+  Future<bool> connectToBluetoothDevice(BluetoothDevice bluetoothDevice) async {
     // [DEBUG TEST]
     if (kDebugMode) {
       print('reader_repository -> connectToBluetoothDevices -> Entry');
@@ -282,24 +282,25 @@ class ReaderRepository {
         await _bluetoothDeviceClient.connectToBluetoothDevice(bluetoothDevice);
 
       if (kDebugMode) {
-        print('reader_repository -> connectToBluetoothDevice -> bluetoothDeviceToReturn - $bluetoothDeviceToReturn');
+        print(
+            'reader_repository -> connectToBluetoothDevice -> bluetoothDeviceToReturn - $bluetoothDeviceToReturn');
       }
 
-      ///[ANCHOR]
-      return BluetoothDevice();
-      /*
-      if(bluetoothDeviceToReturn.macAddress != null) {
-        addConnectedReader(
-            Reader.fromBluetoothDevice(
-                bluetoothDevice: bluetoothDeviceToReturn,
-            ),
+      if(bluetoothDeviceToReturn.macAddress != null
+        && bluetoothDeviceToReturn.connectionStatus == true) {
+
+        var newlyConnectedReader = Reader.fromBluetoothReader(
+          bluetoothReader: bluetoothDeviceToReturn,
         );
+
+        addConnectedReader(newlyConnectedReader);
+
+        return true;
+
+      } else {
+
+        return false;
       }
-
-      return Reader.fromBluetoothDevice(bluetoothDevice: bluetoothDeviceToReturn);
-
-       */
-
     } on ConnectToBluetoothDeviceFailure {
       rethrow;
     } catch (error, stackTrace) {
@@ -310,8 +311,40 @@ class ReaderRepository {
     }
   }
 
+  /// Send the command to disconnect from a Bluetooth device
+  ///
+  /// Throws a [disconnectFromBluetoothDeviceFailure] if an exception occurs.
+  Future<BluetoothDevice> disconnectFromBluetoothDevice(BluetoothDevice bluetoothDevice) async {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> disconnectFromBluetoothDevice -> Entry');
+    }
+    try {
+
+      final disconnectFromBluetoothReaderResult = await _bluetoothDeviceClient.disconnectFromBluetoothDevice(bluetoothDevice);
+
+      if (kDebugMode) {
+        print('reader_repository -> disconnectFromBluetoothDevice -> ${disconnectFromBluetoothReaderResult}');
+      }
+
+      if(disconnectFromBluetoothReaderResult.connectionStatus == null) {
+        removeConnectedReader(bluetoothDevice);
+      }
+
+      return disconnectFromBluetoothReaderResult;
+
+    } on DisconnectFromBluetoothDeviceFailure {
+      rethrow;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(
+          DisconnectFromBluetoothDeviceFailure(error),
+          stackTrace
+      );
+    }
+  }
+
   /// Adds any newly connected Reader to the
-  /// _currentlyConnectedReaders Stream for the getter
+  /// _currentlyAttachedReaders Stream for the getter
   void addConnectedReader(Reader reader) {
     // [DEBUG TEST]
     if (kDebugMode) {
@@ -319,13 +352,13 @@ class ReaderRepository {
     }
 
     try {
-      final newCurrentlyConnectedReadersList =
+      final newCurrentlyAttachedReadersList =
       List<Reader>
-          .from(_currentlyConnectedReadersListController.value)
+          .from(_currentlyAttachedReadersListController.value)
         ..add(reader);
 
-      _currentlyConnectedReadersListController
-          .add(newCurrentlyConnectedReadersList);
+      _currentlyAttachedReadersListController
+          .add(newCurrentlyAttachedReadersList);
 
     } on AddConnectedReaderFailure {
       rethrow;
@@ -338,21 +371,36 @@ class ReaderRepository {
   }
 
   /// Removes Disconnected Reader from the
-  /// _currentlyConnectedReaders Stream for the getter
-  void removeConnectedReader(Reader reader) {
+  /// _currentlyAttachedReaders Stream for the getter
+  void removeConnectedReader(BluetoothDevice device) {
     // [DEBUG TEST]
     if (kDebugMode) {
       print('reader_repository -> removeConnectedReader -> Entry');
     }
 
     try {
-      final newCurrentlyConnectedReadersList =
-      List<Reader>
-          .from(_currentlyConnectedReadersListController.value)
-        ..remove(reader);
+      var tempcurrentlyAttachedReadersList = List<Reader>.from(_currentlyAttachedReadersListController.value);
+      late List<Reader> newcurrentlyAttachedReadersList = [];
 
-      _currentlyConnectedReadersListController
-          .add(newCurrentlyConnectedReadersList);
+      if(kDebugMode) {
+        print('reader_repository -> removeConnectedReader -> tempcurrentlyAttachedReadersList - ${tempcurrentlyAttachedReadersList}');
+        print('reader_repository -> removeConnectedReader -> tempcurrentlyAttachedReadersList - ${tempcurrentlyAttachedReadersList.length}');
+      }
+
+      if (tempcurrentlyAttachedReadersList.isNotEmpty) {
+        for (final reader in tempcurrentlyAttachedReadersList) {
+          if (device.macAddress != reader.macAddress) {
+            newcurrentlyAttachedReadersList.add(reader);
+          }
+        }
+
+        if (kDebugMode) {
+          print('reader_repository -> removeConnectedReader -> newcurrentlyAttachedReadersList - ${newcurrentlyAttachedReadersList}');
+        }
+
+        _currentlyAttachedReadersListController
+            .add(newcurrentlyAttachedReadersList);
+      }
 
     } on RemoveConnectedReaderFailure {
       rethrow;
@@ -364,26 +412,6 @@ class ReaderRepository {
     }
   }
 
-
-  /// Send the command to disconnect from a Bluetooth device
-  ///
-  /// Throws a [disconnectFromBluetoothDeviceFailure] if an exception occurs.
-  Future<BluetoothDevice> disconnectFromBluetoothDevice(BluetoothDevice bluetoothDevice) async {
-    // [DEBUG TEST]
-    if (kDebugMode) {
-      print('reader_repository -> disconnectFromBluetoothDevice -> Entry');
-    }
-    try {
-      return await _bluetoothDeviceClient.disconnectFromBluetoothDevice();
-    } on DisconnectFromBluetoothDeviceFailure {
-      rethrow;
-    } catch (error, stackTrace) {
-      Error.throwWithStackTrace(
-          DisconnectFromBluetoothDeviceFailure(error),
-          stackTrace
-      );
-    }
-  }
 
   /// Send command to start Sensor Streams and set stream subscription
   ///
@@ -424,6 +452,4 @@ class ReaderRepository {
       );
     }
   }
-
-
 }

@@ -30,6 +30,18 @@
         "type": "String",
         "placeholders": {}
     },
+    "readersCurrentTabAttached": "Currently Attached Readers",
+    "@readersCurrentTabAttached": {
+        "description": "Tab Label for Currently Attached Readers",
+        "type": "String",
+        "placeholders": {}
+    },
+    "readersCurrentTabSensors": "Sensor Data",
+    "@readersCurrentTabSensors": {
+        "description": "Tab Label for Sensor Data",
+        "type": "String",
+        "placeholders": {}
+    },
     "readersConnectTabPairedDevices": "Paired Devices",
     "@readersConnectTabPairedDevices": {
         "description": "Tab Label for Paired Devices",

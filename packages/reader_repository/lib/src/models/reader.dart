@@ -10,12 +10,11 @@ class Reader extends Equatable{
     this.readerType,
     this.name,
     this.connectionStatus,
-    this.modelNumber,
     this.macAddress,
     this.ipAddress,
     this.imageStub,
     this.readerDetails,
-    this.triggerStatus,
+    this.triggerSettings,
   });
 
   /// The current reader's type (BT, USB, networked)
@@ -26,9 +25,6 @@ class Reader extends Equatable{
 
   /// The current reader's serial number
   final String? serialNumber;
-
-  /// The current reader's rfid model
-  final String? modelNumber;
 
   /// The current Bluetooth/LAN reader's macAddress
   final String? macAddress;
@@ -43,10 +39,10 @@ class Reader extends Equatable{
   final bool? connectionStatus;
 
   /// The current reader details
-  final Map<String, dynamic>? readerDetails;
+  final ReaderDetails? readerDetails;
 
-  /// The current reader details
-  final Map<String, dynamic>? triggerStatus;
+  /// The current reader trigger settings
+  final TriggerSettings? triggerSettings;
 
 
   factory Reader.fromJson(Map<String, dynamic> data) {
@@ -54,12 +50,11 @@ class Reader extends Equatable{
       serialNumber: data['serial_number'] as String,
       readerType: data['readerType'] as ReaderType,
       name: data['display_name'] as String,
-      modelNumber: data['model_number'] as String,
       macAddress:  data['address'] as String,
       imageStub: data['image_stub'] as String,
       connectionStatus: data['connectionStatus'] as bool,
-      readerDetails: data['readerDetails'] as Map<String, dynamic>?,
-      triggerStatus: data['triggerStatus'] as Map<String, dynamic>?,
+      readerDetails: ReaderDetails.fromJson(data['readerDetails'] as String),
+      triggerSettings: TriggerSettings.fromJson(data['triggerStatus'] as String),
     );
   }
 
@@ -71,12 +66,11 @@ class Reader extends Equatable{
       serialNumber: bluetoothReader.serialNumber,
       readerType: ReaderType.bluetooth,
       name: bluetoothReader.name,
-      modelNumber: bluetoothReader.modelNumber,
       macAddress: bluetoothReader.macAddress,
       imageStub: bluetoothReader.imageStub,
       connectionStatus: bluetoothReader.connectionStatus,
       readerDetails: bluetoothReader.readerDetails,
-      triggerStatus: bluetoothReader.triggerStatus,
+      triggerSettings: bluetoothReader.triggerSettings,
     );
 
   @override
@@ -84,13 +78,12 @@ class Reader extends Equatable{
     serialNumber,
     readerType,
     name,
-    modelNumber,
     macAddress,
     ipAddress,
     connectionStatus,
     imageStub,
     readerDetails,
-    triggerStatus
+    triggerSettings,
   ];
 }
 

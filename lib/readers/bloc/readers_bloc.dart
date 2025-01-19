@@ -16,50 +16,49 @@ class ReadersBloc extends Bloc<ReadersEvent, ReadersState> {
 })
   : _readerRepository = readerRepository,
     super(ReadersState.initial()) {
-      on<GetCurrentlyConnectedReadersList> (onGetCurrentlyConnectedReadersList);
-      on<CurrentlyConnectedReadersListChanged> (onCurrentlyConnectedReadersListChanged);
+      on<GetcurrentlyAttachedReadersList> (onGetcurrentlyAttachedReadersList);
+      on<currentlyAttachedReadersListChanged> (oncurrentlyAttachedReadersListChanged);
 
-      _currentlyConnectedReadersSubscription =
-          _readerRepository.currentlyConnectedReadersList
+      _currentlyAttachedReadersSubscription =
+          _readerRepository.currentlyAttachedReadersList
             .handleError(onError)
-            .listen((readers) => add(CurrentlyConnectedReadersListChanged(readers)));
+            .listen((readers) => add(currentlyAttachedReadersListChanged(readers)));
    }
 
   final ReaderRepository _readerRepository;
 
-  late StreamSubscription<List<Reader>> _currentlyConnectedReadersSubscription;
+  late StreamSubscription<List<Reader>> _currentlyAttachedReadersSubscription;
 
-  Future<void> onGetCurrentlyConnectedReadersList(
-    GetCurrentlyConnectedReadersList event,
+  Future<void> onGetcurrentlyAttachedReadersList(
+    GetcurrentlyAttachedReadersList event,
     Emitter<ReadersState> emit,
     ) async {
 
-    final currentlyConnectedReadersListResponse =
-      await _readerRepository.currentlyConnectedReadersList.last;
+    final currentlyAttachedReadersListResponse =
+      await _readerRepository.currentlyAttachedReadersList.last;
 
     emit(state.copyWith(
       stateStatus: ReadersStatus.done,
-      currentlyConnectedReadersList: currentlyConnectedReadersListResponse,
+      currentlyAttachedReadersList: currentlyAttachedReadersListResponse,
       ),
     );
   }
 
 
-  void onCurrentlyConnectedReadersListChanged (
-        CurrentlyConnectedReadersListChanged event,
+  void oncurrentlyAttachedReadersListChanged (
+        currentlyAttachedReadersListChanged event,
         Emitter<ReadersState> emit,
       ){
 
       emit(state.copyWith(
         stateStatus: ReadersStatus.done,
-        currentlyConnectedReadersList: event.currentlyConnectedReadersList,
+        currentlyAttachedReadersList: event.currentlyAttachedReadersList,
         ),
      );
   }
 
   @override
   Future<void> close() async {
-    _currentlyConnectedReadersSubscription.cancel();
     super.close();
   }
 }

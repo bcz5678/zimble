@@ -33,10 +33,10 @@ class BluetoothDevice extends Equatable {
 
   factory BluetoothDevice.fromMessageData(Map<String, dynamic> data) {
     return BluetoothDevice(
-      macAddress: data["address"] as String,
-      name: data["name"] as String,
-      serialNumber: data['serial_number'] as String,
-      connectionStatus: data["connectionStatus"] as bool,
+      macAddress: data["address"] != null ? data["address"] as String : null,
+      name: data["name"] != null ? data["name"] as String : null,
+      serialNumber: data['serial_number'] != null ? data['serial_number'] as String : null,
+      connectionStatus: data["connectionStatus"] != null ? data["connectionStatus"] as bool : null,
     );
   }
 

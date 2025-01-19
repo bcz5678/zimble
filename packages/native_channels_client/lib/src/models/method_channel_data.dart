@@ -4,8 +4,8 @@ class MethodChannelData {
   final Map<String, dynamic> data;
 
   MethodChannelData(
-      this.data
-      );
+      this.data,
+  );
 
   Map<String, dynamic> encodeSendMap() {
     late Map<String, dynamic> methodChannelDataMap = {};
@@ -21,4 +21,5 @@ class MethodChannelData {
 
     return methodChannelDataMap;
   }
+
 }

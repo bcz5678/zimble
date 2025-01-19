@@ -17,7 +17,7 @@ class ConnectDeviceListItem extends StatelessWidget {
   });
 
   final BluetoothDevice device;
-  late bool isDeviceCurrentlyConnected;
+  late bool isDevicecurrentlyAttached;
 
   bool isDeviceMACAddressInReaderList(BluetoothDevice device, List<Reader> listOfReaders) {
     var readerMatchToReturn = listOfReaders.where(
@@ -34,9 +34,9 @@ class ConnectDeviceListItem extends StatelessWidget {
     return BlocBuilder<ReadersConnectBloc, ReadersConnectState>(
       builder: (context, state) {
 
-        isDeviceCurrentlyConnected = isDeviceMACAddressInReaderList(
+        isDevicecurrentlyAttached = isDeviceMACAddressInReaderList(
             device,
-            context.select((ReadersBloc bloc) => bloc.state.currentlyConnectedReadersList ?? []
+            context.select((ReadersBloc bloc) => bloc.state.currentlyAttachedReadersList ?? []
             )
         );
 
@@ -51,15 +51,15 @@ class ConnectDeviceListItem extends StatelessWidget {
           trailing: ElevatedButton(
             child: Builder(
               builder: (context) {
-                if (state.stateStatus == ReadersConnectStatus.connectToDeviceStatusInProgress
+                if (state.stateStatus == ReadersConnectStatus.connectionStatusInProgress
                     && state.selectedBluetoothDevice!.macAddress == device.macAddress
                 ) {
                   /// Adds Circular Loading indicator to button that is pressed
                   /// while the device tries to connect
                   return const CupertinoActivityIndicator();
 
-                } else if (state.stateStatus == ReadersConnectStatus.connectToDeviceStatusUpdate
-                    && isDeviceCurrentlyConnected
+                } else if (state.stateStatus == ReadersConnectStatus.connectionStatusSuccess
+                    && isDevicecurrentlyAttached
                 ) {
                   /// State has a connection Status to update and the
                   /// current reader matches the device to update
@@ -71,7 +71,7 @@ class ConnectDeviceListItem extends StatelessWidget {
               },
             ),
             onPressed: () {
-              if (isDeviceCurrentlyConnected) {
+              if (isDevicecurrentlyAttached) {
                 if(kDebugMode) {
                   print('connect_readers_screen -> onPressed -> disconnect');
 

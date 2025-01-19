@@ -150,10 +150,10 @@ class  AndroidBluetoothController(
         release()
     }
 
-    override fun connectToDevice(device: BluetoothDeviceEntity): String {
+    override fun connectToDevice(device: BluetoothDeviceEntity): Boolean {
         Log.d(TAG, "In ABTC - connectToDevice")
 
-            var connectionStatus: String  = "";
+            var connectionStatus: Boolean  = false;
 
             if(!hasPermission((Manifest.permission.BLUETOOTH_CONNECT))) {
                 throw SecurityException("No BLUETOOTH_CONNECT permission")
@@ -177,22 +177,22 @@ class  AndroidBluetoothController(
                     socket.connect()
                     //emit(ConnectionResult.ConnectionEstablished(device.address))
                     Log.d(TAG, "Connection Established")
-                    connectionStatus = "isConnected"
+                    connectionStatus = true
                 } catch (e: IOException) {
                     socket.close()
                     currentClientSocket = null
                     //emit(ConnectionResult.Error("Connection was interrupted"))
                     Log.d(TAG, "Connection Error")
-                    connectionStatus =  "notConnected"
+                    connectionStatus =  false
                 }
             }
 
         return connectionStatus
     }
 
-    override fun disconnectFromDevice(device: BluetoothDeviceEntity): String {
+    override fun disconnectFromDevice(device: BluetoothDeviceEntity): Boolean {
         closeConnection()
-        return "notConnected"
+        return true
     }
 
 

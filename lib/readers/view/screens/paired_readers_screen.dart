@@ -88,9 +88,11 @@ class _PairedReadersScreenState extends State<PairedReadersScreen> with Automati
             }
             if ([ReadersConnectStatus.pairedDone,
                 ReadersConnectStatus.pairedBluetoothDevicesUpdated,
-                ReadersConnectStatus.connectToDeviceStatusInProgress,
-                ReadersConnectStatus.connectToDeviceStatusUpdate]
-                  .contains(state.stateStatus)
+                ReadersConnectStatus.connectionStatusInProgress,
+                ReadersConnectStatus.connectionStatusSuccess,
+                ReadersConnectStatus.connectionStatusFailed,
+                ]
+                .contains(state.stateStatus)
             ) {
               if (state.bluetoothPairedDevicesList != null) {
                 return SliverList(

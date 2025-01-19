@@ -90,8 +90,9 @@ class _ScanReadersScreenState extends State<ScanReadersScreen>  with AutomaticKe
             } else
             if ([ ReadersConnectStatus.scannedDone,
                   ReadersConnectStatus.scannedBluetoothDevicesUpdated,
-                  ReadersConnectStatus.connectToDeviceStatusInProgress,
-                  ReadersConnectStatus.connectToDeviceStatusUpdate,
+                  ReadersConnectStatus.connectionStatusInProgress,
+                  ReadersConnectStatus.connectionStatusSuccess,
+                  ReadersConnectStatus.connectionStatusFailed,
                 ].contains(state.stateStatus)) {
               if (state.bluetoothScannedDevicesList!.isNotEmpty) {
                 return SliverList(
@@ -103,6 +104,10 @@ class _ScanReadersScreenState extends State<ScanReadersScreen>  with AutomaticKe
                     },
                       childCount: state.bluetoothScannedDevicesList!.length,
                   )
+                );
+              } else {
+                return SliverToBoxAdapter(
+                  child: SizedBox(),
                 );
               }
             }

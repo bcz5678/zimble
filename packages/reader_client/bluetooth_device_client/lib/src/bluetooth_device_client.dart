@@ -230,38 +230,72 @@ class BluetoothDeviceClient {
       //format data to pass through method channel
       var data = MethodChannelData(device.toJson()).encodeSendMap();
 
-      final connectToBluetoothDeviceResult =
-      await btDevicesMethodChannel
-          .invokeMapMethod("connectToBluetoothDevice", data);
+      final  connectToBluetoothDeviceResultMap = await btDevicesMethodChannel.invokeMapMethod('connectToBluetoothDevice', data);
 
-      if (kDebugMode) {
-        print(
-            'bluetooth_Device_client -> connectToBluetoothDevice -> connectToBluetoothDeviceResult - $connectToBluetoothDeviceResult');
+      //Parse messageData is messageSuccess is true
+      if (connectToBluetoothDeviceResultMap?["messageSuccess"] == "true") {
+
+        //parse messageData JSON
+        var jsonMessageData = json.decode(connectToBluetoothDeviceResultMap!["messageData"].toString()) as Map<String, dynamic>;
+
+        //Build BluetoothDeviceModel if returned correctly
+        if( jsonMessageData.containsKey("bluetoothDeviceEntity")) {
+
+          var connectionUpdateBluetoothDeviceResult = BluetoothReader.fromMessageData(jsonMessageData);
+          return connectionUpdateBluetoothDeviceResult;
+        } else {
+          throw Exception("bluetoothDeviceEntity not found");
+        }
+      } else if (connectToBluetoothDeviceResultMap?["messageSuccess"] == "false") {
+        throw Exception("messageSend Fail");
       }
-
-
-      /// [ANCHOR]
-      return BluetoothReader.fromMessageData(connectToBluetoothDeviceResult["messageData"]);
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(
           ConnectToBluetoothDeviceFailure(error), stackTrace);
     }
+    return Future.error("Unknown error");
   }
 
   /// Sends the command to device to disconnect from a specific bluetooth device
-  Future<BluetoothDevice> disconnectFromBluetoothDevice() async {
+  Future<BluetoothDevice> disconnectFromBluetoothDevice(BluetoothDevice device) async {
     try {
       if (kDebugMode) {
         print(
             'bluetooth_Device_client -> disconnectFromBluetoothDevice -> Entry');
       }
 
-      /// [TODO]
-      return BluetoothDevice();
+      //format data to pass through method channel
+      var data = MethodChannelData(device.toJson()).encodeSendMap();
+
+      final  disconnectFromBluetoothDeviceResultMap = await btDevicesMethodChannel.invokeMapMethod('disconnectFromBluetoothDevice', data);
+
+      //Parse messageData is messageSuccess is true
+      if (disconnectFromBluetoothDeviceResultMap?["messageSuccess"] == "true") {
+
+        //parse messageData JSON
+        var jsonMessageData = json.decode(disconnectFromBluetoothDeviceResultMap!["messageData"].toString()) as Map<String, dynamic>;
+
+        if (kDebugMode) {
+          print(
+              'bluetooth_Device_client -> disconnectFromBluetoothDevice -> jsonMessageData - ${jsonMessageData}');
+        }
+
+        //Build BluetoothDeviceModel if returned correctly
+        if( jsonMessageData.containsKey("bluetoothDeviceEntity")) {
+
+          var connectionUpdateBluetoothDeviceResult = BluetoothDevice.fromMessageData(jsonMessageData);
+          return connectionUpdateBluetoothDeviceResult;
+        } else {
+          throw Exception("bluetoothDeviceEntity not found");
+        }
+      } else if (disconnectFromBluetoothDeviceResultMap ?["messageSuccess"] == "false") {
+        throw Exception("messageSend Fail");
+      }
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(
-          DisconnectFromBluetoothDeviceFailure(error), stackTrace);
+          ConnectToBluetoothDeviceFailure(error), stackTrace);
     }
+    return Future.error("Unknown error");
   }
 }
 

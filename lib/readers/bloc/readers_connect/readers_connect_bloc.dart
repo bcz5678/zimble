@@ -29,7 +29,7 @@ class ReadersConnectBloc extends Bloc<ReadersConnectEvent, ReadersConnectState> 
   /// to handle changes to the bluetooth list
   final ReaderRepository _readerRepository;
 
-  late StreamSubscription<List<Reader>> _currentlyConnectedReadersList;
+  late StreamSubscription<List<Reader>> _currentlyAttachedReadersList;
 
 
   void onGetPairedBluetoothDevices(
@@ -116,7 +116,7 @@ class ReadersConnectBloc extends Bloc<ReadersConnectEvent, ReadersConnectState> 
       ) async {
 
     emit(state.copyWith(
-      stateStatus: ReadersConnectStatus.connectToDeviceStatusInProgress,
+      stateStatus: ReadersConnectStatus.connectionStatusInProgress,
       //bluetoothPairedDevicesList: state.bluetoothPairedDevicesList,
       selectedBluetoothDevice: event.device,
 
@@ -125,10 +125,15 @@ class ReadersConnectBloc extends Bloc<ReadersConnectEvent, ReadersConnectState> 
     final deviceConnectBluetoothResponse =
     await _readerRepository.connectToBluetoothDevice(event.device);
 
-    emit(state.copyWith(
-      stateStatus: ReadersConnectStatus.connectToDeviceStatusUpdate,
-      selectedBluetoothDevice: deviceConnectBluetoothResponse,
-    ));
+    if (deviceConnectBluetoothResponse == true) {
+      emit(state.copyWith(
+        stateStatus: ReadersConnectStatus.connectionStatusSuccess,
+      ));
+    } else {
+      emit(state.copyWith(
+        stateStatus: ReadersConnectStatus.connectionStatusFailed,
+      ));
+    }
   }
 
   void onDisconnectFromBluetoothDevice(
@@ -137,7 +142,7 @@ class ReadersConnectBloc extends Bloc<ReadersConnectEvent, ReadersConnectState> 
       ) async {
 
     emit(state.copyWith(
-      stateStatus: ReadersConnectStatus.connectToDeviceStatusInProgress,
+      stateStatus: ReadersConnectStatus.connectionStatusInProgress,
       selectedBluetoothDevice: event.device,
     ),
     );
@@ -145,9 +150,18 @@ class ReadersConnectBloc extends Bloc<ReadersConnectEvent, ReadersConnectState> 
     final deviceConnectBluetoothResponse =
     await _readerRepository.disconnectFromBluetoothDevice(event.device);
 
-    emit(state.copyWith(
-        stateStatus: ReadersConnectStatus.connectToDeviceStatusUpdate,
-        selectedBluetoothDevice: deviceConnectBluetoothResponse,
-    ));
+    if (kDebugMode) {
+      print('readers_connect_bluetooth_scanned_bloc -> onDisconnectFromBluetoothDevice -> Response ${deviceConnectBluetoothResponse}');
+    }
+
+    if (deviceConnectBluetoothResponse == true) {
+      emit(state.copyWith(
+        stateStatus: ReadersConnectStatus.connectionStatusSuccess,
+      ));
+    } else {
+      emit(state.copyWith(
+        stateStatus: ReadersConnectStatus.connectionStatusFailed,
+      ));
+    }
   }
 }

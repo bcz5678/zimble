@@ -141,15 +141,15 @@ class BluetoothDeviceChannels(context: Context, messenger: BinaryMessenger) {
                                 }.await()
                             } else {
 
-                                // If device form MethodCall is NOT in pairedDevices, start Native connection/pair to device
-                                var nativeConnectionResult: String = async {
+                                // If device forom MethodCall is NOT in pairedDevices, start Native connection/pair to device
+                                var nativeConnectionResult: Boolean = async {
                                     Log.d(TAG, "connecting scanned device through native")
                                     _androidBluetoothController.connectToDevice(bluetoothDeviceToConnect)
                                 }.await()
 
                                 //If native connection/pair success, disconnect native
-                                if (nativeConnectionResult == "isConnected") {
-                                    var nativeDisconnectionResult: String = async {
+                                if (nativeConnectionResult == true) {
+                                    var nativeDisconnectionResult: Boolean = async {
                                         Log.d(TAG, "disconnecting BT device from native")
                                         _androidBluetoothController.disconnectFromDevice(
                                             bluetoothDeviceToConnect
@@ -157,7 +157,7 @@ class BluetoothDeviceChannels(context: Context, messenger: BinaryMessenger) {
                                     }.await()
 
                                     //if native connection disconnected, start ReaderSDK connection to device
-                                    if (nativeDisconnectionResult == "notConnected") {
+                                    if (nativeDisconnectionResult == false) {
                                         connectionResult = async {
                                             Log.d(TAG, "connecting scanned device through SDK")
                                             _androidReaderController.connectToSDKReader(
@@ -174,7 +174,7 @@ class BluetoothDeviceChannels(context: Context, messenger: BinaryMessenger) {
                             if (connectionResult == true) {
                                 Log.d(TAG, "Connected Reader - ${_androidReaderController.getConnectedReaderName()}")
 
-                                bluetoothDeviceToConnect.connectionStatus = "isConnected"
+                                bluetoothDeviceToConnect.connectionStatus = true
                                 bluetoothDeviceToConnect.readerDetails = _androidReaderController.getReaderDeviceProperties()
                                 //Log.d(TAG, bluetoothDeviceToConnect.readerDetails!!.asMap().toString())
 
@@ -221,10 +221,10 @@ class BluetoothDeviceChannels(context: Context, messenger: BinaryMessenger) {
                                 _androidReaderController.disconnectFromReader(bluetoothDeviceToDisconnect)
                             }.await()
 
-                            Log.d(TAG, "Reader SDK DisConnection Result - ${connectionSDKResult}")
+                            Log.d(TAG, "Reader SDK Disconnection Result - ${connectionSDKResult}")
 
                             //Disconnect Native connection
-                            var connectionNativeResult: String = async {
+                            var connectionNativeResult: Boolean = async {
                                 Log.d(TAG, "Starting disconnection")
                                 _androidBluetoothController.disconnectFromDevice(bluetoothDeviceToDisconnect)
                             }.await()
@@ -232,8 +232,10 @@ class BluetoothDeviceChannels(context: Context, messenger: BinaryMessenger) {
                             Log.d(TAG, "Reader Native DisConnection Result - ${connectionNativeResult}")
 
                             // If SDK and Native disconnect success, return BluetoothDeviceModel disconnected status
-                            if (connectionSDKResult == true && connectionNativeResult == "notConnected") {
-                                bluetoothDeviceToDisconnect.connectionStatus = "notConnected"
+                            if (connectionSDKResult == true && connectionNativeResult == true) {
+                                Log.d(TAG, "In connectionSDKResult and connectionNativeResult success")
+
+                                bluetoothDeviceToDisconnect.connectionStatus = false
                                 bluetoothDeviceToDisconnect.readerDetails = null
                                 bluetoothDeviceToDisconnect.triggerSettings = null
                                 result.success(MethodMapData.create(bluetoothDeviceToDisconnect.toMessageMap()))

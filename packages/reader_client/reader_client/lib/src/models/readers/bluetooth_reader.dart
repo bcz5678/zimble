@@ -1,18 +1,20 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'reader_details.dart';
-import 'trigger_details.dart';
+import 'trigger_settings.dart';
 
 
 class BluetoothReader extends Equatable{
   const BluetoothReader ({
     this.name,
     this.serialNumber,
-    this.modelNumber,
     this.macAddress,
     this.imageStub,
     this.connectionStatus,
     this.readerDetails,
-    this.triggerStatus,
+    this.triggerSettings,
   });
 
   /// The current reader's name
@@ -21,12 +23,8 @@ class BluetoothReader extends Equatable{
   /// The current reader's serial number
   final String? serialNumber;
 
-  /// The current reader's rfid model
-  final String? modelNumber;
-
   /// The current reader's MAC Address
   final String? macAddress;
-
 
   /// The current reader's display image
   final String? imageStub;
@@ -38,19 +36,18 @@ class BluetoothReader extends Equatable{
   final ReaderDetails? readerDetails;
 
   /// The current reader details
-  final TriggerDetails? triggerStatus;
+  final TriggerSettings? triggerSettings;
 
   factory BluetoothReader.fromMessageData(Map<String, dynamic> messageData) {
-    final result = messageData['bluetoothDeviceEntity'] as Map<String, dynamic>;
+    final result = messageData['bluetoothDeviceEntity'];
     return BluetoothReader(
-      name: result['name'] as String,
-      serialNumber: result['serialNumber'] as String,
-      macAddress: result['adddress'] as String,
-      imageStub: result['imageStub'] as String,
-      connectionStatus: result['connectionStatus'] as bool,
-      readerDetails: ReaderDetails.fromJson(result['readerDetails'] as Map<String, dynamic>),
-      triggerStatus: TriggerDetails.fromJson(result['triggerDetails']as Map<String, dynamic>),
-
+      name: result['name'] != null ? result['name']as String : null,
+      serialNumber: result['serialNumber'] != null ? result['serialNumber'] as String : null,
+      macAddress: result['address'] != null ? result['address'] as String : null,
+      imageStub: result['imageStub'] != null ? result['imageStub'] as String : null,
+      connectionStatus: result['connectionStatus'] != null ?  result['connectionStatus'] as bool : false,
+      readerDetails: result['readerDetails'] != null ? ReaderDetails.fromJson(result['readerDetails'].toString()) : null,
+      triggerSettings: result['triggerSettings'] != null ? TriggerSettings.fromJson(result['triggerSettings'].toString()) : null,
     );
   }
 
@@ -58,11 +55,10 @@ class BluetoothReader extends Equatable{
   List<Object?> get props =>[
     name,
     serialNumber,
-    modelNumber,
     macAddress,
     imageStub,
     connectionStatus,
     readerDetails,
-    triggerStatus,
+    triggerSettings,
   ];
 }

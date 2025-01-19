@@ -6,14 +6,3 @@ abstract class ReadersCurrentEvent extends Equatable{
   @override
   List<Object> get props => [];
 }
-
-
-//Previously Paired SubTab
-class StartSensorStream extends ReadersCurrentEvent {
-  const StartSensorStream();
-}
-
-//Previously Paired SubTab
-class StopSensorStream extends ReadersCurrentEvent {
-  const StopSensorStream();
-}

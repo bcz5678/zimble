@@ -12,9 +12,9 @@ interface BluetoothController {
 
     //fun startBluetoothServer(): Flow<ConnectionResult>
 
-    fun connectToDevice(device: BluetoothDeviceEntity): String
+    fun connectToDevice(device: BluetoothDeviceEntity): Boolean
 
-    fun disconnectFromDevice(device: BluetoothDeviceEntity): String
+    fun disconnectFromDevice(device: BluetoothDeviceEntity): Boolean
 
     fun closeConnection()
 

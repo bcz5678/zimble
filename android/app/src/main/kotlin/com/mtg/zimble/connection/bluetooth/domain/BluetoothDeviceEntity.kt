@@ -10,7 +10,7 @@ import com.google.gson.Gson
 class BluetoothDeviceEntity(
     var name: String?,
     var address: String,
-    var connectionStatus: String?,
+    var connectionStatus: Boolean?,
     var readerDetails: ReaderDevicePropertiesData?,
     var triggerSettings: ReaderTriggerSettingsData?,
 ) {
@@ -63,7 +63,7 @@ class BluetoothDeviceEntity(
             return BluetoothDeviceEntity(
                 name = jsonData["name"] as String?,
                 address = jsonData["macAddress"] as String,
-                connectionStatus = jsonData["connectionStatus"] as String?,
+                connectionStatus = jsonData["connectionStatus"] as Boolean?,
                 readerDetails = jsonData["readerDetails"] as ReaderDevicePropertiesData?,
                 triggerSettings = jsonData["triggerSettings"] as ReaderTriggerSettingsData?,
             )
