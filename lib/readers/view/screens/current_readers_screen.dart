@@ -56,11 +56,6 @@ class _CurrentReadersScreenState extends State<CurrentReadersScreen>
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ReadersBloc>(
-          create: (_) => ReadersBloc(
-            readerRepository: _readerRepository,
-          ),
-        ),
         BlocProvider<ReadersCurrentBloc>(
           create: (_) => ReadersCurrentBloc(
             readerRepository: _readerRepository,

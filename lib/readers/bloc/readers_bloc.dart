@@ -22,7 +22,14 @@ class ReadersBloc extends Bloc<ReadersEvent, ReadersState> {
       _currentlyAttachedReadersSubscription =
           _readerRepository.currentlyAttachedReadersList
             .handleError(onError)
-            .listen((readers) => add(currentlyAttachedReadersListChanged(readers)));
+            .listen((newReadersList) {
+
+              if(kDebugMode) {
+                print('readers_bloc - inSubscription - ${newReadersList}');
+              }
+
+              add(currentlyAttachedReadersListChanged(newReadersList));
+            });
    }
 
   final ReaderRepository _readerRepository;
@@ -44,14 +51,13 @@ class ReadersBloc extends Bloc<ReadersEvent, ReadersState> {
     );
   }
 
-
   void oncurrentlyAttachedReadersListChanged (
         currentlyAttachedReadersListChanged event,
         Emitter<ReadersState> emit,
       ){
 
       emit(state.copyWith(
-        stateStatus: ReadersStatus.done,
+        stateStatus: ReadersStatus.currentlyAttachedReaderUpdated,
         currentlyAttachedReadersList: event.currentlyAttachedReadersList,
         ),
      );

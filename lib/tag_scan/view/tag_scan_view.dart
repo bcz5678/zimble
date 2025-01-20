@@ -6,14 +6,14 @@ import 'package:zimble/login/view/login_modal.dart';
 import 'package:zimble/navigation/navigation.dart';
 import 'package:zimble/user_profile/user_profile.dart';
 
-class TagInfoView extends StatefulWidget {
-  const TagInfoView({super.key});
+class TagScanView extends StatefulWidget {
+  const TagScanView({super.key});
 
   @override
-  State<TagInfoView> createState() => _TagInfoViewState();
+  State<TagScanView> createState() => _TagScanViewState();
 }
 
-class _TagInfoViewState extends State<TagInfoView> {
+class _TagScanViewState extends State<TagScanView> {
   double? scrolledUnderElevation;
   bool shadowColor = false;
 
@@ -34,7 +34,7 @@ class _TagInfoViewState extends State<TagInfoView> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppRoutes.tagInfo.title ?? 'Tag Info'),
+          title: Text(AppRoutes.tagScan.title ?? 'Tag Scan'),
           titleTextStyle: UITextStyle.headline1,
           scrolledUnderElevation: scrolledUnderElevation,
           centerTitle: true,

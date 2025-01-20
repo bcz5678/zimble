@@ -58,19 +58,11 @@ class _ConnectNewReadersScreenState extends State<ConnectNewReadersScreen>
 
     late ReaderRepository _readerRepository = context.read<ReaderRepository>();
 
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<ReadersBloc>(
-          create: (_) => ReadersBloc(
-            readerRepository: _readerRepository,
-          ),
+    return
+      BlocProvider<ReadersConnectBloc>(
+        create: (_) => ReadersConnectBloc(
+          readerRepository: _readerRepository,
         ),
-        BlocProvider<ReadersConnectBloc>(
-          create: (_) => ReadersConnectBloc(
-            readerRepository: _readerRepository,
-          ),
-        ),
-      ],
       child: Column(
         children: [
           Container(

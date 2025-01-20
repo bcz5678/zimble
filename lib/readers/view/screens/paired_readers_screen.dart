@@ -31,9 +31,6 @@ class _PairedReadersScreenState extends State<PairedReadersScreen> with Automati
     context.read<ReadersConnectBloc>()
         .add(const GetPairedBluetoothDevices());
 
-    if(kDebugMode) {
-      print('paired_readers_screen -> didChangeDependencies - screen rebuilt');
-    }
   }
   
   

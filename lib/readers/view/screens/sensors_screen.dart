@@ -11,7 +11,10 @@ class SensorsReadersScreen extends StatefulWidget {
   State<SensorsReadersScreen> createState() => _SensorsReadersScreenState();
 }
 
-class _SensorsReadersScreenState extends State<SensorsReadersScreen> {
+class _SensorsReadersScreenState extends State<SensorsReadersScreen>  with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
 
   late ReaderRepository _readerRepository = context.read<ReaderRepository>();
 

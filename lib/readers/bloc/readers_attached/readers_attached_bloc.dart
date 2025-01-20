@@ -12,41 +12,6 @@ part 'readers_attached_state.dart';
 class ReadersAttachedBloc extends Bloc<ReadersAttachedEvent, ReadersAttachedState> {
   ReadersAttachedBloc({
     required ReaderRepository readerRepository
-  }) : super (ReadersAttachedState.initial()) {
+  }) : super (ReadersAttachedState.initial());
 
-    on<CurrentlyAttachedReadersListUpdated> (onCurrentlyAttachedReadersListUpdated);
-
-    _currentlyAttachedReadersListSubscription =
-        readerRepository.currentlyAttachedReadersList
-        .handleError(addError)
-        .listen((readersList) {
-          if(kDebugMode) {
-            print('readers_attached_bloc - in subscription listen - readersList - ${readersList}');
-          }
-          add(CurrentlyAttachedReadersListUpdated(readersList));
-        });
-  }
-
-  late StreamSubscription<List<Reader>> _currentlyAttachedReadersListSubscription;
-
-
-  void onCurrentlyAttachedReadersListUpdated (
-    CurrentlyAttachedReadersListUpdated event,
-    Emitter<ReadersAttachedState> emit,
-  ) async {
-    try {
-      if(kDebugMode) {
-        print('readers_attached_bloc - onCurrentlyAttachedReadersListUpdated - readersList - ${event.readersList}');
-      }
-
-      emit(
-        state.copyWith(
-          stateStatus: ReadersAttachedStatus.currentlyAttachedReadersListUpdated,
-          currentlyAttachedReadersList: event.readersList,
-        ),
-      );
-    } catch (error, stackTrace) {
-      print('oncurrentlyattachedreaderslist updated -error - ${error}');
-    }
-  }
 }

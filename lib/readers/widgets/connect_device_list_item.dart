@@ -17,7 +17,7 @@ class ConnectDeviceListItem extends StatelessWidget {
   });
 
   final BluetoothDevice device;
-  late bool isDevicecurrentlyAttached;
+  late bool isDeviceCurrentlyAttached;
 
   bool isDeviceMACAddressInReaderList(BluetoothDevice device, List<Reader> listOfReaders) {
     var readerMatchToReturn = listOfReaders.where(
@@ -34,10 +34,11 @@ class ConnectDeviceListItem extends StatelessWidget {
     return BlocBuilder<ReadersConnectBloc, ReadersConnectState>(
       builder: (context, state) {
 
-        isDevicecurrentlyAttached = isDeviceMACAddressInReaderList(
+        var currentlyAttachedReadersList = context.select((ReadersBloc bloc) => bloc.state.currentlyAttachedReadersList!);
+
+        isDeviceCurrentlyAttached = isDeviceMACAddressInReaderList(
             device,
-            context.select((ReadersBloc bloc) => bloc.state.currentlyAttachedReadersList ?? []
-            )
+            currentlyAttachedReadersList
         );
 
         return ListTile(
@@ -59,7 +60,7 @@ class ConnectDeviceListItem extends StatelessWidget {
                   return const CupertinoActivityIndicator();
 
                 } else if (state.stateStatus == ReadersConnectStatus.connectionStatusSuccess
-                    && isDevicecurrentlyAttached
+                    && isDeviceCurrentlyAttached
                 ) {
                   /// State has a connection Status to update and the
                   /// current reader matches the device to update
@@ -71,7 +72,7 @@ class ConnectDeviceListItem extends StatelessWidget {
               },
             ),
             onPressed: () {
-              if (isDevicecurrentlyAttached) {
+              if (isDeviceCurrentlyAttached) {
                 if(kDebugMode) {
                   print('connect_readers_screen -> onPressed -> disconnect');
 

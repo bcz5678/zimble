@@ -29,7 +29,6 @@ class ReadersConnectBloc extends Bloc<ReadersConnectEvent, ReadersConnectState> 
   /// to handle changes to the bluetooth list
   final ReaderRepository _readerRepository;
 
-  late StreamSubscription<List<Reader>> _currentlyAttachedReadersList;
 
 
   void onGetPairedBluetoothDevices(

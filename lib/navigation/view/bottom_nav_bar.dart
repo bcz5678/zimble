@@ -20,7 +20,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     AppRoutes.inventory,
     AppRoutes.readers,
     AppRoutes.tagFinder,
-    AppRoutes.tagInfo,
+    AppRoutes.tagScan,
     AppRoutes.trigger,
   ];
 

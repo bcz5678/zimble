@@ -68,10 +68,10 @@ class AppRoutes {
     path: '/tag_finder',
     title: 'Tag Finder',
   );
-  static RouteDataModel tagInfo = RouteDataModel(
-    name: 'tagInfo',
-    path: '/tag_info',
-    title: 'Tag Info',
+  static RouteDataModel tagScan = RouteDataModel(
+    name: 'tagScan',
+    path: '/tag_scan',
+    title: 'Tag Scan',
   );
   static RouteDataModel trigger = RouteDataModel(
     name: 'trigger',

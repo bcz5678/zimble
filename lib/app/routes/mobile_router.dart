@@ -13,7 +13,7 @@ import 'package:zimble/login/login.dart';
 import 'package:zimble/navigation/navigation.dart';
 import 'package:zimble/readers/readers.dart';
 import 'package:zimble/tag_finder/tag_finder.dart';
-import 'package:zimble/tag_info/tag_info.dart';
+import 'package:zimble/tag_scan/tag_scan.dart';
 import 'package:zimble/trigger/trigger.dart';
 
 class MobileRouter {
@@ -107,9 +107,9 @@ class MobileRouter {
                     builder: (context, state) => const TagFinderPage(),
                     ),
                     GoRoute(
-                    path: AppRoutes.tagInfo.path,
-                    name: AppRoutes.tagInfo.name,
-                    builder: (context, state) => const TagInfoPage(),
+                    path: AppRoutes.tagScan.path,
+                    name: AppRoutes.tagScan.name,
+                    builder: (context, state) => const TagScanPage(),
                     ),
                     GoRoute(
                     path: AppRoutes.trigger.path,

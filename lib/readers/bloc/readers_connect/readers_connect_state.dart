@@ -23,7 +23,6 @@ class ReadersConnectState {
     this.bluetoothPairedDevicesList,
     this.bluetoothScannedDevicesList,
     this.selectedBluetoothDevice,
-    this.currentlyAttachedReadersList,
   });
 
   const ReadersConnectState.initial()
@@ -36,7 +35,6 @@ class ReadersConnectState {
 
   final List<BluetoothDevice>? bluetoothScannedDevicesList;
   final BluetoothDevice? selectedBluetoothDevice;
-  final List<Reader>? currentlyAttachedReadersList;
 
   @override
   List<Object?> get props => [
@@ -44,7 +42,6 @@ class ReadersConnectState {
     bluetoothPairedDevicesList,
     bluetoothScannedDevicesList,
     selectedBluetoothDevice,
-    currentlyAttachedReadersList,
   ];
 
   ReadersConnectState copyWith({
@@ -52,14 +49,12 @@ class ReadersConnectState {
     List<BluetoothDevice>? bluetoothPairedDevicesList,
     List<BluetoothDevice>? bluetoothScannedDevicesList,
     BluetoothDevice? selectedBluetoothDevice,
-    List<Reader>? currentlyAttachedReadersList,
   }) {
     return ReadersConnectState (
       stateStatus: stateStatus ?? this.stateStatus,
       bluetoothPairedDevicesList: bluetoothPairedDevicesList ?? this.bluetoothPairedDevicesList,
       bluetoothScannedDevicesList: bluetoothScannedDevicesList ?? this.bluetoothScannedDevicesList,
       selectedBluetoothDevice: selectedBluetoothDevice ?? this.selectedBluetoothDevice,
-      currentlyAttachedReadersList: currentlyAttachedReadersList ?? this.currentlyAttachedReadersList,
     );
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reader_repository/reader_repository.dart';
-import 'package:zimble/readers/bloc/readers_attached/readers_attached_bloc.dart';
+import 'package:zimble/readers/readers.dart';
 
 class AttachedReadersScreen extends StatefulWidget {
   const AttachedReadersScreen({super.key});
@@ -11,18 +11,22 @@ class AttachedReadersScreen extends StatefulWidget {
   State<AttachedReadersScreen> createState() => _AttachedReadersScreenState();
 }
 
-class _AttachedReadersScreenState extends State<AttachedReadersScreen> {
+
+class _AttachedReadersScreenState extends State<AttachedReadersScreen>  with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
 
   late ReaderRepository _readerRepository = context.read<ReaderRepository>();
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<ReadersAttachedBloc>(
       create: (context) =>
-          ReadersAttachedBloc(
-            readerRepository: _readerRepository,
-          ),
-      child: AttachedReadersView(),
+        ReadersAttachedBloc(
+          readerRepository: _readerRepository,
+        ),
+      child: const AttachedReadersView(),
     );
   }
 }
@@ -34,28 +38,30 @@ class AttachedReadersView extends StatefulWidget {
   State<AttachedReadersView> createState() => _AttachedReadersViewState();
 }
 
-class _AttachedReadersViewState extends State<AttachedReadersView> with AutomaticKeepAliveClientMixin {
-
-  @override
-  bool get wantKeepAlive => true;
+class _AttachedReadersViewState extends State<AttachedReadersView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        BlocBuilder<ReadersAttachedBloc, ReadersAttachedState>(
-          builder: (context, state) {
-            if (state.stateStatus == ReadersAttachedStatus.currentlyAttachedReadersListUpdated) {
-              for (var reader in state.currentlyAttachedReadersList!) {
-                ReaderDetails(reader: reader);
-              }
-            }
-            return SizedBox();
-          }
-        ),
-      ],
+
+    var currentlyAttachedReadersList = context.select((ReadersBloc bloc) => bloc.state.currentlyAttachedReadersList);
+
+
+    return BlocBuilder<ReadersAttachedBloc, ReadersAttachedState>(
+      builder: (context, state) {
+        if (state.stateStatus == ReadersAttachedStatus.initial
+            && currentlyAttachedReadersList != null
+        && currentlyAttachedReadersList.isNotEmpty) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              for (var reader in currentlyAttachedReadersList) ReaderDetails(reader: reader),
+            ],
+          );
+        } else {
+          return Text("nothing here");
+        }
+      },
     );
   }
 }
@@ -70,6 +76,8 @@ class ReaderDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('attached_readers_screen - ReaderDetails - ${reader}');
+
     return Column(
       children: [
         Row(
