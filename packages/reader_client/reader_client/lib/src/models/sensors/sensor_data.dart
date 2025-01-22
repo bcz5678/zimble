@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:reader_client/reader_client.dart' show AccelerometerData, GyroscopeData, LinearAccelerationData, RotationVectorData;
 
 class SensorData extends Equatable{

@@ -68,6 +68,16 @@ class StopSensorStreamFailure extends ReaderFailure {
   const StopSensorStreamFailure(super.error);
 }
 
+/// Thrown when disconnectFromBluetoothDevice fails.
+class StartTagScanStreamFailure extends ReaderFailure {
+  const StartTagScanStreamFailure(super.error);
+}
+
+/// Thrown when disconnectFromBluetoothDevice fails.
+class StopTagScanStreamFailure extends ReaderFailure {
+  const StopTagScanStreamFailure(super.error);
+}
+
 
 /// [TODO] Add failure definitions here for exception logging and handling
 
@@ -433,7 +443,7 @@ class ReaderRepository {
     }
   }
 
-  /// Send command to start Sensor Streams and set stream subscription
+  /// Send command to stop Sensor Streams
   ///
   /// Throws a [StopSensorStreamFailure] if an exception occurs.
   Future<bool> stopSensorStreams() async {
@@ -452,4 +462,45 @@ class ReaderRepository {
       );
     }
   }
+
+  /// Send command start TagScan Stream and set stream subscription
+  ///
+  /// Throws a [StartTagScaStreamFailure] if an exception occurs.
+  Future<bool> startTagScanStream() async {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> startTagScanStream -> Entry');
+    }
+    try {
+      return await _readerClient.startTagScanStream();
+    } on StartTagScanStreamFailure {
+      rethrow;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(
+          StartTagScanStreamFailure(error),
+          stackTrace
+      );
+    }
+  }
+
+  /// Send command stop TagScan Stream
+  ///
+  /// Throws a [StopTagScaStreamFailure] if an exception occurs.
+  Future<bool> stopTagScanStream() async {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> stopTagScanStream -> Entry');
+    }
+    try {
+      return await _readerClient.stopTagScanStream();
+    } on StopTagScanStreamFailure {
+      rethrow;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(
+          StopTagScanStreamFailure(error),
+          stackTrace
+      );
+    }
+  }
+
 }

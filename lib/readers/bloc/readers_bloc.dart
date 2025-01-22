@@ -16,7 +16,7 @@ class ReadersBloc extends Bloc<ReadersEvent, ReadersState> {
 })
   : _readerRepository = readerRepository,
     super(ReadersState.initial()) {
-      on<GetcurrentlyAttachedReadersList> (onGetcurrentlyAttachedReadersList);
+      on<GetCurrentlyAttachedReadersList> (onGetCurrentlyAttachedReadersList);
       on<currentlyAttachedReadersListChanged> (oncurrentlyAttachedReadersListChanged);
 
       _currentlyAttachedReadersSubscription =
@@ -36,8 +36,8 @@ class ReadersBloc extends Bloc<ReadersEvent, ReadersState> {
 
   late StreamSubscription<List<Reader>> _currentlyAttachedReadersSubscription;
 
-  Future<void> onGetcurrentlyAttachedReadersList(
-    GetcurrentlyAttachedReadersList event,
+  Future<void> onGetCurrentlyAttachedReadersList(
+    GetCurrentlyAttachedReadersList event,
     Emitter<ReadersState> emit,
     ) async {
 

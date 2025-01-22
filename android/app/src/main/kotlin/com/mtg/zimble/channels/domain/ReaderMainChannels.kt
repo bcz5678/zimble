@@ -56,8 +56,10 @@ class ReaderMainChannels(context: Context, messenger: BinaryMessenger) {
                 /// Call Type: InvokeMethod
                 /// Data Message Type: String
                 /// Return Type: List<BluetoothModel>>
-                call.method.equals("testReaderMain") -> {
-                    Log.d(TAG, "in call method - testReaderMain")
+                call.method.equals("startTagScan") -> {
+                    Log.d(TAG, "in call method - startTagScan")
+
+
 
                     result.success("TestReaderMainSuccess")
                 }

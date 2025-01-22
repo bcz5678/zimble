@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
 
 
@@ -14,4 +13,6 @@ class NativeChannels{
   EventChannel  sensorLinearAccelerationStream = EventChannel('mtg_rfid_event/reader/sensor_stream_linear_acceleration');
   EventChannel  sensorRotationVectorStream = EventChannel('mtg_rfid_event/reader/sensor_stream_rotation_vector');
 
+  MethodChannel tagScanMethod = MethodChannel('mtg_rfid_method/reader/tag_scan_method');
+  EventChannel  tagScanStream = EventChannel('mtg_rfid_event/reader/tag_scan_stream');
 }

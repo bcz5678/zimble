@@ -41,11 +41,11 @@ class NavDrawerSections extends StatelessWidget {
             },
           ),
           NavDrawerSectionItem(
-            key: const ValueKey('navDrawerSectionItem_tagInfo'),
-            title: context.l10n.navDrawerTagInfo,
+            key: const ValueKey('navDrawerSectionItem_tagScan'),
+            title: context.l10n.navDrawerTagScan,
             onTap: () {
               Scaffold.of(context).closeDrawer();
-              context.goNamed('tagInfo');
+              context.goNamed('tagScan');
             },
           ),
           NavDrawerSectionItem(

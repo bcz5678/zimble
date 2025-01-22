@@ -7,8 +7,8 @@ abstract class ReadersEvent extends Equatable{
   List<Object> get props => [];
 }
 
-class GetcurrentlyAttachedReadersList extends ReadersEvent {
-  const GetcurrentlyAttachedReadersList();
+class GetCurrentlyAttachedReadersList extends ReadersEvent {
+  const GetCurrentlyAttachedReadersList();
 }
 
 class currentlyAttachedReadersListChanged extends ReadersEvent {

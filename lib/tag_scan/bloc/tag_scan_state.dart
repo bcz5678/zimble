@@ -1,5 +1,45 @@
 part of 'tag_scan_bloc.dart';
 
-class TagScanState {}
+enum TagScanStatus {
+  initial,
+  done,
+  loading,
+  scanStartInProgress,
+  scanStarted,
+  scanUpdated,
+  scanStopped,
+}
 
-final class TagScanInitial extends TagScanState {}
+class TagScanState extends Equatable{
+  TagScanState({
+    this.stateStatus,
+    this.currentlyUpdatedTagList,
+  });
+
+  TagScanState.initial()
+      : this (
+    stateStatus: TagScanStatus.initial,
+  );
+
+  final TagScanStatus? stateStatus;
+  final List<TagData>? currentlyUpdatedTagList;
+
+  @override
+  List<Object?> get props => [
+    stateStatus,
+    currentlyUpdatedTagList
+  ];
+
+  TagScanState copyWith({
+    TagScanStatus? stateStatus,
+    List<TagData>? currentlyUpdatedTagList,
+  }) {
+    return TagScanState(
+      stateStatus: stateStatus ?? this.stateStatus,
+      currentlyUpdatedTagList: currentlyUpdatedTagList ?? this.currentlyUpdatedTagList,
+    );
+  }
+
+}
+
+

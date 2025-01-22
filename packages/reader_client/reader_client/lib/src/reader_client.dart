@@ -27,11 +27,23 @@ class StopSensorStreamFailure extends ReaderClientException {
   const  StopSensorStreamFailure(super.error);
 }
 
+/// Thrown during process of starting the tag scan form the reader
+class StartTagScanStreamFailure extends ReaderClientException {
+  const  StartTagScanStreamFailure(super.error);
+}
+
+/// Thrown during process of stopping the tag scan form the reader
+class StopTagScanStreamFailure extends ReaderClientException {
+  const  StopTagScanStreamFailure(super.error);
+}
+
+
 
 /// Reader client
 class ReaderClient {
   ReaderClient();
 
+  //******* SENSORS ******//
   /// Method Channel to call start/stop sensors stream
   var sensorMethodChannel = NativeChannels().sensorMethod;
 
@@ -56,6 +68,19 @@ class ReaderClient {
   late BehaviorSubject<RotationVectorData> _sensorRotationVectorStream = BehaviorSubject<RotationVectorData>.seeded(RotationVectorData());
 
 
+  //******* TAG SCAN ******//
+  /// Method Channel to call start/stop sensors stream
+  var tagScanMethodChannel = NativeChannels().tagScanMethod;
+
+  /// Event Channels for tag scan
+  var tagScanStreamChannel = NativeChannels().tagScanStream;
+
+  /// Subscription to listen and process tag scan Event Channel Data
+  late StreamSubscription<dynamic> _tagScanSubscription;
+
+  /// Post Processed stream from the _tagScan Stream
+  /// Used to set the tagScanStream getter to pass to ReaderRepository
+  late BehaviorSubject<TagData> _tagScanStream = BehaviorSubject<TagData>.seeded(TagData());
 
 
   /// Stream of [BluetoothReader] which will emit the current reader when
@@ -308,4 +333,90 @@ class ReaderClient {
       Error.throwWithStackTrace(StopSensorStreamFailure(error), stackTrace);
     }
   }
+
+
+
+  ///Starts Stream of tagData to pass to the Reader_repository
+  Future<bool> startTagScanStream() async {
+    try {
+      if (kDebugMode) {
+        print('reader_client -> startTagScanStream -> Entry');
+      }
+
+      // Call Method Channel to start and set the EventChannel streamHandlers
+      final startTagScanStreamResult = await sensorMethodChannel.invokeMethod(
+          "startTagScanStream").toString();
+
+      // Start _sensorAccelerometerSubscription listening to the EventChannel
+      // and format results
+      _tagScanSubscription =
+          tagScanStreamChannel
+              .receiveBroadcastStream()
+              .distinct()
+              .listen((event) {
+
+            // Decode all the event string json into the base of
+            // nested components to see return type
+            Map<String, dynamic>? tagScanEvent = json.decode(event.toString()) as Map<String, dynamic>;
+
+            // If tagData is present, encode the data into
+            // TagData entity and add to _tagScanStream for getter
+            if(tagScanEvent.containsKey("TagData")) {
+              if (tagScanEvent["sensorData"]["sensorType"] == "accelerometer") {
+                try {
+                  _sensorAccelerometerStream.add(
+                    AccelerometerData.fromJson(
+                      tagScanEvent["sensorData"]["sensorDataMap"] as Map<String, dynamic>,
+                    ),
+                  );
+                } catch (error) {
+                  if (kDebugMode) {
+                    print(
+                        'reader_client -> startSensorStream -> acceleromter -> _sensorStream.add -> ${error
+                            .toString()}');
+                  }
+                }
+              }
+            }
+          }
+        );
+
+
+            // Return value that the stream has started successfully
+        return true;
+
+      } on PlatformException catch (e) {
+      // Native side returns error on start
+      if (kDebugMode) {
+        print('reader_client -> startSensorStream -> Error: ${e.message}');
+      }
+
+      // Cancels the newly started _tagScanSubscription to free resources
+      await _tagScanSubscription.cancel();
+
+
+      return false;
+      } catch (error, stackTrace) {
+        Error.throwWithStackTrace(StartTagScanStreamFailure(error), stackTrace);
+      }
+    }
+
+  ///Starts Stream of TagData to pass to the Reader_repository
+  Future<bool> stopTagScanStream() async {
+    try {
+      if (kDebugMode) {
+        print('reader_client -> stopTagScanStream -> Entry');
+      }
+
+      final stopTagScanStreamResult = await sensorMethodChannel.invokeMethod(
+          "stopTagScanStream").toString();
+
+      await _tagScanSubscription.cancel();
+
+      return false;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(StopTagScanStreamFailure(error), stackTrace);
+    }
+  }
+
 }

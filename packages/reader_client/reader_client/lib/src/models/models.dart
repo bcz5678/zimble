@@ -12,3 +12,4 @@ export 'sensors/gyroscope_data.dart';
 export 'sensors/linear_acceleration_data.dart';
 export 'sensors/rotation_vector_data.dart';
 export 'sensors/sensor_data.dart';
+export 'tags/tag_data.dart';

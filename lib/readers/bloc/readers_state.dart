@@ -32,7 +32,7 @@ final List<Reader>? currentlyAttachedReadersList;
   }) {
     return ReadersState (
       stateStatus: stateStatus ?? this.stateStatus,
-      currentlyAttachedReadersList: currentlyAttachedReadersList,
+      currentlyAttachedReadersList: currentlyAttachedReadersList ?? this.currentlyAttachedReadersList,
     );
   }
 }

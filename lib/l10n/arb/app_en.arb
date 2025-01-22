@@ -102,6 +102,18 @@
         "type": "String",
         "placeholders": {}
     },
+    "tagScanButtonStartScan": "Start Tag Scan",
+    "@tagScanButtonStartScan": {
+        "description": "Button text to start tag scan",
+        "type": "String",
+        "placeholders": {}
+    },
+    "tagScanButtonStopScan": "Stop Tag Scan",
+    "@tagScanButtonStopScan": {
+        "description": "Button text to stop tag scan",
+        "type": "String",
+        "placeholders": {}
+    },
     "authenticationFailure": "The username or password you entered is incorrect",
     "@authenticationFailure": {
         "description": "Message shown when there is an error at login",
@@ -372,9 +384,9 @@
         "type": "String",
         "placeholders": {}
     },
-    "navDrawerTagInfo": "Tag Info",
-    "@navDrawerTagInfo": {
-        "description": "TagInfo text shown in the side nav Drawer",
+    "navDrawerTagScan": "Tag Scan",
+    "@navDrawerTagScan": {
+        "description": "TagScan text shown in the side nav Drawer",
         "type": "String",
         "placeholders": {}
     },
@@ -414,9 +426,9 @@
         "type": "String",
         "placeholders": {}
     },
-    "bottomNavBarTagInfo": "Tag Info",
-    "@bottomNavBarTagInfo": {
-        "description": "TagInfo text shown in the bottom nav bar widget.",
+    "bottomNavBarTagScan": "Tag Scan",
+    "@bottomNavBarTagScan": {
+        "description": "TagScan text shown in the bottom nav bar widget.",
         "type": "String",
         "placeholders": {}
     },

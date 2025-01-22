@@ -82,9 +82,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
           label: context.l10n.bottomNavBarTagFinder,
         ),
         BottomNavigationBarItem(
-          key: Key('bottomNavBarItem_tagInfo'),
+          key: Key('bottomNavBarItem_tagScan'),
           icon: const Icon(Icons.assignment),
-          label: context.l10n.bottomNavBarTagInfo,
+          label: context.l10n.bottomNavBarTagScan,
         ),
         BottomNavigationBarItem(
           key: Key('bottomNavBarItem_trigger'),

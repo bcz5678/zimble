@@ -66,13 +66,6 @@ class SensorChannels(context: Context, messenger: BinaryMessenger) {
     )
 
     fun initializeSensorChannels(context:Context, messenger: BinaryMessenger) {
-        val accelerometerChannel = EventChannel(messenger, STREAM_SENSOR_ACCELEROMETER)
-
-
-        Log.d(TAG, "context -> ${context.toString()}")
-        Log.d(TAG, "messenger -> ${messenger.toString()}")
-
-
         Log.d(TAG, "initializing Sensor Android Channels")
 
         //Bluetooth Method Channel for calls from Features->Reader
