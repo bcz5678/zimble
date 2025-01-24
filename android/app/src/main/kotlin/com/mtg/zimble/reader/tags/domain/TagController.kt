@@ -8,6 +8,8 @@ interface TagController {
 
     fun getCommander(): AsciiCommander
 
+    fun isConnected(): Boolean
+
     fun isEnabled(): Boolean
     fun setEnabled(state: Boolean) : Unit
 
@@ -28,6 +30,8 @@ interface TagController {
     fun resetDevice(): Unit
 
     fun updateConfiguration(): Unit
+
+    fun scan(): Unit
 
     fun scanStart(): Unit
     fun scanStop(): Unit

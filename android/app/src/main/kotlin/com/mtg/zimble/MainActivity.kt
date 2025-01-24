@@ -9,6 +9,7 @@ import com.mtg.zimble.reader.main.domain.ReaderConnectionState
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import com.mtg.zimble.channels.domain.TagScanChannels
 
 import com.uk.tsl.rfid.asciiprotocol.AsciiCommander
 import com.uk.tsl.rfid.asciiprotocol.DeviceProperties
@@ -78,10 +79,10 @@ class MainActivity: FlutterActivity() {
     }
 
     private fun setupMainChannels(context: Context, messenger: BinaryMessenger) {
-
         BluetoothDeviceChannels(context, messenger)
         ReaderMainChannels(context, messenger)
         SensorChannels(context, messenger)
+        TagScanChannels(context, messenger)
 
         //set Event StreamHandler
         //rfidEventChannel!!.setStreamHandler(MyStreamHandler(context))
@@ -89,9 +90,7 @@ class MainActivity: FlutterActivity() {
 
 
     private fun teardownChannels() {
-
         //Call Imported Class TearDowns
         //ReaderClass().teardownReaderHandlers()
-
     }
 }

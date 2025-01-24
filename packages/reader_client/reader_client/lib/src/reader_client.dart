@@ -76,7 +76,7 @@ class ReaderClient {
   var tagScanStreamChannel = NativeChannels().tagScanStream;
 
   /// Subscription to listen and process tag scan Event Channel Data
-  late StreamSubscription<dynamic> _tagScanSubscription;
+  StreamSubscription<dynamic>? _tagScanStreamSubscription;
 
   /// Post Processed stream from the _tagScan Stream
   /// Used to set the tagScanStream getter to pass to ReaderRepository
@@ -326,8 +326,6 @@ class ReaderClient {
       await _sensorLinearAccelerationSubscription.cancel();
       await _sensorRotationVectorSubscription.cancel();
 
-
-
       return false;
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(StopSensorStreamFailure(error), stackTrace);
@@ -344,64 +342,63 @@ class ReaderClient {
       }
 
       // Call Method Channel to start and set the EventChannel streamHandlers
-      final startTagScanStreamResult = await sensorMethodChannel.invokeMethod(
-          "startTagScanStream").toString();
+      var startTagScanStreamResult = await tagScanMethodChannel.invokeMethod("startTagScanStream");
 
-      // Start _sensorAccelerometerSubscription listening to the EventChannel
+      if (kDebugMode) {
+        print('reader_client -> startTagScanStream -> startTagScanStreamResult -> ${startTagScanStreamResult.toString()}');
+      }
+
+      // Start _tagScanSubscription listening to the EventChannel
       // and format results
-      _tagScanSubscription =
+      _tagScanStreamSubscription =
           tagScanStreamChannel
               .receiveBroadcastStream()
               .distinct()
               .listen((event) {
 
-            // Decode all the event string json into the base of
-            // nested components to see return type
-            Map<String, dynamic>? tagScanEvent = json.decode(event.toString()) as Map<String, dynamic>;
+          // Decode all the event string json into the base of
+          // nested components to see return type
+          Map<String, dynamic>? tagScanEvent = json.decode(event.toString()) as Map<String, dynamic>;
 
-            // If tagData is present, encode the data into
-            // TagData entity and add to _tagScanStream for getter
-            if(tagScanEvent.containsKey("TagData")) {
-              if (tagScanEvent["sensorData"]["sensorType"] == "accelerometer") {
-                try {
-                  _sensorAccelerometerStream.add(
-                    AccelerometerData.fromJson(
-                      tagScanEvent["sensorData"]["sensorDataMap"] as Map<String, dynamic>,
-                    ),
-                  );
-                } catch (error) {
-                  if (kDebugMode) {
-                    print(
-                        'reader_client -> startSensorStream -> acceleromter -> _sensorStream.add -> ${error
-                            .toString()}');
-                  }
-                }
+          // If tagData is present, encode the data into
+          // TagData entity and add to _tagScanStream for getter
+          if(tagScanEvent.containsKey("TagData")) {
+            try {
+              _tagScanStream.add(
+                TagData.fromJson(
+                  tagScanEvent["tagScanDataMap"] as Map<String, dynamic>,
+                ),
+              );
+            } catch (error) {
+              if (kDebugMode) {
+                print('reader_client -> stopTagScanStream -> ${error.toString()}');
               }
             }
           }
-        );
+        }
+      );
 
+      // Return value that the stream has started successfully
+      return true;
 
-            // Return value that the stream has started successfully
-        return true;
-
-      } on PlatformException catch (e) {
+    } on PlatformException catch (e) {
       // Native side returns error on start
       if (kDebugMode) {
-        print('reader_client -> startSensorStream -> Error: ${e.message}');
+        print('reader_client -> startTagScanStream -> Error: ${e.message}');
       }
 
       // Cancels the newly started _tagScanSubscription to free resources
-      await _tagScanSubscription.cancel();
-
+      if(_tagScanStreamSubscription != null) {
+        await _tagScanStreamSubscription!.cancel();
+      }
 
       return false;
-      } catch (error, stackTrace) {
-        Error.throwWithStackTrace(StartTagScanStreamFailure(error), stackTrace);
-      }
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(StartTagScanStreamFailure(error), stackTrace);
     }
+  }
 
-  ///Starts Stream of TagData to pass to the Reader_repository
+  /// Stop Stream of TagData
   Future<bool> stopTagScanStream() async {
     try {
       if (kDebugMode) {
@@ -411,7 +408,32 @@ class ReaderClient {
       final stopTagScanStreamResult = await sensorMethodChannel.invokeMethod(
           "stopTagScanStream").toString();
 
-      await _tagScanSubscription.cancel();
+      if (kDebugMode) {
+        print('reader_client -> stopTagScanStream -> ${_tagScanStreamSubscription}');
+      }
+
+      if(_tagScanStreamSubscription != null) {
+
+        await _tagScanStreamSubscription!.cancel();
+      }
+
+      return false;
+    }  on PlatformException catch (e) {
+
+
+      // Native side returns error on start
+      if (kDebugMode) {
+        print('reader_client -> startTagScanStream -> Error: ${e.message}');
+      }
+
+      // Cancels the newly started _tagScanSubscription to free resources
+      if(_tagScanStreamSubscription != null) {
+        await _tagScanStreamSubscription!.cancel();
+      }
+
+      if(e.message == "No Reader Connected") {
+
+      }
 
       return false;
     } catch (error, stackTrace) {

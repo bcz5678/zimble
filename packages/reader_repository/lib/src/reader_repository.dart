@@ -465,7 +465,7 @@ class ReaderRepository {
 
   /// Send command start TagScan Stream and set stream subscription
   ///
-  /// Throws a [StartTagScaStreamFailure] if an exception occurs.
+  /// Throws a [StartTagScanStreamFailure] if an exception occurs.
   Future<bool> startTagScanStream() async {
     // [DEBUG TEST]
     if (kDebugMode) {
@@ -485,7 +485,7 @@ class ReaderRepository {
 
   /// Send command stop TagScan Stream
   ///
-  /// Throws a [StopTagScaStreamFailure] if an exception occurs.
+  /// Throws a [StopTagScanStreamFailure] if an exception occurs.
   Future<bool> stopTagScanStream() async {
     // [DEBUG TEST]
     if (kDebugMode) {

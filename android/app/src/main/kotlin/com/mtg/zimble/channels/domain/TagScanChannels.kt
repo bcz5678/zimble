@@ -6,7 +6,11 @@ import io.flutter.plugin.common.MethodChannel
 
 import android.content.Context
 import android.util.Log
+import com.mtg.zimble.reader.tags.data.AndroidTagController
 import com.mtg.zimble.reader.tags.domain.TagScanStreamHandler
+
+
+import com.uk.tsl.rfid.asciiprotocol.responders.LoggerResponder;
 
 class TagScanChannels(context: Context, messenger: BinaryMessenger) {
     val TAG = "TagScanChannels"
@@ -19,6 +23,8 @@ class TagScanChannels(context: Context, messenger: BinaryMessenger) {
     ///Create the Channels to use to transfer data
     private lateinit var _tagScanMethodChannel : MethodChannel
     lateinit var tagScanStreamChannel : EventChannel
+
+    private var _androidTagController : AndroidTagController = AndroidTagController()
 
     init {
         initializeTagScanChannels(context, messenger)
@@ -40,24 +46,49 @@ class TagScanChannels(context: Context, messenger: BinaryMessenger) {
         //Define TagScan Method Calls
         _tagScanMethodChannel.setMethodCallHandler { call, result ->
             when {
-                call.method.equals("startTagScan") -> {
+                call.method.equals("startTagScanStream") -> {
                     try {
                         Log.d(TAG, "in startTagScan")
+                        if(AndroidTagController().isConnected() == true) {
+                            Log.d(TAG, "AndroidTagController is connected")
 
-                        //Assign StreamHandler for tagScan
-                        tagScanStreamChannel.setStreamHandler(tagScanStreamHandler)
+                            //Assign StreamHandler for tagScan
+                            tagScanStreamChannel.setStreamHandler(tagScanStreamHandler)
 
+
+                            if (!_androidTagController.isEnabled()) {
+                                _androidTagController.getCommander().clearResponders()
+                                _androidTagController.getCommander().addResponder(LoggerResponder())
+                                _androidTagController.getCommander().addSynchronousResponder()
+                                _androidTagController.setEnabled(true)
+
+                                _androidTagController.scanStart()
+
+                            }
+                            Log.d(TAG, "AndroidTagController -> isEnabled -> ${_androidTagController.isEnabled()}")
+
+                            Log.d(TAG, "AndroidTagController -> updateConfiguration -> ${_androidTagController.updateConfiguration()}")
+
+
+                            result.success("tagScanStreamStartSuccess")
+                        } else {
+                            Log.d(TAG, "AndroidTagController is not connected")
+                            result.error("tagScanStartError", "No Reader Connected", null)
+                        }
                     } catch (e: Exception) {
                         Log.d(TAG, "in call method - startTagScan - error")
                         result.error("tagScanStartError", "There was a problem starting the TagScan", null)
                     }
                 }
 
-                call.method.equals("stopTagScan") -> {
+                call.method.equals("stopTagScanStream") -> {
                     try {
 
+                        _androidTagController.scanStop()
+
+                        result.success("tagScanStreamStopSuccess")
                     } catch (e: Exception) {
-                        Log.d(TAG, "in call method - stopSensors - error")
+                        Log.d(TAG, "in call method - stopTagScan - error")
                         result.error("tagScanStopError", "There was a problem stopping the TagScan", null)
                     }
                 }
