@@ -83,5 +83,4 @@ class FoundDeviceReceiver(
             Log.d(TAG, "Receiver is not registered")
         }
     }
-
 }

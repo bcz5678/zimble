@@ -1,16 +1,19 @@
 package com.mtg.zimble.channels.domain
 
+import com.mtg.zimble.reader.tags.data.AndroidTagController
+import com.mtg.zimble.reader.tags.domain.TagScanStreamHandler
+
+import android.content.Context
+import android.util.Log
+import android.view.KeyEvent.DispatcherState
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 
-import android.content.Context
-import android.util.Log
-import com.mtg.zimble.reader.tags.data.AndroidTagController
-import com.mtg.zimble.reader.tags.domain.TagScanStreamHandler
 
 
 import com.uk.tsl.rfid.asciiprotocol.responders.LoggerResponder;
+import kotlinx.coroutines.CoroutineScope
 
 class TagScanChannels(context: Context, messenger: BinaryMessenger) {
     val TAG = "TagScanChannels"
@@ -55,20 +58,17 @@ class TagScanChannels(context: Context, messenger: BinaryMessenger) {
                             //Assign StreamHandler for tagScan
                             tagScanStreamChannel.setStreamHandler(tagScanStreamHandler)
 
-
                             if (!_androidTagController.isEnabled()) {
                                 _androidTagController.getCommander().clearResponders()
                                 _androidTagController.getCommander().addResponder(LoggerResponder())
                                 _androidTagController.getCommander().addSynchronousResponder()
                                 _androidTagController.setEnabled(true)
 
-                                _androidTagController.scanStart()
-
                             }
-                            Log.d(TAG, "AndroidTagController -> isEnabled -> ${_androidTagController.isEnabled()}")
 
-                            Log.d(TAG, "AndroidTagController -> updateConfiguration -> ${_androidTagController.updateConfiguration()}")
-
+                            if(_androidTagController.isEnabled()== true) {
+                                _androidTagController.scanStart()
+                            }
 
                             result.success("tagScanStreamStartSuccess")
                         } else {
@@ -83,7 +83,7 @@ class TagScanChannels(context: Context, messenger: BinaryMessenger) {
 
                 call.method.equals("stopTagScanStream") -> {
                     try {
-
+                        Log.d(TAG, "In stopTagScanStream")
                         _androidTagController.scanStop()
 
                         result.success("tagScanStreamStopSuccess")

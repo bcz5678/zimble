@@ -1,6 +1,7 @@
 package com.mtg.zimble.reader.tags.data
 
 import android.util.Log
+import com.mtg.zimble.reader.tags.data.TagData
 import com.mtg.zimble.reader.tags.domain.TagController
 import com.uk.tsl.rfid.asciiprotocol.AsciiCommander
 import com.uk.tsl.rfid.asciiprotocol.commands.AbortCommand
@@ -17,16 +18,27 @@ import com.uk.tsl.rfid.asciiprotocol.responders.ICommandResponseLifecycleDelegat
 import com.uk.tsl.rfid.asciiprotocol.responders.ITransponderReceivedDelegate
 import com.uk.tsl.rfid.asciiprotocol.responders.TransponderData
 import com.uk.tsl.utils.HexEncoding
+import kotlinx.coroutines.CoroutineScope
+//import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import java.util.HashMap
 import java.util.Locale
-import com.mtg.zimble.reader.tags.data.TransponderData as TransponderDataModel
 
 
 class AndroidTagController() : TagController {
     val TAG = "AndroidTagController"
 
+
     private var anyTagSeen: Boolean = false
     private var enabled: Boolean  = false
     private var continuousScanEnabled: Boolean = false
+
     private var uniquesOnly: Boolean = false
     private var tagsSeen: Int = 0
 
@@ -40,117 +52,101 @@ class AndroidTagController() : TagController {
     private var maximumTagsPerScan: Int = 0
 
     // The command to use as a responder to capture incoming inventory responses
-    private var inventoryResponder: InventoryCommand
+    private var inventoryResponder: InventoryCommand = InventoryCommand()
 
     // The command used to issue commands
-    private var inventoryCommand: InventoryCommand
+    private var inventoryCommand: InventoryCommand= InventoryCommand()
 
     // The command to use as a responder to capture incoming barcode responses
-    private var barcodeResponder: BarcodeCommand
+    private var barcodeResponder: BarcodeCommand = BarcodeCommand()
 
     // A 'Dictionary' lookup for the unique transponders seen
     private var uniqueTransponders: HashMap<String, TransponderData> =
         HashMap<String, TransponderData>()
 
+    // A MutableMap to gather the current scanned tag info,
+    // Used to build the TagData object using the fromMap method
+    private lateinit var newTagDataMap: MutableMap<String, Any?> = mutableMapOf<String, Any?>()
+
+    //Scan tracking time variables to calculate Read Rate
     private var startTime: Long = 0
     private var finishTime: Long = 0
     private var firstTagTime: Long = 0
     private var lastTagTime: Long = 0
     private var inventoryTagCount: Long = 0
 
-    private var epc: String = ""
-    private var tidData: String? = null
-    private var rssi: Int? = null
-    private var rssiPercent: Int? = null
-    private var pc: Int? = null
-    private var crc: Int? = null
-    private var qt: Int? = null
-    private var didKill: Boolean? = null
-    private var didLock: Boolean? = null
-    private var channelFrequency: Int? = null
-    private var phase: Int? = null
-    private var timestamp: String? = null
-    private var index: Int? = null
-    private var accessErrorCode: String? = null
-    private var backscatterErrorCode: String? = null
-    private var readData: String? = null
-    private var wordsWritten: Int? = null
-    private var isDuplicate: Boolean? = null
+    // Stateflows for Scan Stream
+    private var _tagDataScanList = MutableStateFlow<List<TagData>>(emptyList())
+    override val tagDataScanList: StateFlow<List<TagData>>
+        get() = _tagDataScanList.asStateFlow()
+
 
     init {
+            initializeTagScan()
+    }
+
+     fun initializeTagScan() {
+
+        //Set Audible Alert (Beep) duration - can be modified to use saved preferences
         alertCommand = AlertCommand()
         alertCommand.setDuration(AlertDuration.SHORT)
 
         // This is the command that will be used to perform configuration changes and inventories
-        inventoryCommand = InventoryCommand()
         inventoryCommand.setResetParameters(TriState.YES)
 
-        // Handle the alerts in the App
+        // Handle the alerts in the App - Not wrking correctly
         inventoryCommand.setUseAlert(TriState.NO)
 
         // Use an InventoryCommand as a responder to capture all incoming inventory responses
-        inventoryResponder = InventoryCommand()
-
         // Also capture the responses that were not from App commands
         inventoryResponder.setCaptureNonLibraryResponses(true)
 
-        // Notify when each transponder is seen
+        // Defingn the delegae to notify when each transponder is seen
         inventoryResponder.setTransponderReceivedDelegate(object: ITransponderReceivedDelegate {
             override fun transponderReceived(transponder: TransponderData, moreAvailable: Boolean) {
+                // Clear the newTagDataMap from previous tags
+                newTagDataMap.clear()
+
                 // If tagCount set to 0
                 if (!anyTagSeen) {
                     firstTagTime = System.nanoTime()
                 }
                 inventoryTagCount += 1
 
+                // Transponder with EPC seen to capture
                 if (transponder.getEpc() != null) {
                     anyTagSeen = true
 
                     if (!(uniquesOnly && uniqueTransponders.containsKey(transponder.getEpc()))) {
-
-                        epc = transponder.getEpc()
+                        newTagDataMap["epc"] = transponder.getEpc()
 
                         if (transponder.getTidData() != null) {
-                            tidData = HexEncoding.bytesToString(transponder.getTidData())
+                            newTagDataMap["tidData"] = HexEncoding.bytesToString(transponder.getTidData())
                         }
 
                         if (isInfoRequested) {
-                            rssi = transponder.getRssi()
-                            rssiPercent = transponder.getRssiPercent()
-                            pc = transponder.getPc()
-                            crc = transponder.getCrc()
-                            phase =  transponder.getPhase()
-                            channelFrequency = transponder.getChannelFrequency()
+                            newTagDataMap["rssi"] = transponder.getRssi()
+                            newTagDataMap["rssiPercent"] = transponder.getRssiPercent()
+                            newTagDataMap["pc"] = transponder.getPc()
+                            newTagDataMap["crc"] = transponder.getCrc()
+                            newTagDataMap["phase"] = transponder.getPhase()
+                            newTagDataMap["channelFrequency"] = transponder.getChannelFrequency()
                         }
 
-                        var transponderData = TransponderDataModel(
-                            epc = epc,
-                            tidData = tidData,
-                            rssi = rssi,
-                            rssiPercent = rssi,
-                            pc = pc,
-                            crc = crc,
-                            qt = qt,
-                            didKill = didKill,
-                            didLock = didLock,
-                            channelFrequency = channelFrequency,
-                            phase = phase,
-                            timestamp = timestamp,
-                            index = index,
-                            accessErrorCode = accessErrorCode,
-                            backscatterErrorCode = backscatterErrorCode,
-                            readData = readData,
-                            wordsWritten = wordsWritten,
-                            isDuplicate = isDuplicate,
-                        )
+                        //Create a TagData Object from newTagMap for uniformity
+                        var tagData = TagData.fromMap(newTagDataMap)
 
-                        //// [TODO] CoRoutine handler goes here
-                        Log.d(TAG, "in TransponderReceivedDelegate = ${transponderData.toString()}")
+                        Log.d(TAG, "in TransponderReceivedDelegate = ${tagData.toString()}")
 
+                        // If new tagdata is not in the mutableState flow already,
+                        // add the tag to the mutable state flow for the stream collector
+                        _tagDataScanList.update{
+                                tags -> if(tagData in tags) tags else tags + tagData
+                        }
 
                         // Remember this transponder as it has not been seen before
                         if (uniquesOnly) {
-                            uniqueTransponders[transponder.getEpc()] = transponder
+                            uniqueTransponders[newTagDataMap["epc"]] = transponder
                         }
                     }
                 }
@@ -169,6 +165,7 @@ class AndroidTagController() : TagController {
                 // Default to inventory start time until a Tag is actually seen
                 firstTagTime = System.nanoTime()
                 inventoryTagCount = 0
+
             }
 
             override fun responseEnded() {
@@ -189,7 +186,7 @@ class AndroidTagController() : TagController {
 
                 // Send on any messages
                 for (msg in inventoryResponder.getMessages()) {
-                    /// [TODO]  CoRoutine handler goes here
+                    /// [TODO]  Collector goes here
                     Log.d(TAG, "InventoryResponder message - ${msg.toString()}")
                 }
 
@@ -217,13 +214,12 @@ class AndroidTagController() : TagController {
         })
 
         // This command is used to capture barcode responses
-        barcodeResponder = BarcodeCommand()
         barcodeResponder.setCaptureNonLibraryResponses(true)
         barcodeResponder.setUseEscapeCharacter(TriState.YES)
         barcodeResponder.setBarcodeReceivedDelegate(object : IBarcodeReceivedDelegate {
             override fun barcodeReceived(barcode: String?) {
 
-                /// [TODO]  CoRoutine handler goes here
+                /// [TODO]  Collector goes here
                 var msg: String? = "BC: " + barcodeResponder.getData()
 
                 // Include additional information when present - Series 3 readers only
@@ -235,11 +231,10 @@ class AndroidTagController() : TagController {
                         barcodeResponder.getSymbology().getCode(),
                         barcodeResponder.getSymbology().getModifier()
                     )
-                    /// [TODO]  CoRoutine handler goes here
+                    /// [TODO]  Collector goes here
                 }
             }
         })
-
     }
 
 
@@ -373,9 +368,22 @@ class AndroidTagController() : TagController {
     override fun scanStart() {
         testForAntenna()
         if(getCommander().isConnected()) {
+
             continuousScanEnabled = true
             inventoryCommand.setTakeNoAction(TriState.NO)
-            getCommander().executeCommand(inventoryCommand)
+            continuousScanJob = CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    getCommander().executeCommand(inventoryCommand)
+                    while (continuousScanEnabled) {
+                        Log.d(TAG, "continuousScanEbaled: true")
+                    }
+                } catch (e:CancellationException) {
+                    Log.d(TAG, "Scan Job was cancelled - ${e}")
+                    throw e
+                } catch (e:Exception) {
+                    Log.d(TAG, "Scan Job Message: ${e}")
+                }
+            }
         }
     }
 
@@ -383,13 +391,18 @@ class AndroidTagController() : TagController {
     // Stop the continuous inventory scan
     //
     override fun scanStop() {
+
+        //Set scan setting for reader
         continuousScanEnabled = false
+
+        //Collaboritively Cancel Scan Coroutine
+        continuousScanJob.cancel()
         inventoryCommand.setTakeNoAction(TriState.YES)
 
+        //Abort current Scan
         if(getCommander().isConnected()) {
             getCommander().executeCommand(AbortCommand())
         }
-
     }
 
     //
@@ -473,8 +486,4 @@ class AndroidTagController() : TagController {
         tagsSeen = 0;
         uniqueTransponders.clear();
     }
-
-
-
-
 }

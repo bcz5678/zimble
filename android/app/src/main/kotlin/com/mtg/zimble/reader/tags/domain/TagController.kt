@@ -1,10 +1,13 @@
 package com.mtg.zimble.reader.tags.domain
 
+import com.mtg.zimble.reader.tags.data.TagData
 import com.uk.tsl.rfid.asciiprotocol.commands.InventoryCommand
-import com.uk.tsl.rfid.asciiprotocol.responders.TransponderData
 import com.uk.tsl.rfid.asciiprotocol.AsciiCommander
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.Job
 
 interface TagController {
+    val tagDataList: StateFlow<List<TagData>>
 
     fun getCommander(): AsciiCommander
 

@@ -1,4 +1,4 @@
-package com.mtg.zimble.connection.bluetooth.domain
+package com.mtg.zimble.reader.tags.domain
 
 //import android.content.Context
 import io.flutter.plugin.common.EventChannel
@@ -12,24 +12,24 @@ import com.google.gson.GsonBuilder
 
 import android.util.Log
 
-class BluetoothDeviceScanningStreamHandler(): EventChannel.StreamHandler {
-    val TAG = "BluetoothDeviceScanningStreamHandler"
+class TagScanStreamHandler(): EventChannel.StreamHandler {
+    val TAG = "TagScanStreamHandler"
 
-    private var _btScannedDevicesEventSink: EventChannel.EventSink? = null
+    private var _tagScanEventSink: EventChannel.EventSink? = null
 
     var gson : Gson = GsonBuilder().serializeNulls().create();
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-        _btScannedDevicesEventSink = events;
+        _tagScanEventSink = events;
     }
 
     override fun onCancel(arguments: Any?) {
-        _btScannedDevicesEventSink = null;
+        _tagScanEventSink = null;
     }
 
 
-    fun updateBluetoothScanList(devices: List<BluetoothDeviceEntity>) {
-        var _bluetoothDevicesList:  MutableList<String?> = mutableListOf()
+    fun updateTagScanList(tagsList: List<TagData>) {
+        var _tagScanList:  MutableList<String?> = mutableListOf()
 
         for (x in (0..devices.size-1)) {
             val tempDevice: Map<String, String?> = mapOf(

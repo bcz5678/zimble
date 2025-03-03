@@ -2,7 +2,7 @@ package com.mtg.zimble.reader.tags.data
 
 import com.google.gson.Gson
 
-class TransponderData (
+class TagData (
     var epc: String,
     var tidData: String?,
     var rssi: Int?,
@@ -23,6 +23,32 @@ class TransponderData (
     var isDuplicate: Boolean?,
 ){
 
+    /// Function to build the TagData objject from a MutableMap
+    /// (usually received from the reader in the AndroidTagController)
+    fun fromMap(tagDataMap: MutableMap<String, Any?>): TagData {
+        return TagData(
+            epc: tagDataMap["epc"],
+            tidData: tagDataMap["tidData"] ?: null,
+            rssi: tagDataMap["rssi"] ?: null,
+            rssiPercent: tagDataMap["rssiPercent"] ?: null,
+            pc: tagDataMap["pc"] ?: null,
+            crc: tagDataMap["crc"] ?: null,
+            qt: tagDataMap["qt"] ?: null,
+            didKill: tagDataMap["didKill"] ?: null,
+            didLock: tagDataMap["didLock"] ?: null,
+            channelFrequency: tagDataMap["channelFrequency"] ?: null,
+            phase: tagDataMap["phase"] ?: null,
+            timestamp: tagDataMap["timestamp"] ?: null,
+            index: tagDataMap["index"] ?: null,
+            accessErrorCode: tagDataMap["accessErrorCode"] ?: null,
+            backscatterErrorCode: tagDataMap["backscatterErrorCode"] ?: null,
+            readData: tagDataMap["readData"] ?: null,
+            wordsWritten: tagDataMap["wordsWritten"] ?: null,
+            isDuplicate: tagDataMap["isDuplicate"] ?: null,
+        )
+    }
+
+    /// Function to build a MessageMap from the TagData object to send across the EventChannel
     fun toMessageMap(): MutableMap<String, Any?> {
         var map = mutableMapOf<String, Any?>()
         var returnMap = mutableMapOf<String, Any?>()
@@ -51,6 +77,8 @@ class TransponderData (
         return returnMap
     }
 
+    /// Function to build a Json String from the TagData object
+    ///  to send across the EventChannel or to remote API
     fun toJson(): String {
         var map = mutableMapOf<String, Any?>()
         var returnMap = mutableMapOf<String, Any?>()

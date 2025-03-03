@@ -17,11 +17,7 @@ class bluetoothScanningCollector(
     private val TAG = "BluetoothScanState"
 
     init {
-        //Testing pass by reference
-        //println("btStreamHandlerInstance Hash Code - ${btStreamHandlerInstance.hashCode()}")
-        //println("btStreamHandlerInstance Reference Code - ${Integer.toHexString(System.identityHashCode(btStreamHandlerInstance))}")
-
-        //Start Collector to listen for StateFLow changes to devices
+        // Start Collector to listen for StateFLow changes to devices
         // REVISIT LIFECYCLE SCOPE HERE FOR SAFETY ADN MEMORY LEAK
         CoroutineScope(Dispatchers.IO).launch {
             scannedDevicesState.collect {

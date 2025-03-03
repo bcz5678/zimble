@@ -86,7 +86,7 @@ class StopTagScanStreamFailure extends ReaderFailure {
 ///
 /// NOTE: We will be making a distinction between "Reader" and "Device"
 ///
-/// Reader: Connected TSL Reader/Scanner, connected with the AsciiCOmmander Protocol
+/// Reader: Connected TSL Reader/Scanner, connected with the AsciiCommander Protocol
 ///         Readers can be Bluetooth, USB, or Network connected
 ///
 /// Device: Device is a device that is detected but not connected

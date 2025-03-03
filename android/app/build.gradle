@@ -30,7 +30,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "com.mtg.zimble"
-    compileSdkVersion 34
+    compileSdkVersion 35
     ndkVersion "27.2.12479018"
 
     compileOptions {
@@ -94,7 +94,6 @@ android {
             manifestPlaceholders = [appName: "[DEV] Zimble"]
         }
     }
-
 
     buildTypes {
         release {

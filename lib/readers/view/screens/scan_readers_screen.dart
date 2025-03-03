@@ -1,12 +1,7 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_client/permission_client.dart';
-import 'package:reader_client/reader_client.dart';
-import 'package:reader_repository/reader_repository.dart';
 import 'package:zimble/l10n/l10n.dart';
 import 'package:zimble/readers/readers.dart';
 
