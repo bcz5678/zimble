@@ -1,7 +1,7 @@
 package com.mtg.zimble.channels.domain
 
 import com.mtg.zimble.reader.tags.data.AndroidTagController
-import com.mtg.zimble.reader.tags.domain.TagScanStreamHandler
+import com.mtg.zimble.reader.tags.domain.TagDataScanStreamHandler
 
 import android.content.Context
 import android.util.Log
@@ -34,7 +34,7 @@ class TagScanChannels(context: Context, messenger: BinaryMessenger) {
     }
 
     ///Creates a Sensor Stream Handler instances to pass to the controller and collector
-    var tagScanStreamHandler = TagScanStreamHandler()
+    var tagDataScanStreamHandler = TagDataScanStreamHandler()
 
     fun initializeTagScanChannels(context:Context, messenger: BinaryMessenger) {
         Log.d(TAG, "initializing TagScan Android Channels")
@@ -56,7 +56,7 @@ class TagScanChannels(context: Context, messenger: BinaryMessenger) {
                             Log.d(TAG, "AndroidTagController is connected")
 
                             //Assign StreamHandler for tagScan
-                            tagScanStreamChannel.setStreamHandler(tagScanStreamHandler)
+                            tagScanStreamChannel.setStreamHandler(tagDataScanStreamHandler)
 
                             if (!_androidTagController.isEnabled()) {
                                 _androidTagController.getCommander().clearResponders()

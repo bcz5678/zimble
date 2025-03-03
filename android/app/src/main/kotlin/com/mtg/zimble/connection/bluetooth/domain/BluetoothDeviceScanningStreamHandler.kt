@@ -8,8 +8,6 @@ import android.os.Looper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
-
-
 import android.util.Log
 
 class BluetoothDeviceScanningStreamHandler(): EventChannel.StreamHandler {

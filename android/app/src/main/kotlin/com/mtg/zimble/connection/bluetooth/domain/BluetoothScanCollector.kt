@@ -6,15 +6,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
-import android.util.Log
 
-
-class bluetoothScanningCollector(
+class BluetoothScanCollector(
     //private val coroutineScope: CoroutineScope,
     private val btStreamHandlerInstance: BluetoothDeviceScanningStreamHandler,
     private val scannedDevicesState: StateFlow<List<BluetoothDeviceEntity>>
 ) {
-    private val TAG = "BluetoothScanState"
+    private val TAG = "BluetoothScanCollector"
 
     init {
         // Start Collector to listen for StateFLow changes to devices
@@ -27,7 +25,10 @@ class bluetoothScanningCollector(
     }
 
     // Sending Scan Updates to the Stream Handler
-    private fun sendDataToStreamHandler(btStreamHandlerInstance: BluetoothDeviceScanningStreamHandler, devicesList: List<BluetoothDeviceEntity>) {
+    private fun sendDataToStreamHandler(
+        btStreamHandlerInstance: BluetoothDeviceScanningStreamHandler,
+        devicesList: List<BluetoothDeviceEntity>
+    ) {
         btStreamHandlerInstance.updateBluetoothScanList(devicesList)
     }
 

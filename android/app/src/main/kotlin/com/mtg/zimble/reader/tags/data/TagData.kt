@@ -23,28 +23,28 @@ class TagData (
     var isDuplicate: Boolean?,
 ){
 
-    /// Function to build the TagData objject from a MutableMap
+    /// Function to build the TagData object from a MutableMap
     /// (usually received from the reader in the AndroidTagController)
     fun fromMap(tagDataMap: MutableMap<String, Any?>): TagData {
         return TagData(
-            epc: tagDataMap["epc"],
-            tidData: tagDataMap["tidData"] ?: null,
-            rssi: tagDataMap["rssi"] ?: null,
-            rssiPercent: tagDataMap["rssiPercent"] ?: null,
-            pc: tagDataMap["pc"] ?: null,
-            crc: tagDataMap["crc"] ?: null,
-            qt: tagDataMap["qt"] ?: null,
-            didKill: tagDataMap["didKill"] ?: null,
-            didLock: tagDataMap["didLock"] ?: null,
-            channelFrequency: tagDataMap["channelFrequency"] ?: null,
-            phase: tagDataMap["phase"] ?: null,
-            timestamp: tagDataMap["timestamp"] ?: null,
-            index: tagDataMap["index"] ?: null,
-            accessErrorCode: tagDataMap["accessErrorCode"] ?: null,
-            backscatterErrorCode: tagDataMap["backscatterErrorCode"] ?: null,
-            readData: tagDataMap["readData"] ?: null,
-            wordsWritten: tagDataMap["wordsWritten"] ?: null,
-            isDuplicate: tagDataMap["isDuplicate"] ?: null,
+            epc = tagDataMap["epc"].toString(),
+            tidData = tagDataMap["tidData"].toString(),
+            rssi = tagDataMap["rssi"] as Int,
+            rssiPercent = tagDataMap["rssiPercent"] as Int,
+            pc = tagDataMap["pc"] as Int,
+            crc = tagDataMap["crc"] as Int,
+            qt = tagDataMap["qt"] as Int,
+            didKill = tagDataMap["didKill"] as Boolean,
+            didLock = tagDataMap["didLock"] as Boolean,
+            channelFrequency = tagDataMap["channelFrequency"] as Int,
+            phase = tagDataMap["phase"] as Int,
+            timestamp = tagDataMap["timestamp"].toString(),
+            index = tagDataMap["index"] as Int,
+            accessErrorCode = tagDataMap["accessErrorCode"].toString(),
+            backscatterErrorCode = tagDataMap["backscatterErrorCode"].toString(),
+            readData = tagDataMap["readData"].toString(),
+            wordsWritten = tagDataMap["wordsWritten"] as Int,
+            isDuplicate = tagDataMap["isDuplicate"] as Boolean,
         )
     }
 

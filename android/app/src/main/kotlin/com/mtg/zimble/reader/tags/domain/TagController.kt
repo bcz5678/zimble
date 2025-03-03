@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.Job
 
 interface TagController {
-    val tagDataList: StateFlow<List<TagData>>
+    val tagDataScanList: StateFlow<List<TagData>>
 
     fun getCommander(): AsciiCommander
 

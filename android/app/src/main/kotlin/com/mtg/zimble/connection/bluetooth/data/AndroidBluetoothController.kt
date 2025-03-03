@@ -19,7 +19,7 @@ import com.mtg.zimble.connection.bluetooth.domain.BluetoothController
 import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceEntity
 import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceScanningStreamHandler
 import com.mtg.zimble.connection.bluetooth.domain.ConnectionResult
-import com.mtg.zimble.connection.bluetooth.domain.bluetoothScanningCollector
+import com.mtg.zimble.connection.bluetooth.domain.BluetoothScanCollector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -117,7 +117,7 @@ class  AndroidBluetoothController(
         }
 
         //Initialize the Stateflow Collector to receive devices state changes
-        bluetoothScanningCollector(streamHandlerInstanceTest, scannedDevices)
+        BluetoothScanCollector(streamHandlerInstanceTest, scannedDevices)
 
         Log.d(TAG, "ABTC - startDiscovery")
 

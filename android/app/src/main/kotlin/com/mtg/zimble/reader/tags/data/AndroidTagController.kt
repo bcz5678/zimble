@@ -1,8 +1,20 @@
 package com.mtg.zimble.reader.tags.data
 
 import android.util.Log
-import com.mtg.zimble.reader.tags.data.TagData
+
+import kotlinx.coroutines.CoroutineScope
+//import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
+import com.mtg.zimble.reader.tags.data.TagData as TagData
 import com.mtg.zimble.reader.tags.domain.TagController
+
 import com.uk.tsl.rfid.asciiprotocol.AsciiCommander
 import com.uk.tsl.rfid.asciiprotocol.commands.AbortCommand
 import com.uk.tsl.rfid.asciiprotocol.commands.AlertCommand
@@ -18,15 +30,7 @@ import com.uk.tsl.rfid.asciiprotocol.responders.ICommandResponseLifecycleDelegat
 import com.uk.tsl.rfid.asciiprotocol.responders.ITransponderReceivedDelegate
 import com.uk.tsl.rfid.asciiprotocol.responders.TransponderData
 import com.uk.tsl.utils.HexEncoding
-import kotlinx.coroutines.CoroutineScope
-//import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+
 import java.util.HashMap
 import java.util.Locale
 
@@ -61,12 +65,12 @@ class AndroidTagController() : TagController {
     private var barcodeResponder: BarcodeCommand = BarcodeCommand()
 
     // A 'Dictionary' lookup for the unique transponders seen
-    private var uniqueTransponders: HashMap<String, TransponderData> =
-        HashMap<String, TransponderData>()
+    private var uniqueTransponders: MutableMap<String, TransponderData> =
+       mutableMapOf<String, TransponderData>()
 
     // A MutableMap to gather the current scanned tag info,
     // Used to build the TagData object using the fromMap method
-    private lateinit var newTagDataMap: MutableMap<String, Any?> = mutableMapOf<String, Any?>()
+    private var newTagDataMap: MutableMap<String, Any?> = mutableMapOf<String, Any?>()
 
     //Scan tracking time variables to calculate Read Rate
     private var startTime: Long = 0
@@ -76,9 +80,10 @@ class AndroidTagController() : TagController {
     private var inventoryTagCount: Long = 0
 
     // Stateflows for Scan Stream
-    private var _tagDataScanList = MutableStateFlow<List<TagData>>(emptyList())
-    override val tagDataScanList: StateFlow<List<TagData>>
-        get() = _tagDataScanList.asStateFlow()
+    private var _tagDataScanState = MutableStateFlow<List<TagData>>(emptyList())
+
+    override val tagDataScanState: StateFlow<List<TagData>>
+        get() = _tagDataScanState.asStateFlow()
 
 
     init {
@@ -101,7 +106,7 @@ class AndroidTagController() : TagController {
         // Also capture the responses that were not from App commands
         inventoryResponder.setCaptureNonLibraryResponses(true)
 
-        // Defingn the delegae to notify when each transponder is seen
+        // Defining the delegate to notify when each transponder is seen
         inventoryResponder.setTransponderReceivedDelegate(object: ITransponderReceivedDelegate {
             override fun transponderReceived(transponder: TransponderData, moreAvailable: Boolean) {
                 // Clear the newTagDataMap from previous tags
@@ -118,19 +123,19 @@ class AndroidTagController() : TagController {
                     anyTagSeen = true
 
                     if (!(uniquesOnly && uniqueTransponders.containsKey(transponder.getEpc()))) {
-                        newTagDataMap["epc"] = transponder.getEpc()
+                        newTagDataMap.put("epc", transponder.getEpc())
 
                         if (transponder.getTidData() != null) {
-                            newTagDataMap["tidData"] = HexEncoding.bytesToString(transponder.getTidData())
+                            newTagDataMap.put("tidData", HexEncoding.bytesToString(transponder.getTidData()))
                         }
 
                         if (isInfoRequested) {
-                            newTagDataMap["rssi"] = transponder.getRssi()
-                            newTagDataMap["rssiPercent"] = transponder.getRssiPercent()
-                            newTagDataMap["pc"] = transponder.getPc()
-                            newTagDataMap["crc"] = transponder.getCrc()
-                            newTagDataMap["phase"] = transponder.getPhase()
-                            newTagDataMap["channelFrequency"] = transponder.getChannelFrequency()
+                            newTagDataMap.put("rssi", transponder.getRssi())
+                            newTagDataMap.put("rssiPercent", transponder.getRssiPercent())
+                            newTagDataMap.put("pc", transponder.getPc())
+                            newTagDataMap.put("crc", transponder.getCrc())
+                            newTagDataMap.put("phase", transponder.getPhase())
+                            newTagDataMap.put("channelFrequency", transponder.getChannelFrequency())
                         }
 
                         //Create a TagData Object from newTagMap for uniformity
@@ -140,13 +145,13 @@ class AndroidTagController() : TagController {
 
                         // If new tagdata is not in the mutableState flow already,
                         // add the tag to the mutable state flow for the stream collector
-                        _tagDataScanList.update{
+                        _tagDataScanState.update{
                                 tags -> if(tagData in tags) tags else tags + tagData
                         }
 
                         // Remember this transponder as it has not been seen before
                         if (uniquesOnly) {
-                            uniqueTransponders[newTagDataMap["epc"]] = transponder
+                            uniqueTransponders.put(newTagDataMap["epc"].toString(), transponder)
                         }
                     }
                 }
