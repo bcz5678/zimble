@@ -5,6 +5,7 @@ enum TagScanStatus {
   done,
   loading,
   scanStartInProgress,
+  scanStopInProgress,
   scanStarted,
   scanUpdated,
   scanStopped,

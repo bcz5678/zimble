@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:reader_client/reader_client.dart';
 import 'package:reader_repository/reader_repository.dart';
 
@@ -37,14 +38,25 @@ class TagScanBloc extends Bloc<TagScanEvent, TagScanState> {
       Emitter<TagScanState> emit,
       ) async {
     emit(state.copyWith(
-        stateStatus: TagScanStatus.scanStartInProgress
+        stateStatus: TagScanStatus.scanStopInProgress
     ));
 
-    final tagScanStartResponse = await _readerRepository.stopTagScanStream();
+    try {
 
-    emit(state.copyWith(
-      stateStatus: TagScanStatus.scanStopped,
-    ));
+      final tagScanStopResponse = await _readerRepository.stopTagScanStream();
+
+      if(kDebugMode) {
+        print('tag_Scan_bloc -> onTagScanStop -> tagScanStopResponse -> ${tagScanStopResponse}');
+      }
+
+      emit(state.copyWith(
+        stateStatus: TagScanStatus.scanStopped,
+      ));
+    } catch (e) {
+      if(kDebugMode) {
+        print('tag_Scan_bloc -> onTagScanStop -> error ${e}');
+      }
+    }
   }
 
 }

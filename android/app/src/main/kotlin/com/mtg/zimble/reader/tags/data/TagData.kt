@@ -22,32 +22,6 @@ class TagData (
     var wordsWritten: Int?,
     var isDuplicate: Boolean?,
 ){
-
-    /// Function to build the TagData object from a MutableMap
-    /// (usually received from the reader in the AndroidTagController)
-    fun fromMap(tagDataMap: MutableMap<String, Any?>): TagData {
-        return TagData(
-            epc = tagDataMap["epc"].toString(),
-            tidData = tagDataMap["tidData"].toString(),
-            rssi = tagDataMap["rssi"] as Int,
-            rssiPercent = tagDataMap["rssiPercent"] as Int,
-            pc = tagDataMap["pc"] as Int,
-            crc = tagDataMap["crc"] as Int,
-            qt = tagDataMap["qt"] as Int,
-            didKill = tagDataMap["didKill"] as Boolean,
-            didLock = tagDataMap["didLock"] as Boolean,
-            channelFrequency = tagDataMap["channelFrequency"] as Int,
-            phase = tagDataMap["phase"] as Int,
-            timestamp = tagDataMap["timestamp"].toString(),
-            index = tagDataMap["index"] as Int,
-            accessErrorCode = tagDataMap["accessErrorCode"].toString(),
-            backscatterErrorCode = tagDataMap["backscatterErrorCode"].toString(),
-            readData = tagDataMap["readData"].toString(),
-            wordsWritten = tagDataMap["wordsWritten"] as Int,
-            isDuplicate = tagDataMap["isDuplicate"] as Boolean,
-        )
-    }
-
     /// Function to build a MessageMap from the TagData object to send across the EventChannel
     fun toMessageMap(): MutableMap<String, Any?> {
         var map = mutableMapOf<String, Any?>()
@@ -107,4 +81,32 @@ class TagData (
         returnMap.put("tagData", map)
         return Gson().toJson(returnMap)
     }
+
+    companion object {
+        /// Function to build the TagData object from a MutableMap
+        /// (usually received from the reader in the AndroidTagController)
+        fun fromMap(tagDataMap: MutableMap<String, Any?>): TagData {
+            return TagData(
+                epc = tagDataMap["epc"].toString(),
+                tidData = tagDataMap["tidData"] as String?,
+                rssi = tagDataMap["rssi"] as Int?,
+                rssiPercent = tagDataMap["rssiPercent"] as Int?,
+                pc = tagDataMap["pc"] as Int?,
+                crc = tagDataMap["crc"] as Int?,
+                qt = tagDataMap["qt"] as Int?,
+                didKill = tagDataMap["didKill"] as Boolean?,
+                didLock = tagDataMap["didLock"] as Boolean?,
+                channelFrequency = tagDataMap["channelFrequency"] as Int?,
+                phase = tagDataMap["phase"] as Int?,
+                timestamp = tagDataMap["timestamp"] as String?,
+                index = tagDataMap["index"] as Int?,
+                accessErrorCode = tagDataMap["accessErrorCode"] as String?,
+                backscatterErrorCode = tagDataMap["backscatterErrorCode"] as String?,
+                readData = tagDataMap["readData"] as String?,
+                wordsWritten = tagDataMap["wordsWritten"] as Int?,
+                isDuplicate = tagDataMap["isDuplicate"] as Boolean?,
+            )
+        }
+    }
+
 }

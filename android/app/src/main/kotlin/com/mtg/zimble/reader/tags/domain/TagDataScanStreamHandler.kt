@@ -3,6 +3,8 @@ package com.mtg.zimble.reader.tags.domain
 import android.util.Log
 import io.flutter.plugin.common.EventChannel
 import com.mtg.zimble.reader.tags.data.TagData
+import android.os.Handler
+import android.os.Looper
 
 
 
@@ -30,7 +32,12 @@ class TagDataScanStreamHandler(
             _tagDataScanList.add(tagDataList[x].toJson())
         }
 
-        tagDataScanEventSink?.success(_tagDataScanList)
+        //Use Handler and Looper to Return to the MainUI thread to send down the line
+        val handler = Handler(Looper.getMainLooper())
+
+        handler.post {
+            tagDataScanEventSink?.success(_tagDataScanList)
+        }
     }
 
 

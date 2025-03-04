@@ -360,6 +360,11 @@ class ReaderClient {
           // nested components to see return type
           Map<String, dynamic>? tagScanEvent = json.decode(event.toString()) as Map<String, dynamic>;
 
+          if(kDebugMode) {
+            print('reader_client -> startTagScanStream -> tagScanEvent -> ${tagScanEvent}');
+          }
+
+
           // If tagData is present, encode the data into
           // TagData entity and add to _tagScanStream for getter
           if(tagScanEvent.containsKey("TagData")) {
@@ -405,7 +410,7 @@ class ReaderClient {
         print('reader_client -> stopTagScanStream -> Entry');
       }
 
-      final stopTagScanStreamResult = await sensorMethodChannel.invokeMethod(
+      final stopTagScanStreamResult = await  tagScanMethodChannel.invokeMethod(
           "stopTagScanStream").toString();
 
       if (kDebugMode) {

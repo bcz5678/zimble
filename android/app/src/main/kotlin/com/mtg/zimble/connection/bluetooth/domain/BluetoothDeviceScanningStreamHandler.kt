@@ -37,6 +37,7 @@ class BluetoothDeviceScanningStreamHandler(): EventChannel.StreamHandler {
             _bluetoothDevicesList.add(gson.toJson(tempDevice))
         }
 
+        //Use Handler and Looper to Return to the MainUI thread to send down the line
         val handler = Handler(Looper.getMainLooper())
 
         handler.post {

@@ -1,19 +1,16 @@
 package com.mtg.zimble.reader.tags.data
 
 import android.util.Log
+import com.mtg.zimble.connection.bluetooth.domain.BluetoothScanCollector
 
-import kotlinx.coroutines.CoroutineScope
-//import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 
-import com.mtg.zimble.reader.tags.data.TagData as TagData
 import com.mtg.zimble.reader.tags.domain.TagController
+import com.mtg.zimble.reader.tags.domain.TagDataScanStreamHandler
+import com.mtg.zimble.reader.tags.domain.TagScanCollector
 
 import com.uk.tsl.rfid.asciiprotocol.AsciiCommander
 import com.uk.tsl.rfid.asciiprotocol.commands.AbortCommand
@@ -80,8 +77,7 @@ class AndroidTagController() : TagController {
     private var inventoryTagCount: Long = 0
 
     // Stateflows for Scan Stream
-    private var _tagDataScanState = MutableStateFlow<List<TagData>>(emptyList())
-
+    private val _tagDataScanState = MutableStateFlow<List<TagData>>(emptyList())
     override val tagDataScanState: StateFlow<List<TagData>>
         get() = _tagDataScanState.asStateFlow()
 
@@ -142,6 +138,8 @@ class AndroidTagController() : TagController {
                         var tagData = TagData.fromMap(newTagDataMap)
 
                         Log.d(TAG, "in TransponderReceivedDelegate = ${tagData.toString()}")
+
+                        tagsSeen++
 
                         // If new tagdata is not in the mutableState flow already,
                         // add the tag to the mutable state flow for the stream collector
@@ -370,24 +368,20 @@ class AndroidTagController() : TagController {
     //
     // Start the continuous inventory scan with the current command parameters
     //
-    override fun scanStart() {
+    override fun scanStart(streamHandlerInstance: TagDataScanStreamHandler) {
+        //Initialize the Stateflow Collector to receive devices state changes
+        TagScanCollector(streamHandlerInstance, tagDataScanState)
+
         testForAntenna()
         if(getCommander().isConnected()) {
 
             continuousScanEnabled = true
             inventoryCommand.setTakeNoAction(TriState.NO)
-            continuousScanJob = CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    getCommander().executeCommand(inventoryCommand)
-                    while (continuousScanEnabled) {
-                        Log.d(TAG, "continuousScanEbaled: true")
-                    }
-                } catch (e:CancellationException) {
-                    Log.d(TAG, "Scan Job was cancelled - ${e}")
-                    throw e
-                } catch (e:Exception) {
-                    Log.d(TAG, "Scan Job Message: ${e}")
-                }
+
+            try{
+                getCommander().executeCommand(inventoryCommand)
+            } catch (e: Exception) {
+                Log.d(TAG, "Scan Start -> exception -> ${e}")
             }
         }
     }
@@ -399,9 +393,6 @@ class AndroidTagController() : TagController {
 
         //Set scan setting for reader
         continuousScanEnabled = false
-
-        //Collaboritively Cancel Scan Coroutine
-        continuousScanJob.cancel()
         inventoryCommand.setTakeNoAction(TriState.YES)
 
         //Abort current Scan

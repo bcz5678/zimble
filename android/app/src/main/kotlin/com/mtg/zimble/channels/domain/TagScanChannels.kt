@@ -67,7 +67,7 @@ class TagScanChannels(context: Context, messenger: BinaryMessenger) {
                             }
 
                             if(_androidTagController.isEnabled()== true) {
-                                _androidTagController.scanStart()
+                                _androidTagController.scanStart(tagDataScanStreamHandler)
                             }
 
                             result.success("tagScanStreamStartSuccess")
