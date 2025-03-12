@@ -9,35 +9,37 @@ enum TagScanStatus {
   scanStarted,
   scanUpdated,
   scanStopped,
+  error
 }
 
 class TagScanState extends Equatable{
   TagScanState({
     this.stateStatus,
-    this.currentlyUpdatedTagList,
+    this.currentScanTagDataList,
   });
 
   TagScanState.initial()
       : this (
     stateStatus: TagScanStatus.initial,
+    currentScanTagDataList: [],
   );
 
   final TagScanStatus? stateStatus;
-  final List<TagData>? currentlyUpdatedTagList;
+  late List<Map<String, dynamic>>? currentScanTagDataList;
 
   @override
   List<Object?> get props => [
     stateStatus,
-    currentlyUpdatedTagList
+    currentScanTagDataList
   ];
 
   TagScanState copyWith({
     TagScanStatus? stateStatus,
-    List<TagData>? currentlyUpdatedTagList,
+    List<Map<String, dynamic>>? currentScanTagDataList,
   }) {
     return TagScanState(
       stateStatus: stateStatus ?? this.stateStatus,
-      currentlyUpdatedTagList: currentlyUpdatedTagList ?? this.currentlyUpdatedTagList,
+      currentScanTagDataList: currentScanTagDataList ?? this.currentScanTagDataList,
     );
   }
 

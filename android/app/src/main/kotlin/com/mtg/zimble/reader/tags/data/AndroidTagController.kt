@@ -1,7 +1,6 @@
 package com.mtg.zimble.reader.tags.data
 
 import android.util.Log
-import com.mtg.zimble.connection.bluetooth.domain.BluetoothScanCollector
 
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,8 +17,6 @@ import com.uk.tsl.rfid.asciiprotocol.commands.AlertCommand
 import com.uk.tsl.rfid.asciiprotocol.commands.BarcodeCommand
 import com.uk.tsl.rfid.asciiprotocol.commands.FactoryDefaultsCommand
 import com.uk.tsl.rfid.asciiprotocol.commands.InventoryCommand
-import com.uk.tsl.rfid.asciiprotocol.commands.LinkProfileCommand
-import com.uk.tsl.rfid.asciiprotocol.commands.ReadLogFileCommand
 import com.uk.tsl.rfid.asciiprotocol.enumerations.AlertDuration
 import com.uk.tsl.rfid.asciiprotocol.enumerations.TriState
 import com.uk.tsl.rfid.asciiprotocol.responders.IBarcodeReceivedDelegate
@@ -28,7 +25,6 @@ import com.uk.tsl.rfid.asciiprotocol.responders.ITransponderReceivedDelegate
 import com.uk.tsl.rfid.asciiprotocol.responders.TransponderData
 import com.uk.tsl.utils.HexEncoding
 
-import java.util.HashMap
 import java.util.Locale
 
 
@@ -77,8 +73,8 @@ class AndroidTagController() : TagController {
     private var inventoryTagCount: Long = 0
 
     // Stateflows for Scan Stream
-    private val _tagDataScanState = MutableStateFlow<List<TagData>>(emptyList())
-    override val tagDataScanState: StateFlow<List<TagData>>
+    private val _tagDataScanState = MutableStateFlow<TagScanData>(TagScanData.initial())
+    override val tagDataScanState: StateFlow<TagScanData>
         get() = _tagDataScanState.asStateFlow()
 
 
@@ -88,19 +84,31 @@ class AndroidTagController() : TagController {
 
      fun initializeTagScan() {
 
-        //Set Audible Alert (Beep) duration - can be modified to use saved preferences
+         //Set Audible Alert (Beep) duration - can be modified to use saved preferences
         alertCommand = AlertCommand()
         alertCommand.setDuration(AlertDuration.SHORT)
 
-        // This is the command that will be used to perform configuration changes and inventories
-        inventoryCommand.setResetParameters(TriState.YES)
+        // This is the command that will be used to always override any configured read parameters
+        // to defaults if set to TriState.YES
+        inventoryCommand.setResetParameters(TriState.NO)
 
-        // Handle the alerts in the App - Not wrking correctly
+         Log.d(TAG, "readParameters - pre: ${inventoryCommand.getReadParameters()}")
+
+         updateConfiguration()
+
+         // This is the command that will be used to perform configuration changes and inventories
+         inventoryCommand.setReadParameters(TriState.YES)
+
+         Log.d(TAG, "readParameters - post: ${inventoryCommand.getReadParameters()}")
+
+        // Handle the alerts in the App - Not working correctly
         inventoryCommand.setUseAlert(TriState.NO)
 
         // Use an InventoryCommand as a responder to capture all incoming inventory responses
         // Also capture the responses that were not from App commands
         inventoryResponder.setCaptureNonLibraryResponses(true)
+
+
 
         // Defining the delegate to notify when each transponder is seen
         inventoryResponder.setTransponderReceivedDelegate(object: ITransponderReceivedDelegate {
@@ -118,33 +126,37 @@ class AndroidTagController() : TagController {
                 if (transponder.getEpc() != null) {
                     anyTagSeen = true
 
+                    Log.d(TAG, "transponder: ${transponder}")
+                    Log.d(TAG, "getEpc: ${transponder.getEpc()}")
+                    Log.d(TAG, "getTidData: ${transponder.getTidData()}")
+                    Log.d(TAG, "getRssi: ${transponder.getRssi()}")
+
                     if (!(uniquesOnly && uniqueTransponders.containsKey(transponder.getEpc()))) {
                         newTagDataMap.put("epc", transponder.getEpc())
+
+
 
                         if (transponder.getTidData() != null) {
                             newTagDataMap.put("tidData", HexEncoding.bytesToString(transponder.getTidData()))
                         }
 
-                        if (isInfoRequested) {
-                            newTagDataMap.put("rssi", transponder.getRssi())
-                            newTagDataMap.put("rssiPercent", transponder.getRssiPercent())
-                            newTagDataMap.put("pc", transponder.getPc())
-                            newTagDataMap.put("crc", transponder.getCrc())
-                            newTagDataMap.put("phase", transponder.getPhase())
-                            newTagDataMap.put("channelFrequency", transponder.getChannelFrequency())
-                        }
+
+                        newTagDataMap.put("rssi", transponder.getRssi())
+                        newTagDataMap.put("pc", transponder.getPc())
+                        newTagDataMap.put("crc", transponder.getCrc())
+                        newTagDataMap.put("channelFrequency", transponder.getChannelFrequency())
+
 
                         //Create a TagData Object from newTagMap for uniformity
-                        var tagData = TagData.fromMap(newTagDataMap)
+                        var tagData = TagScanData.fromMap(newTagDataMap)
 
-                        Log.d(TAG, "in TransponderReceivedDelegate = ${tagData.toString()}")
+                        Log.d(TAG, "in TransponderReceivedDelegate - Electronic Product Code: ${tagData.epc.toString()} - Transponder ID: ${tagData.tidData.toString()} - Protocol Control: ${tagData.pc.toString()} - Cyclic Redundancy Check: ${tagData.crc.toString()} ")
 
                         tagsSeen++
 
-                        // If new tagdata is not in the mutableState flow already,
-                        // add the tag to the mutable state flow for the stream collector
+                        // Add the tag to the mutable state flow for the stream collector
                         _tagDataScanState.update{
-                                tags -> if(tagData in tags) tags else tags + tagData
+                            currentTagData -> tagData
                         }
 
                         // Remember this transponder as it has not been seen before
@@ -406,20 +418,40 @@ class AndroidTagController() : TagController {
     // Call this after each change to the model's command
     //
     override fun updateConfiguration() {
+        Log.d(TAG, "in UpdateConfiguration")
+
         if(getCommander().isConnected()) {
             try {
+                Log.d(TAG, "in isConnected")
                 inventoryCommand.setTakeNoAction(TriState.YES)
 
                 // configure the type of scan reports
-                inventoryCommand.setIncludeTransponderRssi(TriState.from(isInfoRequested()))
-                inventoryCommand.setIncludeChecksum(TriState.from(isInfoRequested()))
-                inventoryCommand.setIncludePC(TriState.from(isInfoRequested()))
-                inventoryCommand.setIncludeDateTime(TriState.from(isInfoRequested()))
+                inventoryCommand.setIncludeTransponderRssi(TriState.YES)
+                inventoryCommand.setIncludeChecksum(TriState.YES)
+                inventoryCommand.setIncludePC(TriState.YES)
+                inventoryCommand.setIncludeDateTime(TriState.YES)
+                inventoryCommand.setIncludeEpc(TriState.YES)
+                inventoryCommand.setIncludeChannelFrequency(TriState.YES)
+                inventoryCommand.setUsefastId(TriState.YES)
 
                 // Only Series 3 readers - older readers will ignore this parameter
                 inventoryCommand.setHaltOnTags(maximumTagsPerScan)
 
+                //Execute and set
+                getCommander().executeCommand(inventoryCommand)
+
+                /*
                 Log.d(TAG, "AndroidTagController -> updateConfiguration -> post executeCommand")
+
+                // configure the type of scan reports
+                Log.d(TAG, "inventoryCommand.getIncludeTransponderRssi() - ${inventoryCommand.getIncludeTransponderRssi()}")
+                Log.d(TAG, "inventoryCommand.getIncludeChecksum() - ${inventoryCommand.getIncludeChecksum()}")
+                Log.d(TAG, "inventoryCommand.getIncludePC() - ${inventoryCommand.getIncludePC()}")
+                Log.d(TAG, "inventoryCommand.getIncludeDateTime() - ${inventoryCommand.getIncludeDateTime()}")
+                Log.d(TAG, "inventoryCommand.getIncludeEpc() - ${inventoryCommand.getIncludeEpc()}")
+                Log.d(TAG, "inventoryCommand.getIncludeChannelFrequency() - ${inventoryCommand.getIncludeChannelFrequency()}")
+                Log.d(TAG, "inventoryCommand.getUsefastId() - ${inventoryCommand.getUsefastId()}")
+
 
                 // Configure the link profile if needed
                 if (getCommander().getDeviceProperties().getLinkProfile() != linkProfile) {
@@ -441,6 +473,8 @@ class AndroidTagController() : TagController {
                     getCommander().updateDeviceProperties()
                 }
 
+
+
                 if (getCommander().getDeviceProperties().getInformationCommand().getAsciiProtocol().startsWith(("3"))) {
                     // Workaround for slow performance due to SD-Card logging issues in early Series 3 firmware
                     // Turn off the logging!
@@ -449,6 +483,8 @@ class AndroidTagController() : TagController {
                     rlCommand.setCommandLoggingEnabled(TriState.NO)
                     getCommander().executeCommand(rlCommand)
                 }
+
+                 */
             } catch (e: Exception) {
                 Log.d(TAG, "Exception: ${e.message.toString()}")
             }

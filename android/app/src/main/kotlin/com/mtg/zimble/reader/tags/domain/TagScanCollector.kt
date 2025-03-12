@@ -1,6 +1,6 @@
 package com.mtg.zimble.reader.tags.domain
 
-import com.mtg.zimble.reader.tags.data.TagData
+import com.mtg.zimble.reader.tags.data.TagScanData
 
 //import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.StateFlow
@@ -8,9 +8,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
+import android.util.Log
+
 class TagScanCollector(
     private val tagDataScanStreamHandlerInstance: TagDataScanStreamHandler,
-    private val tagDataScanState: StateFlow<List<TagData>>
+    private val tagDataScanState: StateFlow<TagScanData>
 ) {
     private val TAG = "TagScanCollector"
 
@@ -18,20 +20,25 @@ class TagScanCollector(
         // Start Collector to listen for StateFLow changes to devices
         // REVISIT LIFECYCLE SCOPE HERE FOR SAFETY AND MEMORY LEAK
         CoroutineScope(Dispatchers.IO).launch {
-            tagDataScanState.collect {
-                    tagDatas -> if(tagDatas.isNotEmpty()) sendDataToStreamHandler(tagDataScanStreamHandlerInstance, tagDatas) else doWhenNothing()
+            tagDataScanState.collect { tagScanDataItem: TagScanData ->
+                if (tagScanDataItem.epc != "INITIAL") {
+                    sendDataToStreamHandler(tagDataScanStreamHandlerInstance, tagScanDataItem)
+                } else {
+                    doWhenNothing()
+                }
             }
         }
     }
 
     private fun sendDataToStreamHandler(
         tagDataScanStreamHandlerInstance: TagDataScanStreamHandler,
-        tagDataList: List<TagData>,
+        tagScanDataItem: TagScanData,
     ) {
-        tagDataScanStreamHandlerInstance.updateTagDataScanStream(tagDataList)
+        tagDataScanStreamHandlerInstance.updateTagDataScanStream(tagScanDataItem)
     }
 
     private fun doWhenNothing() {
+        Log.d(TAG, "in doWhenNothing")
         return
     }
 

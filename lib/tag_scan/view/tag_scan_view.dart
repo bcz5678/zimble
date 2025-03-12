@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reader_client/reader_client.dart';
 import 'package:zimble/app/app.dart';
 import 'package:zimble/app/view/app.dart';
 import 'package:zimble/l10n/l10n.dart';
@@ -69,11 +73,7 @@ class _TagScanViewState extends State<TagScanView> {
             child: BlocBuilder<TagScanBloc, TagScanState>(
               builder: (context, state) {
                 return Center(
-                  child: Column(
-                    children: [
-                      TagScanScreen()
-                    ],
-                  ),
+                  child: TagScanScreen(),
                 );
               },
             )
@@ -93,19 +93,26 @@ class TagScanScreen extends StatefulWidget {
 
 class _TagScanScreenState extends State<TagScanScreen> {
   late bool _scanButtonState = false;
+  late List<Map<String, dynamic>> tagDataScanList;
 
+  @override
+  void initState() {
+    tagDataScanList = [];
+  }
+
+  
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ElevatedButton(
             onPressed: () {
               _scanButtonState
-              ? context.read<TagScanBloc>().add(TagScanStop())
-              : context.read<TagScanBloc>().add(TagScanStart());
+                  ? context.read<TagScanBloc>().add(TagScanStop())
+                  : context.read<TagScanBloc>().add(TagScanStart());
 
               setState(() {
                 _scanButtonState = !_scanButtonState;
@@ -118,9 +125,113 @@ class _TagScanScreenState extends State<TagScanScreen> {
                 : Text(
               context.l10n.tagScanButtonStartScan,
             )
-        )
+        ),
+        BlocBuilder<TagScanBloc, TagScanState>(
+          builder: (context, state) {
+            if(state.stateStatus == TagScanStatus.scanUpdated) {
+              return Expanded(
+                child: CustomScrollView(
+                  slivers: [
+                    if(state.currentScanTagDataList!.isNotEmpty)
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                            (context, index){
+                              return TagScanDataCard(
+                                  tagScanDataItem: state.currentScanTagDataList![index],
+                              );
+                            },
+                          childCount: state.currentScanTagDataList!.length
+                        ),
+                      ),
+                  ]
+                ),
+              );
+            } else {
+              return SizedBox();
+            }
+          },
+        ),
       ],
     );
   }
 }
+
+class TagScanDataCard extends StatefulWidget {
+  const TagScanDataCard({
+    required this.tagScanDataItem,
+    super.key
+  });
+
+  final Map<String, dynamic> tagScanDataItem;
+
+  @override
+  State<TagScanDataCard> createState() => _TagDataCardState();
+
+}
+
+class _TagDataCardState extends State<TagScanDataCard> {
+  late TagScanData _tagScanData;
+  late int _numberTimesSeen;
+
+  get math => null;
+
+  @override
+  void initState() {
+    _tagScanData = widget.tagScanDataItem["tagScanData"] as TagScanData;
+    _numberTimesSeen = widget.tagScanDataItem["numberTimesSeen"] as int;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      color: AppColors.lingoDark_20,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
+        child: Expanded(
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Flexible(
+                flex: 8,
+                child: Text(
+                  _tagScanData.epc.toString(),
+                  style: TextStyle(
+                    color: AppColors.lingoBlack_80,
+                    fontSize: 10.0,
+                  ),
+                ),
+              ),
+              Flexible(
+                flex: 2,
+                child: Text(
+                 _tagScanData.rssi.toString(),
+                  style: TextStyle(
+                    color: AppColors.lingoBlack_80,
+                    fontSize: 10.0,
+                  ),
+                ),
+              ),
+              Flexible(
+                flex: 2,
+                child: Text(
+                  _numberTimesSeen.toString(),
+                  style: TextStyle(
+                    color: AppColors.lingoBlack_80,
+                    fontSize: 10.0,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 

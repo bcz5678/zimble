@@ -2,7 +2,7 @@ package com.mtg.zimble.reader.tags.data
 
 import com.google.gson.Gson
 
-class TagData (
+class TagFullData (
     var epc: String,
     var tidData: String?,
     var rssi: Int?,
@@ -47,17 +47,17 @@ class TagData (
             "isDuplicate" to isDuplicate,
         )
 
-        map["tagData"] = Gson().toJson(tagDataMap)
+        map["tagFullData"] = Gson().toJson(tagDataMap)
         return returnMap
     }
 
     /// Function to build a Json String from the TagData object
     ///  to send across the EventChannel or to remote API
     fun toJson(): String {
-        var map = mutableMapOf<String, Any?>()
         var returnMap = mutableMapOf<String, Any?>()
+        //var returnMap = mutableMapOf<String, Any?>()
 
-        map["tagDataMap"] = mutableMapOf<String, Any?>(
+        returnMap["tagFullData"] = mutableMapOf<String, Any?>(
             "epc" to epc,
             "tid" to tidData,
             "rssi" to rssi,
@@ -78,15 +78,41 @@ class TagData (
             "isDuplicate" to isDuplicate,
         )
 
-        returnMap.put("tagData", map)
+        //returnMap.put("tagData", map)
         return Gson().toJson(returnMap)
     }
 
     companion object {
+        /// Function to build an Initial TagData object for the Stateflow (since it cant have
+        /// a null starting value and will be EPC = INITIAL and ignored by the collector
+        fun  initial(): TagFullData {
+            return TagFullData(
+                epc = "INITIAL",
+                tidData = null,
+                rssi = null,
+                rssiPercent = null,
+                pc = null,
+                crc = null,
+                qt = null,
+                didKill =  null,
+                didLock =  null,
+                channelFrequency = null,
+                phase = null,
+                timestamp = null,
+                index = null,
+                accessErrorCode = null,
+                backscatterErrorCode = null,
+                readData = null,
+                wordsWritten = null,
+                isDuplicate = null,
+            )
+        }
+
+
         /// Function to build the TagData object from a MutableMap
         /// (usually received from the reader in the AndroidTagController)
-        fun fromMap(tagDataMap: MutableMap<String, Any?>): TagData {
-            return TagData(
+        fun fromMap(tagDataMap: MutableMap<String, Any?>): TagFullData {
+            return TagFullData(
                 epc = tagDataMap["epc"].toString(),
                 tidData = tagDataMap["tidData"] as String?,
                 rssi = tagDataMap["rssi"] as Int?,
@@ -108,5 +134,4 @@ class TagData (
             )
         }
     }
-
 }

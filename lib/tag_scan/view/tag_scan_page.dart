@@ -8,9 +8,12 @@ class TagScanPage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+
+    late ReaderRepository _readerRepository = context.read<ReaderRepository>();
+
     return BlocProvider(
       create: (_) => TagScanBloc(
-        readerRepository: context.read<ReaderRepository>(),
+        readerRepository: _readerRepository,
       ),
       child: const TagScanView(),
     );

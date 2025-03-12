@@ -53,7 +53,6 @@ class ReaderClient {
   var sensorLinearAccelerationStreamChannel = NativeChannels().sensorLinearAccelerationStream;
   var sensorRotationVectorStreamChannel = NativeChannels().sensorRotationVectorStream;
 
-
   /// Subscription to listen and process sensor Event Channel Data
   late StreamSubscription<dynamic> _sensorAccelerometerSubscription;
   late StreamSubscription<dynamic> _sensorGyroscopeSubscription;
@@ -80,7 +79,10 @@ class ReaderClient {
 
   /// Post Processed stream from the _tagScan Stream
   /// Used to set the tagScanStream getter to pass to ReaderRepository
-  late BehaviorSubject<TagData> _tagScanStream = BehaviorSubject<TagData>.seeded(TagData());
+  late BehaviorSubject<TagScanData> _tagScanStream = BehaviorSubject<TagScanData>();
+
+  /// Updated TagScanData list to send to strem
+  late List<TagScanData> _tagScanDataList = [];
 
 
   /// Stream of [BluetoothReader] which will emit the current reader when
@@ -133,6 +135,11 @@ class ReaderClient {
   /// Stream of [RotationVectorData] which will emit current sensor RotationVector data streaming
   /// from the attached mobile device
   Stream<RotationVectorData> get streamSensorDataRotationVector => _sensorRotationVectorStream;
+
+
+  /// Stream of [TagScanData] which will emit current tagDAtSCan list
+  /// from the reader
+  Stream<TagScanData> get streamTagScanData => _tagScanStream;
 
 
   ///Starts Stream of sensorData to pass to the Reader_repository
@@ -334,7 +341,7 @@ class ReaderClient {
 
 
 
-  ///Starts Stream of tagData to pass to the Reader_repository
+  ///Starts Stream of tagScanData to pass to the Reader_repository
   Future<bool> startTagScanStream() async {
     try {
       if (kDebugMode) {
@@ -356,32 +363,33 @@ class ReaderClient {
               .distinct()
               .listen((event) {
 
-          // Decode all the event string json into the base of
-          // nested components to see return type
-          Map<String, dynamic>? tagScanEvent = json.decode(event.toString()) as Map<String, dynamic>;
+                if(kDebugMode) {
+                  print('reader_client -> startTagScanStream -> _tagStreamSubscription -> event -> ${event}');
+                }
 
-          if(kDebugMode) {
-            print('reader_client -> startTagScanStream -> tagScanEvent -> ${tagScanEvent}');
-          }
+                try {
+                  var tagScanDataItem = event.toString();
 
+                  //Deserialize into a tagScanData JSON
+                  Map<String, dynamic>? tempTagScanData =
+                  json.decode(tagScanDataItem) as Map<String, dynamic>;
 
-          // If tagData is present, encode the data into
-          // TagData entity and add to _tagScanStream for getter
-          if(tagScanEvent.containsKey("TagData")) {
-            try {
-              _tagScanStream.add(
-                TagData.fromJson(
-                  tagScanEvent["tagScanDataMap"] as Map<String, dynamic>,
-                ),
-              );
-            } catch (error) {
-              if (kDebugMode) {
-                print('reader_client -> stopTagScanStream -> ${error.toString()}');
-              }
-            }
-          }
-        }
-      );
+                  if(kDebugMode) {
+                    print('reader_client -> startTagScanStream -> _tagStreamSubscription -> _tagScanDataItem -> ${tempTagScanData}');
+                  }
+
+                  _tagScanStream.add(
+                      TagScanData.fromJson(
+                          tempTagScanData['tagScanData'] as Map<String, dynamic>,
+                      ),
+                  );
+
+                } catch (error) {
+                  if (kDebugMode) {
+                    print('reader_client -> stopTagScanStream -> ${error.toString()}');
+                  }
+                }
+              });
 
       // Return value that the stream has started successfully
       return true;
@@ -403,7 +411,7 @@ class ReaderClient {
     }
   }
 
-  /// Stop Stream of TagData
+  /// Stop Stream of TagScanData
   Future<bool> stopTagScanStream() async {
     try {
       if (kDebugMode) {

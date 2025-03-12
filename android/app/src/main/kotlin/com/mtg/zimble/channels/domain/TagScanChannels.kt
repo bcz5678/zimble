@@ -52,18 +52,18 @@ class TagScanChannels(context: Context, messenger: BinaryMessenger) {
                 call.method.equals("startTagScanStream") -> {
                     try {
                         Log.d(TAG, "in startTagScan")
+
+                        //Assign StreamHandler for tagScan
+                        tagScanStreamChannel.setStreamHandler(tagDataScanStreamHandler)
+
                         if(AndroidTagController().isConnected() == true) {
                             Log.d(TAG, "AndroidTagController is connected")
-
-                            //Assign StreamHandler for tagScan
-                            tagScanStreamChannel.setStreamHandler(tagDataScanStreamHandler)
 
                             if (!_androidTagController.isEnabled()) {
                                 _androidTagController.getCommander().clearResponders()
                                 _androidTagController.getCommander().addResponder(LoggerResponder())
                                 _androidTagController.getCommander().addSynchronousResponder()
                                 _androidTagController.setEnabled(true)
-
                             }
 
                             if(_androidTagController.isEnabled()== true) {

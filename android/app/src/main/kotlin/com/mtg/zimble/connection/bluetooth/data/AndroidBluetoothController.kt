@@ -2,23 +2,16 @@ package com.mtg.zimble.connection.bluetooth.data
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.content.Context
-import android.content.Context.RECEIVER_EXPORTED
-import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.location.LocationManager
-import android.os.Build
 import android.util.Log
 import com.mtg.zimble.connection.bluetooth.domain.BluetoothController
 import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceEntity
 import com.mtg.zimble.connection.bluetooth.domain.BluetoothDeviceScanningStreamHandler
-import com.mtg.zimble.connection.bluetooth.domain.ConnectionResult
 import com.mtg.zimble.connection.bluetooth.domain.BluetoothScanCollector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

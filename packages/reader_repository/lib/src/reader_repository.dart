@@ -109,8 +109,8 @@ class ReaderRepository {
   final _networkDeviceClient = NetworkDeviceClient();
 
   final _currentlyAttachedReadersListController = BehaviorSubject<List<Reader>>.seeded([]);
-  final _sensorStreamsController = BehaviorSubject<List<SensorData>>.seeded([]);
-  final _bluetoothScannedDevicesListController = BehaviorSubject<List<BluetoothDevice>>.seeded([]);
+
+
 
 
   BehaviorSubject<List<Reader>> get currentlyAttachedReadersList {
@@ -201,8 +201,16 @@ class ReaderRepository {
       print('reader_repository -> get sensorDataStream -> Entry');
     }
 
-
     return _readerClient.streamSensorDataAll;
+  }
+
+  Stream<TagScanData> get tagDataScanStream {
+    // [DEBUG TEST]
+    if (kDebugMode) {
+      print('reader_repository -> get tagScanDataStream -> Entry');
+    }
+
+    return _readerClient.streamTagScanData;
   }
 
 
